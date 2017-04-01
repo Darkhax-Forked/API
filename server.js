@@ -33,7 +33,10 @@ router.get('/v1/', function (req, res) {
 })
 
 router.get('/v1/users', function (req, res) {
-    res.json({status: 404, error: "Not Found", message: ""})
+    connection.query('SELECT * FROM `USERS`', function (error, results, fields) {
+        if (error) res.json({status: 0, error: "", message: ""});
+        res.json(results);
+    });
 })
 
 router.get('/v1/users/:id', function (req, res) {
