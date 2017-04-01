@@ -211,12 +211,19 @@ var Project = sequelize.define('PROJECT', {
     freezeTableName: true,
     createdAt: false,
     updatedAt: false,
-    deletedAt: false
+    deletedAt: false,
+    include: [
+        {model: ProjectFiles, as: "files"},
+        {model: ProjectAuthors, as: "authors"},
+        {model: ProjectType, as: "type"}
+        ]
 });
 
 exports.sequelize = sequelize;
 exports.Project = Project;
 exports.User = User;
+
+Project.hasMany(ProjectAuthors, {as:"authors", through: "ProjectAuthors"});
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
