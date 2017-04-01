@@ -86,7 +86,7 @@ var ProjectAuthors = sequelize.define('PROJECT_AUTHORS', {
     deletedAt: false
 });
 
-var ProjectAuthors = sequelize.define('PROJECT_CATEGORIES', {
+var ProjectCategories = sequelize.define('PROJECT_CATEGORIES', {
     id: {
         type: Sequelize.INTEGER,
         field: "PROJECT_ID",
@@ -211,42 +211,33 @@ var Project = sequelize.define('PROJECT', {
     freezeTableName: true,
     createdAt: false,
     updatedAt: false,
-    deletedAt: false,
-    include: [
-        {model: ProjectFiles, as: "files"},
-        {model: ProjectAuthors, as: "authors"},
-        {model: ProjectType, as: "type"}
-        ]
+    deletedAt: false
 });
 
 exports.sequelize = sequelize;
+exports.Game = Game;
 exports.Project = Project;
 exports.User = User;
-
-Project.hasMany(ProjectAuthors, {as:"authors", through: "ProjectAuthors"});
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
 var port = 1234;
 
-var router = express.Router();
+var v1router = express.Router();
 
-router.get("/", function (req, res) {
-    res.json({status: 404, error: "Not Found", message: "No version specified."})
-})
-
-router.get("/v1/", function (req, res) {
+v1router.get("/", function (req, res) {
     res.json({status: 404, error: "Not Found", message: "No such endpoint."})
-})
+});
 
-router.get('/v1/projects', function (req, res) {
-    Project.findAll().then(function(projects) {
+v1router.get('/projects', function (req, res) {
+    Promise.all(Project.findAll())
+    Project.findAll({where:{}}).then(function(projects) {
         res.json(projects);
     });
-})
+});
 
-router.get('/v1/projects/:id', function (req, res) {
+v1router.get('/projects/:id', function (req, res) {
     Project.findOne({where: {id: req.params.id}}).then(function (project) {
         if(project) {
             res.json(project);
@@ -254,15 +245,45 @@ router.get('/v1/projects/:id', function (req, res) {
             res.json({status: 404, error: "Not Found", message: "Project Not Found"});
         }
     })
-})
+});
 
-router.get('/v1/users', function (req, res) {
+v1router.get('/projects/:id/authors', function (req, res) {
+    ProjectAuthors.findAll({where: {project_id: req.params.id}}).then(function (authors) {
+        if(authors) {
+            res.json(authors);
+        } else {
+            res.json({status: 404, error: "Not Found", message: "No Authors Found"});
+        }
+    })
+});
+
+v1router.get('/projects/:id/files', function (req, res) {
+    ProjectFiles.findAll({where: {project_id: req.params.id}}).then(function (files) {
+        if(files) {
+            res.json(files);
+        } else {
+            res.json({status: 404, error: "Not Found", message: "No Files Found"});
+        }
+    })
+});
+
+v1router.get('/projects/:id/categories', function (req, res) {
+    ProjectCategories.findAll({where: {project_id: req.params.id}}).then(function (categories) {
+        if(categories) {
+            res.json(categories);
+        } else {
+            res.json({status: 404, error: "Not Found", message: "No Categories Found"});
+        }
+    })
+});
+
+v1router.get('/users', function (req, res) {
     User.findAll().then(function(users) {
         res.json(users);
     })
-})
+});
 
-router.get('/v1/users/:id', function (req, res) {
+v1router.get('/users/:id', function (req, res) {
     User.findOne({where: {id: req.params.id}}).then(function (user) {
         if(user) {
             res.json(user);
@@ -270,10 +291,10 @@ router.get('/v1/users/:id', function (req, res) {
             res.json({status: 404, error: "Not Found", message: "User Not Found"});
         }
     })
-})
+});
 
 
-app.use("/api", router);
+app.use("/v1", v1router);
 
 app.listen(port);
 
