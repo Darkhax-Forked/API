@@ -14,12 +14,6 @@ var sequelize = new Sequelize(settings.database, settings.user, settings.passwor
     dialect: 'mariadb'
 }
 );
-var connection = mysql.createConnection({
-    host     : settings.host,
-    user     : settings.user,
-    password : settings.password,
-    database : settings.database
-});
 
 var User = sequelize.define('USERS', {
     id: {
@@ -86,8 +80,9 @@ var Project = sequelize.define('PROJECT', {
     deletedAt: false
 });
 
-connection.connect();
-exports.connection = connection;
+exports.sequelize = sequelize;
+exports.Project = Project;
+exports.User = User;
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
@@ -105,39 +100,19 @@ router.get("/v1/", function (req, res) {
 })
 
 router.get('/v1/projects', function (req, res) {
-    connection.query('SELECT * FROM `PROJECT`', function (error, results, fields) {
-        if (error) res.json({status: 0, error: "", message: ""});
-        res.json(results.map(function(result) {
-            return {
-                id:result.PROJECT_ID,
-                game:result.GAME_ID,
-                type:result.TYPE_ID,
-                owner:result.USER_ID,
-                description:result.DESCRIPTION,
-                created:result.CREATED,
-                updated:result.LAST_UPDATED
-            };
-        }));
+    Project.findAll().then(function(projects) {
+        res.json(projects);
     });
 })
 
 router.get('/v1/projects/:id', function (req, res) {
-    connection.query('SELECT * FROM `PROJECT` WHERE `PROJECT_ID` = ' + connection.escape(req.params.id), function (error, results, fields) {
-        if (error) res.json({status: 0, error: "", message: ""});
-        if(results.length>0) {
-            res.json({
-                id:result.PROJECT_ID,
-                game:result.GAME_ID,
-                type:result.TYPE_ID,
-                owner:result.USER_ID,
-                description:result.DESCRIPTION,
-                created:result.CREATED,
-                updated         :result.LAST_UPDATED
-            });
+    Project.findOne({where: {id: req.params.id}}).then(function (project) {
+        if(user) {
+            res.json(project);
         } else {
             res.json({status: 404, error: "Not Found", message: "Project Not Found"});
         }
-    });
+    })
 })
 
 router.get('/v1/users', function (req, res) {
