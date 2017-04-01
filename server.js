@@ -32,6 +32,42 @@ router.get("/v1/", function (req, res) {
     res.json({status: 404, error: "Not Found", message: "No such endpoint."})
 })
 
+router.get('/v1/projects', function (req, res) {
+    connection.query('SELECT * FROM `PROJECT`', function (error, results, fields) {
+        if (error) res.json({status: 0, error: "", message: ""});
+        res.json(results.map(function(result) {
+            return {
+                id:result.PROJECT_ID,
+                game:result.GAME_ID,
+                type:result.TYPE_ID,
+                owner:result.USER_ID,
+                description:result.DESCRIPTION,
+                created:result.CREATED,
+                updated:result.LAST_UPDATED
+            };
+        }));
+    });
+})
+
+router.get('/v1/projects/:id', function (req, res) {
+    connection.query('SELECT * FROM `PROJECT` WHERE `PROJECT_ID` = ' + connection.escape(req.params.id), function (error, results, fields) {
+        if (error) res.json({status: 0, error: "", message: ""});
+        if(results.length>0) {
+            res.json({
+                id:result.PROJECT_ID,
+                game:result.GAME_ID,
+                type:result.TYPE_ID,
+                owner:result.USER_ID,
+                description:result.DESCRIPTION,
+                created:result.CREATED,
+                updated:result.LAST_UPDATED
+            });
+        } else {
+            res.json({status: 404, error: "Not Found", message: "Project Not Found"});
+        }
+    });
+})
+
 router.get('/v1/users', function (req, res) {
     connection.query('SELECT * FROM `USERS`', function (error, results, fields) {
         if (error) res.json({status: 0, error: "", message: ""});
@@ -46,7 +82,7 @@ router.get('/v1/users', function (req, res) {
     });
 })
 
-router.get('/v1/:id', function (req, res) {
+router.get('/v1/users/:id', function (req, res) {
     connection.query('SELECT * FROM `USERS` WHERE `USER_ID` = ' + connection.escape(req.params.id), function (error, results, fields) {
         if (error) res.json({status: 0, error: "", message: ""});
         if(results.length>0) {
