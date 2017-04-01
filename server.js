@@ -49,12 +49,16 @@ router.get('/v1/users', function (req, res) {
 router.get('/v1/:id', function (req, res) {
     connection.query('SELECT * FROM `USERS` WHERE `USER_ID` = ' + connection.escape(req.params.id), function (error, results, fields) {
         if (error) res.json({status: 0, error: "", message: ""});
-        res.json({
-            id: results[0].USER_ID,
-            username: results[0].USERNAME,
-            created: results[0].CREATED,
-            avatar: results[0].AVATAR
-        });
+        if(results.length>0) {
+            res.json({
+                id: results[0].USER_ID,
+                username: results[0].USERNAME,
+                created: results[0].CREATED,
+                avatar: results[0].AVATAR
+            });
+        } else {
+            res.json({status: 404, error: "Not Found", message: "User Not Found"});
+        }
     });
 })
 
