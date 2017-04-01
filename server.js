@@ -20,6 +20,7 @@ var connection = mysql.createConnection({
     password : settings.password,
     database : settings.database
 });
+
 var User = sequelize.define('USERS', {
     id: {
         type: Sequelize.INTEGER,
@@ -37,7 +38,9 @@ var User = sequelize.define('USERS', {
     avatar: {
         type: Sequelize.STRING,
         field: "AVATAR"
-    },
+    }
+}, {
+    freezeTableName: true
 });
 var Project = sequelize.define('PROJECT', {
     id: {
@@ -121,7 +124,7 @@ router.get('/v1/projects/:id', function (req, res) {
                 owner:result.USER_ID,
                 description:result.DESCRIPTION,
                 created:result.CREATED,
-                updated:result.LAST_UPDATED
+                updated         :result.LAST_UPDATED
             });
         } else {
             res.json({status: 404, error: "Not Found", message: "Project Not Found"});
