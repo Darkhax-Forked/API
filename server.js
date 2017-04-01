@@ -39,6 +39,140 @@ var User = sequelize.define('USERS', {
     updatedAt: false,
     deletedAt: false
 });
+
+var Game = sequelize.define('GAME', {
+    id: {
+        type: Sequelize.INTEGER,
+        field: "GAME_ID",
+        primaryKey: true
+    },
+    name: {
+        type: Sequelize.STRING,
+        field: "NAME"
+    },
+    website: {
+        type: Sequelize.URL,
+        field: "WEBSITE"
+    },
+    description: {
+        type: Sequelize.STRING,
+        field: "DESCRIPTION"
+    }
+}, {
+    freezeTableName: true,
+    createdAt: false,
+    updatedAt: false,
+    deletedAt: false
+});
+
+var ProjectAuthors = sequelize.define('PROJECT_AUTHORS', {
+    project_id: {
+        type: Sequelize.INTEGER,
+        field: "PROJECT_ID",
+        primaryKey: true
+    },
+    user_id: {
+        type: Sequelize.INTEGER,
+        field: "USER_ID"
+    },
+    role: {
+        type: Sequelize.STRING,
+        field: "ROLE"
+    }
+}, {
+    freezeTableName: true,
+    createdAt: false,
+    updatedAt: false,
+    deletedAt: false
+});
+
+var ProjectAuthors = sequelize.define('PROJECT_CATEGORIES', {
+    id: {
+        type: Sequelize.INTEGER,
+        field: "PROJECT_ID",
+        primaryKey: true
+    },
+    category: {
+        type: Sequelize.STRING,
+        field: "CATEGORY"
+    }
+}, {
+    freezeTableName: true,
+    createdAt: false,
+    updatedAt: false,
+    deletedAt: false
+});
+
+var ProjectType = sequelize.define('PROJECT_TYPE', {
+    id: {
+        type: Sequelize.INTEGER,
+        field: "TYPE_ID",
+        primaryKey: true
+    },
+    name: {
+        type: Sequelize.STRING,
+        field: "TYPE_NAME"
+    },
+    description: {
+        type: Sequelize.STRING,
+        field: "DESCRIPTION"
+    },
+    game: {
+        type: Sequelize.INTEGER,
+        field: "GAME_ID"
+    }
+}, {
+    freezeTableName: true,
+    createdAt: false,
+    updatedAt: false,
+    deletedAt: false
+});
+
+var ProjectFiles = sequelize.define('PROJECT_FILES', {
+    project_id: {
+        type: Sequelize.INTEGER,
+        field: "PROJECT_ID",
+        primaryKey: true
+    },
+    sha256: {
+        type: Sequelize.STRING,
+        field: "SHA256"
+    },
+    file_name: {
+        type: Sequelize.STRING,
+        field: "ORIGINAL_FILE_NAME"
+    },
+    display_name: {
+        type: Sequelize.STRING,
+        field: "FILE_NAME"
+    },
+    release_type: {
+        type: Sequelize.STRING,
+        field: "RELEASE_TYPE"
+    },
+    release_date: {
+        type: Sequelize.DATE,
+        field: "RELEASE_DATE"
+    },
+    downloads: {
+        type: Sequelize.INTEGER,
+        field: "DOWNLOADS"
+    },
+    size: {
+        type: Sequelize.INTEGER,
+        field: "SIZE"
+    },
+    changelog: {
+        type: Sequelize.STRING,
+        field: "CHANGELOG"
+    }
+}, {
+    freezeTableName: true,
+    createdAt: false,
+    updatedAt: false,
+    deletedAt: false
+});
+
 var Project = sequelize.define('PROJECT', {
     id: {
         type: Sequelize.INTEGER,
@@ -107,7 +241,7 @@ router.get('/v1/projects', function (req, res) {
 
 router.get('/v1/projects/:id', function (req, res) {
     Project.findOne({where: {id: req.params.id}}).then(function (project) {
-        if(user) {
+        if(project) {
             res.json(project);
         } else {
             res.json({status: 404, error: "Not Found", message: "Project Not Found"});
