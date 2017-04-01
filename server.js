@@ -20,7 +20,7 @@ var connection = mysql.createConnection({
     password : settings.password,
     database : settings.database
 });
-var User = sequelize.define('user', {
+var User = sequelize.define('USERS', {
     id: {
         type: Sequelize.INTEGER,
         field: "USER_ID",
@@ -37,6 +37,41 @@ var User = sequelize.define('user', {
     avatar: {
         type: Sequelize.STRING,
         field: "AVATAR"
+    },
+});
+var Project = sequelize.define('PROJECT', {
+    id: {
+        type: Sequelize.INTEGER,
+        field: "PROJECT_ID",
+        primaryKey: true
+    },
+    game: {
+        type: Sequelize.INTEGER,
+        field: "GAME_ID"
+    },
+    type: {
+        type: Sequelize.INTEGER,
+        field: "TYPE_ID"
+    },
+    name: {
+        type: Sequelize.STRING,
+        field: "PROJECT_NAME"
+    },
+    owner: {
+        type: Sequelize.INTEGER,
+        field: "USER_ID"
+    },
+    description: {
+        type: Sequelize.STRING,
+        field: "DESCRIPTION"
+    },
+    created: {
+        type: Sequelize.DATE,
+        field: "CREATED"
+    },
+    updated: {
+        type: Sequelize.DATE,
+        field: "LAST_UPDATED"
     },
 });
 
