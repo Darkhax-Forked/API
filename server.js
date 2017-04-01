@@ -4,14 +4,39 @@ var fs = require("fs");
 var bodyParser = require("body-parser");
 var mysql = require("mysql");
 var promise = require("promise");
+var Sequelize = require('sequelize');
 var oauthserver = require("oauth2-server");
 
 var settings = JSON.parse(fs.readFileSync("../settings.json"));
+var sequelize = new Sequelize(settings.database, settings.user, settings.password,
+{
+    host: settings.host,
+    dialect: 'mariadb'
+}
+);
 var connection = mysql.createConnection({
     host     : settings.host,
     user     : settings.user,
     password : settings.password,
     database : settings.database
+});
+var User = sequelize.define('user', {
+    id: {
+        type: Sequelize.INTEGER,
+        field: "USER_ID"
+    },
+    username: {
+        type: Sequelize.STRING,
+        field: "USERNAME"
+    },
+    created: {
+        type: Sequelize.DATE,
+        field: "CREATED"
+    },
+    avatar: {
+        type: Sequelize.STRING,
+        field: "AVATAR"
+    },
 });
 
 connection.connect();
@@ -69,17 +94,9 @@ router.get('/v1/projects/:id', function (req, res) {
 })
 
 router.get('/v1/users', function (req, res) {
-    connection.query('SELECT * FROM `USERS`', function (error, results, fields) {
-        if (error) res.json({status: 0, error: "", message: ""});
-        res.json(results.map(function(result) {
-            return {
-                id: result.USER_ID,
-                username: result.USERNAME,
-                created: result.CREATED,
-                avatar: result.AVATAR
-            };
-        }));
-    });
+    User.findAll().then(function(users) {
+        res.json(users);
+    })
 })
 
 router.get('/v1/users/:id', function (req, res) {

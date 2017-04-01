@@ -9,7 +9,8 @@
     "fs": "0.0.1-security",
     "mysql": "^2.13.0",
     "oauth2-server": "^2.4.1",
-    "promise": "^7.1.1"
+    "promise": "^7.1.1",
+    "sequelize": "^3.30.4"
   },
   "devDependencies": {},
   "scripts": {
