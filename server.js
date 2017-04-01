@@ -1,15 +1,17 @@
 var express = require('express');
 var app = express();
+var fs = require("fs");
 var bodyParser = require('body-parser');
 var mysql = require('mysql');
 var promise = require('promise');
 var oauthserver = require('oauth2-server');
 
+var settings = JSON.parse(fs.readFileSync("../settings.json"));
 var connection = mysql.createConnection({
-    host     : 'localhost',
-    user     : 'mmdsite',
-    password : 'hah',
-    database : 'mmdsite'
+    host     : settings.host,
+    user     : settings.user,
+    password : settings.password,
+    database : settings.database
 });
 
 connection.connect();
@@ -31,7 +33,6 @@ router.get('/v1/', function (req, res) {
 })
 
 router.get('/v1/users', function (req, res) {
-
     res.json({status: 404, error: "Not Found", message: ""})
 })
 
