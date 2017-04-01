@@ -35,7 +35,16 @@ router.get('/v1/', function (req, res) {
 router.get('/v1/users', function (req, res) {
     connection.query('SELECT * FROM `USERS`', function (error, results, fields) {
         if (error) res.json({status: 0, error: "", message: ""});
-        res.json(results);
+        var users = [];
+        for (i = 0; i < results.length; i++) {
+            var result = results[i];
+            var user =[];
+            user["id"]=result["USER_ID"];
+            user["created"]=result["CREATED"];
+            user["avatar"]=result["AVATAR"];
+            users[0] = user;
+        }
+        res.json(users);
     });
 })
 
