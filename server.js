@@ -283,6 +283,32 @@ v1router.get('/users', function (req, res) {
     })
 });
 
+v1router.get('/games', function (req, res) {
+    Game.findAll().then(function(games) {
+        res.json(games);
+    })
+});
+
+v1router.get('/games/:id', function (req, res) {
+    Game.findOne({where: {id: req.params.id}}).then(function (game) {
+        if(game) {
+            res.json(game);
+        } else {
+            res.json({status: 404, error: "Not Found", message: "Game Not Found"});
+        }
+    })
+});
+
+v1router.get('/games/:id/projects', function (req, res) {
+    Project.findAll({where: {game: req.params.id}}).then(function (projects) {
+        if(projects) {
+            res.json(projects);
+        } else {
+            res.json({status: 404, error: "Not Found", message: "No Projects Found"});
+        }
+    })
+});
+
 v1router.get('/users/:id', function (req, res) {
     User.findOne({where: {id: req.params.id}}).then(function (user) {
         if(user) {
