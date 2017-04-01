@@ -47,16 +47,14 @@ router.get('/v1/users', function (req, res) {
 })
 
 router.get('/v1/:id', function (req, res) {
-    connection.query('SELECT * FROM `USERS` WHERE `USER_ID` = '+req.params.id, function (error, results, fields) {
+    connection.query('SELECT * FROM `USERS` WHERE `USER_ID` = ' + connection.escape(req.params.id), function (error, results, fields) {
         if (error) res.json({status: 0, error: "", message: ""});
-        res.json(results[0].map(function(result) {
-            return {
-                id: result.USER_ID,
-                username: result.USERNAME,
-                created: result.CREATED,
-                avatar: result.AVATAR
-            };
-        }));
+        res.json({
+            id: results[0].USER_ID,
+            username: results[0].USERNAME,
+            created: results[0].CREATED,
+            avatar: results[0].AVATAR
+        });
     });
 })
 
