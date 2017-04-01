@@ -51,7 +51,7 @@ var Game = sequelize.define('GAME', {
         field: "NAME"
     },
     website: {
-        type: Sequelize.URL,
+        type: Sequelize.STRING,
         field: "WEBSITE"
     },
     description: {
