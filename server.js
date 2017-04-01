@@ -20,7 +20,7 @@ exports.connection = connection;
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
-var port = 8080;
+var port = 1234;
 
 var router = express.Router();
 
