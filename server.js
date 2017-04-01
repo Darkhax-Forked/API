@@ -23,7 +23,8 @@ var connection = mysql.createConnection({
 var User = sequelize.define('user', {
     id: {
         type: Sequelize.INTEGER,
-        field: "USER_ID"
+        field: "USER_ID",
+        primaryKey: true
     },
     username: {
         type: Sequelize.STRING,
