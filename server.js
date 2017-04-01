@@ -40,7 +40,10 @@ var User = sequelize.define('USERS', {
         field: "AVATAR"
     }
 }, {
-    freezeTableName: true
+    freezeTableName: true,
+    createdAt: false,
+    updatedAt: false,
+    deletedAt: false
 });
 var Project = sequelize.define('PROJECT', {
     id: {
