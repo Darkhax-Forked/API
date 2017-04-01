@@ -79,6 +79,11 @@ var Project = sequelize.define('PROJECT', {
         type: Sequelize.DATE,
         field: "LAST_UPDATED"
     },
+}, {
+    freezeTableName: true,
+    createdAt: false,
+    updatedAt: false,
+    deletedAt: false
 });
 
 connection.connect();
@@ -142,19 +147,13 @@ router.get('/v1/users', function (req, res) {
 })
 
 router.get('/v1/users/:id', function (req, res) {
-    connection.query('SELECT * FROM `USERS` WHERE `USER_ID` = ' + connection.escape(req.params.id), function (error, results, fields) {
-        if (error) res.json({status: 0, error: "", message: ""});
-        if(results.length>0) {
-            res.json({
-                id: results[0].USER_ID,
-                username: results[0].USERNAME,
-                created: results[0].CREATED,
-                avatar: results[0].AVATAR
-            });
+    User.findOne({where: {id: req.params.id}}).then(function (user) {
+        if(user) {
+            res.json(user);
         } else {
             res.json({status: 404, error: "Not Found", message: "User Not Found"});
         }
-    });
+    })
 })
 
 
