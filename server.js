@@ -6,7 +6,6 @@ var oauth = require('./oauth');
 var users = require('./users');
 var projects = require('./projects');
 var games = require('./games');
-var passport = require('passport');
 
 var app = express();
 app.use(bodyParser.urlencoded({extended: true}));
