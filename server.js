@@ -6,7 +6,9 @@ var database = require('./database');
 var oauth = require('./oauth');
 var users = require('./users');
 var projects = require('./projects');
+var authModel = require('./models/auth');
 var games = require('./games');
+var OAuthServer = require('express-oauth-server');
 
 var app = express();
 app.use(bodyParser.urlencoded({extended: true}));
@@ -28,30 +30,45 @@ oauth.route(oauthRouter)
 
 app.use('/v1', v1router);
 app.use('/oauth', oauthRouter);
-app.oauth = oauthserver({
+/*app.oauth = oauthserver({
     model: {
         getClient: function (clientID, clientSecret, callback) {
-            
+            console.log(clientID + ":" + clientSecret);
+            callback(null, true);
         },
         grantTypeAllowed: function (clientID, grantType, callback) {
-            
+            if (grantType === 'password') {
+                callback(null, true);
+            } else {
+                callback('Invalid grant type!', false);
+            }
         },
         getUser: function (username, password, callback) {
-            
+            if (username == "lclc98") {
+                callback(null, true);
+            } else {
+                callback('Invalid username/password!', false);
+            }
         },
         saveAccessToken: function (accessToken, clientId, expires, user, callback) {
-            
+            console.log(accessToken + ":" + clientId + ":" + expires + ":" + user);
+            callback(null, true);
         },
         saveRefreshToken: function (refreshToken, clientId, expires, user, callback) {
-            
+            console.log('test3');
         }
     }, // See below for specification
     grants: ['password'],
     debug: true
+});*/
+app.oauth= new OAuthServer({
+    model: authModel
 });
 app.all('/oauth/token', app.oauth.grant());
 app.use(app.oauth.errorHandler());
-app.get('/', app.oauth.authorise(), function (req, res) {
+app.use(app.oauth.authorise());
+
+app.get('/', function (req, res) {
     res.send('Secret area');
 });
 app.listen(httpPort);
