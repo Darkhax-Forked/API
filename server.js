@@ -1,5 +1,6 @@
 var express = require('express');
 var bodyParser = require('body-parser');
+var oauthserver = require('oauth2-server');
 var promise = require('promise');
 var database = require('./database');
 var oauth = require('./oauth');
