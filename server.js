@@ -29,7 +29,23 @@ oauth.route(oauthRouter)
 app.use('/v1', v1router);
 app.use('/oauth', oauthRouter);
 app.oauth = oauthserver({
-    model: {}, // See below for specification
+    model: {
+        getClient: function (clientID, clientSecret, callback) {
+            
+        },
+        grantTypeAllowed: function (clientID, grantType, callback) {
+            
+        },
+        getUser: function (username, password, callback) {
+            
+        },
+        saveAccessToken: function (accessToken, clientId, expires, user, callback) {
+            
+        },
+        saveRefreshToken: function (refreshToken, clientId, expires, user, callback) {
+            
+        }
+    }, // See below for specification
     grants: ['password'],
     debug: true
 });
