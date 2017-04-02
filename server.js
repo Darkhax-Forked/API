@@ -11,6 +11,8 @@ var passport = require('passport');
 var app = express();
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.cookieParser());
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(bodyParser.json());
 
 var httpPort = 1234;
@@ -29,7 +31,16 @@ oauth.route(oauthRouter)
 
 app.use('/v1', v1router);
 app.use('/oauth', oauthRouter);
-
+app.oauth = oauthserver({
+    model: {}, // See below for specification
+    grants: ['password'],
+    debug: true
+});
+app.all('/oauth/token', app.oauth.grant());
+app.use(app.oauth.errorHandler());
+app.get('/', app.oauth.authorise(), function (req, res) {
+    res.send('Secret area');
+});
 app.listen(httpPort);
 
 console.log('Magic happens on port ' + httpPort);

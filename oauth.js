@@ -1,17 +1,9 @@
-var oauth2orize = require('oauth2orize');
+var oauth2server = require('oauth2-server');
 
 module.exports = {
     route: function (router) {
-        
+        router.route('authorize', function (req, res) {
+
+        })
     }
 };
-
-server.grant(oauth2orize.grant.code(function(client, redirectURI, user, ares, done) {
-    var code = utils.uid(16);
-
-    var ac = new AuthorizationCode(code, client.id, redirectURI, user.id, ares.scope);
-    ac.save(function(err) {
-        if (err) { return done(err); }
-        return done(null, code);
-    });
-}));
