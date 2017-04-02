@@ -1,5 +1,4 @@
 const express = require('express');
-const bodyParser = require('body-parser');
 const promise = require('promise');
 const oauthserver = require('oauth2-server');
 const Database = require('./database');
@@ -11,8 +10,6 @@ const games = require('./games');
 const OAuthServer = require('express-oauth-server');
 
 const app = express();
-app.use(bodyParser.urlencoded({extended: true}));
-app.use(bodyParser.json());
 
 const httpPort = 1234;
 
