@@ -9,7 +9,6 @@ var games = require('./games');
 
 var app = express();
 app.use(bodyParser.urlencoded({extended: true}));
-app.use(express.cookieParser());
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(bodyParser.json());
