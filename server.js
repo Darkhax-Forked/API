@@ -1,76 +1,78 @@
-var express = require('express');
-var bodyParser = require('body-parser');
-var oauthserver = require('oauth2-server');
-var promise = require('promise');
-var database = require('./database');
-var oauth = require('./oauth');
-var users = require('./users');
-var projects = require('./projects');
-var authModel = require('./models/auth');
-var games = require('./games');
-var OAuthServer = require('express-oauth-server');
+const express = require('express');
+const bodyParser = require('body-parser');
+const promise = require('promise');
+const oauthserver = require('oauth2-server');
+const Database = require('./database');
+const oauth = require('./oauth');
+const users = require('./users');
+const projects = require('./projects');
+const authModel = require('./models/auth');
+const games = require('./games');
+const OAuthServer = require('express-oauth-server');
 
-var app = express();
+const app = express();
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
-var httpPort = 1234;
+const httpPort = 1234;
 
-var v1router = express.Router();
-var oauthRouter = express.Router();
+Database.then(database => {
+    const v1router = express.Router();
+    const oauthRouter = express.Router();
 
-v1router.get('/', function (req, res) {
-    res.json({status: 404, error: 'Not Found', message: 'No such endpoint.'})
-});
+    [users, projects, games].forEach(it => it.route(v1router, database));
+    oauth.route(oauthRouter);
 
-users.route(v1router);
-projects.route(v1router);
-games.route(v1router);
-oauth.route(oauthRouter)
-
-app.use('/v1', v1router);
-app.use('/oauth', oauthRouter);
-/*app.oauth = oauthserver({
-    model: {
-        getClient: function (clientID, clientSecret, callback) {
-            console.log(clientID + ":" + clientSecret);
-            callback(null, true);
-        },
-        grantTypeAllowed: function (clientID, grantType, callback) {
-            if (grantType === 'password') {
+    app.use('/v1', v1router);
+    app.use('/oauth', oauthRouter);
+    /*app.oauth = oauthserver({
+        model: {
+            getClient: function (clientID, clientSecret, callback) {
+                console.log(clientID + ":" + clientSecret);
                 callback(null, true);
-            } else {
-                callback('Invalid grant type!', false);
-            }
-        },
-        getUser: function (username, password, callback) {
-            if (username == "lclc98") {
+            },
+            grantTypeAllowed: function (clientID, grantType, callback) {
+                if (grantType === 'password') {
+                    callback(null, true);
+                } else {
+                    callback('Invalid grant type!', false);
+                }
+            },
+            getUser: function (username, password, callback) {
+                if (username == "lclc98") {
+                    callback(null, true);
+                } else {
+                    callback('Invalid username/password!', false);
+                }
+            },
+            saveAccessToken: function (accessToken, clientId, expires, user, callback) {
+                console.log(accessToken + ":" + clientId + ":" + expires + ":" + user);
                 callback(null, true);
-            } else {
-                callback('Invalid username/password!', false);
+            },
+            saveRefreshToken: function (refreshToken, clientId, expires, user, callback) {
+                console.log('test3');
             }
-        },
-        saveAccessToken: function (accessToken, clientId, expires, user, callback) {
-            console.log(accessToken + ":" + clientId + ":" + expires + ":" + user);
-            callback(null, true);
-        },
-        saveRefreshToken: function (refreshToken, clientId, expires, user, callback) {
-            console.log('test3');
-        }
-    }, // See below for specification
-    grants: ['password'],
-    debug: true
-});*/
-app.oauth= new OAuthServer({
-    model: authModel
-});
-app.all('/oauth/token', app.oauth.grant());
-app.use(app.oauth.errorHandler());
-app.use(app.oauth.authorise());
+        }, // See below for specification
+        grants: ['password'],
+        debug: true
+    });*/
+    /*app.oauth= new OAuthServer({
+        model: authModel
+    });
+    app.all('/oauth/token', app.oauth.grant());
+    app.use(app.oauth.errorHandler());
+    app.use(app.oauth.authorise());*/
 
-app.get('/', function (req, res) {
-    res.send('Secret area');
-});
-app.listen(httpPort);
+    app.get('/', (req, res) => {
+        res.send('Secret area');
+    });
 
-console.log('Magic happens on port ' + httpPort);
+    v1router.get('*', (req, res) => {
+        res.status(404);
+        res.json({status: 404, error: 'Not Found', message: 'No such endpoint.'})
+    });
+
+    app.listen(httpPort);
+
+    console.log(`Magic happens on port ${httpPort}`);
+});

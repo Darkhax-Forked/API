@@ -1,64 +1,40 @@
-var express = require('express');
-var app = express();
-var bodyParser = require('body-parser');
-var database = require('./database');
-
 module.exports = {
-    route: function (router) {
-
-        router.get('/projects', function (req, res) {
-            database.Project.findAll({where: {}}).then(function (projects) {
+    route: (router, database) => {
+        router.get('/projects', (req, res) => {
+            database.Project.findAll().then((projects) => {
                 res.json(projects);
             });
         });
 
-        router.get('/projects/:id', function (req, res) {
-            database.Project.findOne({where: {id: req.params.id}}).then(function (project) {
-                if (project) {
-                    res.json(project);
+        const loadProject = (req, res, next) => {
+            database.Project.findById(req.params.projectId).then((project) => {
+                if(project) {
+                    req.project = project;
+                    next();
                 } else {
                     res.status(404);
                     res.json({status: 404, error: 'Not Found', message: 'Project Not Found'});
                 }
             });
-        });
+        };
 
-        router.get('/projects/:id/authors', function (req, res) {
-            database.Project.findOne({where: {id: req.params.id}}).then(function (project) {
-                if (project) {
-                    database.ProjectAuthors.findAll({where: {project_id: req.params.id}}).then(function (authors) {
-                        res.json(authors);
-                    });
-                } else {
-                    res.status(404);
-                    res.json({status: 404, error: 'Not Found', message: 'Project Not Found'});
-                }
+        router.get('/projects/:projectId', loadProject, (req, res) => res.json(req.project));
+
+        router.get('/projects/:projectId/authors', loadProject, (req, res) => {
+            req.project.getUsers().then((users) => {
+                res.json(users);
             });
         });
 
-        router.get('/projects/:id/files', function (req, res) {
-            database.Project.findOne({where: {id: req.params.id}}).then(function (project) {
-                if (project) {
-                    database.ProjectFiles.findAll({where: {project_id: req.params.id}}).then(function (files) {
-                        res.json(files);
-                    });
-                } else {
-                    res.status(404);
-                    res.json({status: 404, error: 'Not Found', message: 'Project Not Found'});
-                }
+        router.get('/projects/:projectId/files', loadProject, (req, res) => {
+            req.project.getProjectFiles().then((projectFiles) => {
+                res.json(projectFiles);
             });
         });
 
-        router.get('/projects/:id/categories', function (req, res) {
-            database.Project.findOne({where: {id: req.params.id}}).then(function (project) {
-                if (project) {
-                    database.ProjectCategories.findAll({where: {project_id: req.params.id}}).then(function (categories) {
-                        res.json(categories);
-                    });
-                } else {
-                    res.status(404);
-                    res.json({status: 404, error: 'Not Found', message: 'Project Not Found'});
-                }
+        router.get('/projects/:projectId/categories', loadProject, (req, res) => {
+            req.project.getProjectCategories().then((projectCategories) => {
+                res.json(projectCategories);
             });
         });
     }

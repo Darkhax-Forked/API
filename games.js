@@ -1,39 +1,31 @@
-var express = require('express');
-var app = express();
-var bodyParser = require('body-parser');
-var database = require('./database');
-
 module.exports = {
-    route: function (router) {
-
-        router.get('/games', function (req, res) {
-            database.Game.findAll().then(function(games) {
+    route: (router, database) => {
+        router.get('/games', (req, res) => {
+            database.Game.findAll().then((games) => {
                 res.json(games);
             });
         });
 
-        router.get('/games/:id', function (req, res) {
-            database.Game.findOne({where: {id: req.params.id}}).then(function (game) {
+        const loadGame = (req, res, next) => {
+            database.Game.findById(req.params.gameId).then((game) => {
                 if(game) {
-                    res.json(game);
+                    req.game = game;
+                    next();
                 } else {
                     res.status(404);
                     res.json({status: 404, error: 'Not Found', message: 'Game Not Found'});
                 }
+            });
+        };
+
+        router.get('/games/:gameId', loadGame, (req, res) => res.json(req.game));
+
+        router.get('/games/:gameId/projectTypes', loadGame, (req, res) => {
+            req.game.getProjectTypes().then((projectTypes) => {
+                res.json(projectTypes);
             });
         });
 
-        router.get('/games/:id/projects', function (req, res) {
-            database.Game.findOne({where: {id: req.params.id}}).then(function (game) {
-                if(game) {
-                    database.Project.findAll({where: {game: req.params.id}}).then(function (projects) {
-                        res.json(projects);
-                    });
-                } else {
-                    res.status(404);
-                    res.json({status: 404, error: 'Not Found', message: 'Game Not Found'});
-                }
-            });
-        });
+        // TODO: Add get for game projects
     }
 };

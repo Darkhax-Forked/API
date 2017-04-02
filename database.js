@@ -1,213 +1,164 @@
-var settings = require('./settings');
-var Sequelize = require('sequelize');
+const settings = require('./settings');
+const Sequelize = require('sequelize');
 
-var sequelize = new Sequelize(settings.database, settings.user, settings.password, {
+const sequelize = new Sequelize(settings.database, settings.user, settings.password, {
     host: settings.host,
     dialect: 'mariadb',
-    port: settings.port
+    port: settings.port,
+    define: {
+        freezeTableName: true
+    }
 });
 
-var User = sequelize.define('USERS', {
+const User = sequelize.define('user', {
     id: {
         type: Sequelize.INTEGER,
-        field: 'USER_ID',
-        primaryKey: true
+        primaryKey: true,
+        autoIncrement: true
+    },
+    email: {
+        type: Sequelize.STRING(50),
+        unique: true,
+        allowNull: false
     },
     username: {
-        type: Sequelize.STRING,
-        field: 'USERNAME'
-    },
-    created: {
-        type: Sequelize.DATE,
-        field: 'CREATED'
+        type: Sequelize.STRING(20),
+        unique: true,
+        allowNull: false
     },
     avatar: {
         type: Sequelize.STRING,
-        field: 'AVATAR'
+        allowNull: false
+    },
+    points: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+    },
+    password: {
+        type: Sequelize.CHAR(60),
+        allowNull: false
     }
-}, {
-    freezeTableName: true,
-    createdAt: false,
-    updatedAt: false,
-    deletedAt: false
 });
 
-var Game = sequelize.define('GAME', {
+const Game = sequelize.define('game', {
     id: {
         type: Sequelize.INTEGER,
-        field: 'GAME_ID',
-        primaryKey: true
+        primaryKey: true,
+        autoIncrement: true
     },
     name: {
-        type: Sequelize.STRING,
-        field: 'NAME'
+        type: Sequelize.STRING(50),
+        allowNull: false
     },
     website: {
-        type: Sequelize.STRING,
-        field: 'WEBSITE'
+        type: Sequelize.STRING(50),
+        allowNull: false
     },
     description: {
-        type: Sequelize.STRING,
-        field: 'DESCRIPTION'
+        type: Sequelize.TEXT,
+        allowNull: false
     }
 }, {
-    freezeTableName: true,
     createdAt: false,
-    updatedAt: false,
-    deletedAt: false
+    updatedAt: false
 });
 
-var ProjectAuthors = sequelize.define('PROJECT_AUTHORS', {
-    project_id: {
-        type: Sequelize.INTEGER,
-        field: 'PROJECT_ID',
-        primaryKey: true
-    },
-    user_id: {
-        type: Sequelize.INTEGER,
-        field: 'USER_ID'
-    },
-    role: {
-        type: Sequelize.STRING,
-        field: 'ROLE'
-    }
-}, {
-    freezeTableName: true,
-    createdAt: false,
-    updatedAt: false,
-    deletedAt: false
-});
-
-var ProjectCategories = sequelize.define('PROJECT_CATEGORIES', {
+const ProjectType = sequelize.define('projectType', {
     id: {
         type: Sequelize.INTEGER,
-        field: 'PROJECT_ID',
+        primaryKey: true,
+        autoIncrement: true
+    },
+    name: {
+        type: Sequelize.STRING(50),
+        allowNull: false
+    },
+    description: {
+        type: Sequelize.TEXT,
+        allowNull: false
+    },
+}, {
+    createdAt: false,
+    updatedAt: false
+});
+
+const Project = sequelize.define('project', {
+    id: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+    },
+    name: {
+        type: Sequelize.STRING(50),
+        allowNull: false
+    },
+    description: {
+        type: Sequelize.TEXT
+    }
+});
+
+const ProjectAuthor = sequelize.define('projectAuthor', {
+    role: {
+        type: Sequelize.STRING(50),
+        allowNull: false
+    }
+});
+
+const ProjectCategory = sequelize.define('projectCategory', {
+    projectId: {
+        type: Sequelize.INTEGER,
         primaryKey: true
     },
     category: {
-        type: Sequelize.STRING,
-        field: 'CATEGORY'
+        type: Sequelize.STRING(20),
+        primaryKey: true
     }
 }, {
-    freezeTableName: true,
     createdAt: false,
-    updatedAt: false,
-    deletedAt: false
+    updatedAt: false
 });
 
-var ProjectType = sequelize.define('PROJECT_TYPE', {
-    id: {
-        type: Sequelize.INTEGER,
-        field: 'TYPE_ID',
-        primaryKey: true
-    },
-    name: {
-        type: Sequelize.STRING,
-        field: 'TYPE_NAME'
-    },
-    description: {
-        type: Sequelize.STRING,
-        field: 'DESCRIPTION'
-    },
-    game: {
-        type: Sequelize.INTEGER,
-        field: 'GAME_ID'
-    }
-}, {
-    freezeTableName: true,
-    createdAt: false,
-    updatedAt: false,
-    deletedAt: false
-});
-
-var ProjectFiles = sequelize.define('PROJECT_FILES', {
-    project_id: {
-        type: Sequelize.INTEGER,
-        field: 'PROJECT_ID',
-        primaryKey: true
-    },
+const ProjectFile = sequelize.define('projectFile', {
     sha256: {
-        type: Sequelize.STRING,
-        field: 'SHA256'
+        type: Sequelize.CHAR(64),
+        primaryKey: true
     },
-    file_name: {
-        type: Sequelize.STRING,
-        field: 'ORIGINAL_FILE_NAME'
+    fileName: {
+        type: Sequelize.STRING(50),
+        allowNull: false
     },
-    display_name: {
-        type: Sequelize.STRING,
-        field: 'FILE_NAME'
+    displayName: {
+        type: Sequelize.STRING(50),
+        allowNull: false
     },
-    release_type: {
-        type: Sequelize.STRING,
-        field: 'RELEASE_TYPE'
-    },
-    release_date: {
-        type: Sequelize.DATE,
-        field: 'RELEASE_DATE'
+    releaseType: {
+        type: Sequelize.ENUM('preAlpha', 'alpha', 'beta', 'release'),
+        allowNull: false
     },
     downloads: {
         type: Sequelize.INTEGER,
-        field: 'DOWNLOADS'
+        allowNull: false
     },
     size: {
         type: Sequelize.INTEGER,
-        field: 'SIZE'
+        allowNull: false
     },
-    changelog: {
-        type: Sequelize.STRING,
-        field: 'CHANGELOG'
-    }
-}, {
-    freezeTableName: true,
-    createdAt: false,
-    updatedAt: false,
-    deletedAt: false
+    changelog: Sequelize.TEXT
 });
 
-var Project = sequelize.define('PROJECT', {
-    id: {
-        type: Sequelize.INTEGER,
-        field: 'PROJECT_ID',
-        primaryKey: true
-    },
-    game: {
-        type: Sequelize.INTEGER,
-        field: 'GAME_ID'
-    },
-    type: {
-        type: Sequelize.INTEGER,
-        field: 'TYPE_ID'
-    },
-    name: {
-        type: Sequelize.STRING,
-        field: 'PROJECT_NAME'
-    },
-    owner: {
-        type: Sequelize.INTEGER,
-        field: 'USER_ID'
-    },
-    description: {
-        type: Sequelize.STRING,
-        field: 'DESCRIPTION'
-    },
-    created: {
-        type: Sequelize.DATE,
-        field: 'CREATED'
-    },
-    updated: {
-        type: Sequelize.DATE,
-        field: 'LAST_UPDATED'
-    },
-}, {
-    freezeTableName: true,
-    createdAt: false,
-    updatedAt: false,
-    deletedAt: false
-});
+Game.hasMany(ProjectType, {foreignKey: {allowNull: false}});
+ProjectType.hasMany(Project, {foreignKey: {allowNull: false}});
+Project.belongsToMany(User, {through: ProjectAuthor, foreignKey: {name: 'projectId', allowNull: false}});
+User.belongsToMany(Project, {through: ProjectAuthor, foreignKey: {name: 'userId', allowNull: false}});
+Project.hasMany(ProjectFile, {foreignKey: {allowNull: false}});
+Project.hasMany(ProjectCategory, {foreignKey: {allowNull: false}});
 
-exports.sequelize = sequelize;
-exports.Game = Game;
-exports.Project = Project;
-exports.User = User;
-exports.ProjectFiles = ProjectFiles;
+module.exports = sequelize.sync().then(() => ({
+    sequelize,
+    Game,
+    Project,
+    User,
+    ProjectFile,
+    ProjectAuthor,
+    ProjectCategory
+}));
