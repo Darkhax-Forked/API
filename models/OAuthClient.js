@@ -20,7 +20,7 @@ var OAuthClient = sequelize.define('OAUTH_CLIENT', {
     },
     grant_types: {
         type: Sequelize.STRING,
-        field: 'USER_ID'
+        field: 'GRANT_TYPES'
     },
     scope: {
         type: Sequelize.STRING,
