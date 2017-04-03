@@ -1,3 +1,3 @@
-var fs = require('fs');
+const fs = require('fs');
 
 module.exports = JSON.parse(fs.readFileSync('../settings.json'));

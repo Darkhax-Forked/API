@@ -6,152 +6,152 @@ const sequelize = new Sequelize(settings.database, settings.user, settings.passw
     dialect: 'mariadb',
     port: settings.port,
     define: {
-        freezeTableName: true
-    }
+        freezeTableName: true,
+    },
 });
 
 const User = sequelize.define('user', {
     id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
-        autoIncrement: true
+        autoIncrement: true,
     },
     email: {
         type: Sequelize.STRING(50),
         unique: true,
-        allowNull: false
+        allowNull: false,
     },
     username: {
         type: Sequelize.STRING(20),
         unique: true,
-        allowNull: false
+        allowNull: false,
     },
     avatar: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
     },
     points: {
         type: Sequelize.INTEGER,
-        allowNull: false
+        allowNull: false,
     },
     password: {
         type: Sequelize.CHAR(60),
-        allowNull: false
-    }
+        allowNull: false,
+    },
 });
 
 const Game = sequelize.define('game', {
     id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
-        autoIncrement: true
+        autoIncrement: true,
     },
     name: {
         type: Sequelize.STRING(50),
-        allowNull: false
+        allowNull: false,
     },
     website: {
         type: Sequelize.STRING(50),
-        allowNull: false
+        allowNull: false,
     },
     description: {
         type: Sequelize.TEXT,
-        allowNull: false
-    }
+        allowNull: false,
+    },
 }, {
     createdAt: false,
-    updatedAt: false
+    updatedAt: false,
 });
 
 const ProjectType = sequelize.define('projectType', {
     id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
-        autoIncrement: true
+        autoIncrement: true,
     },
     name: {
         type: Sequelize.STRING(50),
-        allowNull: false
+        allowNull: false,
     },
     description: {
         type: Sequelize.TEXT,
-        allowNull: false
+        allowNull: false,
     },
 }, {
     createdAt: false,
-    updatedAt: false
+    updatedAt: false,
 });
 
 const Project = sequelize.define('project', {
     id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
-        autoIncrement: true
+        autoIncrement: true,
     },
     name: {
         type: Sequelize.STRING(50),
-        allowNull: false
+        allowNull: false,
     },
     description: {
-        type: Sequelize.TEXT
-    }
+        type: Sequelize.TEXT,
+    },
 });
 
 const ProjectAuthor = sequelize.define('projectAuthor', {
     role: {
         type: Sequelize.STRING(50),
-        allowNull: false
+        allowNull: false,
     }
 });
 
 const ProjectCategory = sequelize.define('projectCategory', {
     projectId: {
         type: Sequelize.INTEGER,
-        primaryKey: true
+        primaryKey: true,
     },
     category: {
         type: Sequelize.STRING(20),
-        primaryKey: true
+        primaryKey: true,
     }
 }, {
     createdAt: false,
-    updatedAt: false
+    updatedAt: false,
 });
 
 const ProjectFile = sequelize.define('projectFile', {
     sha256: {
         type: Sequelize.CHAR(64),
-        primaryKey: true
+        primaryKey: true,
     },
     fileName: {
         type: Sequelize.STRING(50),
-        allowNull: false
+        allowNull: false,
     },
     displayName: {
         type: Sequelize.STRING(50),
-        allowNull: false
+        allowNull: false,
     },
     releaseType: {
         type: Sequelize.ENUM('preAlpha', 'alpha', 'beta', 'release'),
-        allowNull: false
+        allowNull: false,
     },
     downloads: {
         type: Sequelize.INTEGER,
-        allowNull: false
+        allowNull: false,
     },
     size: {
         type: Sequelize.INTEGER,
-        allowNull: false
+        allowNull: false,
     },
-    changelog: Sequelize.TEXT
+    changelog: Sequelize.TEXT,
 });
 
-Game.hasMany(ProjectType, {foreignKey: {allowNull: false}});
-ProjectType.hasMany(Project, {foreignKey: {allowNull: false}});
-Project.belongsToMany(User, {through: ProjectAuthor, foreignKey: {name: 'projectId', allowNull: false}});
-User.belongsToMany(Project, {through: ProjectAuthor, foreignKey: {name: 'userId', allowNull: false}});
-Project.hasMany(ProjectFile, {foreignKey: {allowNull: false}});
-Project.hasMany(ProjectCategory, {foreignKey: {allowNull: false}});
+Game.hasMany(ProjectType, { foreignKey: { allowNull: false } });
+ProjectType.hasMany(Project, { foreignKey: { allowNull: false } });
+Project.belongsToMany(User, { through: ProjectAuthor, foreignKey: { name: 'projectId', allowNull: false } });
+User.belongsToMany(Project, { through: ProjectAuthor, foreignKey: { name: 'userId', allowNull: false } });
+Project.hasMany(ProjectFile, { foreignKey: { allowNull: false } });
+Project.hasMany(ProjectCategory, { foreignKey: { allowNull: false } });
 
 module.exports = sequelize.sync().then(() => ({
     sequelize,
@@ -160,5 +160,5 @@ module.exports = sequelize.sync().then(() => ({
     User,
     ProjectFile,
     ProjectAuthor,
-    ProjectCategory
+    ProjectCategory,
 }));

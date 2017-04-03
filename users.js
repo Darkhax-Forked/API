@@ -1,5 +1,5 @@
 module.exports = {
-    route: (router, database) => {
+    route(router, database) {
         router.get('/users', (req, res) => {
             database.User.findAll().then((users) => {
                 res.json(users);
@@ -8,7 +8,7 @@ module.exports = {
 
         const loadUser = (req, res, next) => {
             database.User.findById(req.params.userId).then((user) => {
-                if(user) {
+                if (user) {
                     req.user = user;
                     next();
                 } else {
@@ -19,5 +19,5 @@ module.exports = {
         };
 
         router.get('/users/:userId', loadUser, (req, res) => res.json(req.user));
-    }
+    },
 };

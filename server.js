@@ -1,19 +1,15 @@
 const express = require('express');
-const promise = require('promise');
-const oauthserver = require('oauth2-server');
 const Database = require('./database');
 const oauth = require('./oauth');
 const users = require('./users');
 const projects = require('./projects');
-const authModel = require('./models/auth');
 const games = require('./games');
-const OAuthServer = require('express-oauth-server');
 
 const app = express();
 
 const httpPort = 1234;
 
-Database.then(database => {
+Database.then((database) => {
     const v1router = express.Router();
     const oauthRouter = express.Router();
 
@@ -22,7 +18,7 @@ Database.then(database => {
 
     app.use('/v1', v1router);
     app.use('/oauth', oauthRouter);
-    /*app.oauth = oauthserver({
+    /* app.oauth = oauthserver({
         model: {
             getClient: function (clientID, clientSecret, callback) {
                 console.log(clientID + ":" + clientSecret);
@@ -53,7 +49,7 @@ Database.then(database => {
         grants: ['password'],
         debug: true
     });*/
-    /*app.oauth= new OAuthServer({
+    /* app.oauth= new OAuthServer({
         model: authModel
     });
     app.all('/oauth/token', app.oauth.grant());
@@ -66,7 +62,7 @@ Database.then(database => {
 
     v1router.get('*', (req, res) => {
         res.status(404);
-        res.json({status: 404, error: 'Not Found', message: 'No such endpoint.'})
+        res.json({ status: 404, error: 'Not Found', message: 'No such endpoint.' });
     });
 
     app.listen(httpPort);

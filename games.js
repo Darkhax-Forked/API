@@ -1,5 +1,5 @@
 module.exports = {
-    route: (router, database) => {
+    route(router, database) {
         router.get('/games', (req, res) => {
             database.Game.findAll().then((games) => {
                 res.json(games);
@@ -8,12 +8,12 @@ module.exports = {
 
         const loadGame = (req, res, next) => {
             database.Game.findById(req.params.gameId).then((game) => {
-                if(game) {
+                if (game) {
                     req.game = game;
                     next();
                 } else {
                     res.status(404);
-                    res.json({status: 404, error: 'Not Found', message: 'Game Not Found'});
+                    res.json({ status: 404, error: 'Not Found', message: 'Game Not Found' });
                 }
             });
         };
@@ -27,5 +27,5 @@ module.exports = {
         });
 
         // TODO: Add get for game projects
-    }
+    },
 };

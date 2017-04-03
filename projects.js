@@ -1,5 +1,5 @@
 module.exports = {
-    route: (router, database) => {
+    route(router, database) {
         router.get('/projects', (req, res) => {
             database.Project.findAll().then((projects) => {
                 res.json(projects);
@@ -8,12 +8,12 @@ module.exports = {
 
         const loadProject = (req, res, next) => {
             database.Project.findById(req.params.projectId).then((project) => {
-                if(project) {
+                if (project) {
                     req.project = project;
                     next();
                 } else {
                     res.status(404);
-                    res.json({status: 404, error: 'Not Found', message: 'Project Not Found'});
+                    res.json({ status: 404, error: 'Not Found', message: 'Project Not Found' });
                 }
             });
         };
@@ -37,5 +37,5 @@ module.exports = {
                 res.json(projectCategories);
             });
         });
-    }
+    },
 };
