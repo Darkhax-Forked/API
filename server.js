@@ -7,7 +7,7 @@ const games = require('./games');
 
 const app = express();
 
-const httpPort = 1234;
+const httpPort = 3000;
 
 Database.then((database) => {
     const v1router = express.Router();
