@@ -65,6 +65,10 @@ Database.then((database) => {
         res.json({ status: 404, error: 'Not Found', message: 'No such endpoint.' });
     });
 
+    app.all('/ping', (req, res) => {
+        res.send('pong');
+    });
+
     app.listen(httpPort);
 
     console.log(`Magic happens on port ${httpPort}`);
