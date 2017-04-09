@@ -28,7 +28,6 @@ const User = sequelize.define('user', {
     },
     avatar: {
         type: Sequelize.STRING,
-        allowNull: false,
     },
     points: {
         type: Sequelize.INTEGER,

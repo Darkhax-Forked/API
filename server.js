@@ -57,9 +57,11 @@ Database.then((database) => {
     app.use(app.oauth.errorHandler());
     app.use(app.oauth.authorise());*/
 
-    app.get('/', (req, res) => {
+    app.all('/', (req, res) => {
         res.send('Secret area');
     });
+
+    app.use(express.static('public'));
 
     v1router.get('*', (req, res) => {
         res.status(404);

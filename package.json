@@ -4,12 +4,17 @@
   "description": "",
   "main": "server.js",
   "dependencies": {
+    "body-parser": "^1.17.1",
     "express": "^4.15.2",
+    "express-fileupload": "^0.1.2",
     "express-oauth-server": "^2.0.0-b1",
+    "fs-promise": "^2.0.2",
     "mysql": "^2.13.0",
     "oauth2-server": "^2.4.1",
     "promise": "^7.1.1",
-    "sequelize": "^3.30.4"
+    "randomstring": "^1.1.5",
+    "sequelize": "^3.30.4",
+    "sharp": "^0.17.3"
   },
   "devDependencies": {
     "eslint": "^3.19.0",
