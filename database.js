@@ -156,6 +156,7 @@ Project.hasMany(ProjectCategory, { foreignKey: { allowNull: false } });
 module.exports = sequelize.sync().then(() => ({
     sequelize,
     Game,
+    ProjectType,
     Project,
     User,
     ProjectFile,

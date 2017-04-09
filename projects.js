@@ -12,8 +12,7 @@ module.exports = {
                     req.project = project;
                     next();
                 } else {
-                    res.status(404);
-                    res.json({ status: 404, error: 'Not Found', message: 'Project Not Found' });
+                    res.status(404).json({ status: 404, error: 'Not Found', message: 'Project Not Found' });
                 }
             });
         };

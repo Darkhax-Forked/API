@@ -4,6 +4,7 @@ const oauth = require('./oauth');
 const users = require('./users');
 const projects = require('./projects');
 const games = require('./games');
+const projectTypes = require('./project-types');
 
 const app = express();
 
@@ -13,7 +14,7 @@ Database.then((database) => {
     const v1router = express.Router();
     const oauthRouter = express.Router();
 
-    [users, projects, games].forEach(it => it.route(v1router, database));
+    [users, projects, games, projectTypes].forEach(it => it.route(v1router, database));
     oauth.route(oauthRouter);
 
     app.use('/v1', v1router);
