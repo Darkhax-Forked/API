@@ -1,5 +1,11 @@
 module.exports = {
     route(router, database) {
+        const mapUserProps = user => ({
+            id: user.id,
+            username: user.username,
+            avatar: getUserAvatarUrl(user),
+            createdAt: user.createdAt,
+        });
         router.get('/projects', (req, res) => {
             database.Project.findAll().then((projects) => {
                 res.json(projects);
@@ -21,7 +27,7 @@ module.exports = {
 
         router.get('/projects/:projectId/authors', loadProject, (req, res) => {
             req.project.getUsers().then((users) => {
-                res.json(users);
+                res.json(users.map(mapUserProps));
             });
         });
 
