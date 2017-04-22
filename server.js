@@ -6,6 +6,7 @@ const projects = require('./projects');
 const games = require('./games');
 const projectTypes = require('./project-types');
 
+const cors = require("cors");
 const app = express();
 
 const httpPort = 3000;
@@ -13,6 +14,8 @@ const httpPort = 3000;
 Database.then((database) => {
     const v1router = express.Router();
     const oauthRouter = express.Router();
+
+    app.use(cors());
 
     [users, projects, games, projectTypes].forEach(it => it.route(v1router, database));
     oauth.route(oauthRouter);
