@@ -1,10 +1,8 @@
 module.exports = {
     route(router, database) {
         router.get('/games', (req, res) => {
-            let where = {};
             if (req.query.name) {
-                where.name = req.query.name;
-                database.Game.findOne({where: where}).then((game) => {
+                database.Game.findOne({where: {name: req.query.name}}).then((game) => {
                     if (game) {
                         res.json(game);
                     } else {
@@ -12,7 +10,7 @@ module.exports = {
                     }
                 });
             } else {
-                database.Game.findAll({where: where}).then((games) => {
+                database.Game.findAll().then((games) => {
                     res.json(games);
                 });
             }

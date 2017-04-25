@@ -56,12 +56,10 @@ module.exports = {
         });
 
         router.get('/users', (req, res) => {
-            let where = {};
             if (req.query.username) {
-                where.username = req.query.username;
                 database.User.findOne({
                     attributes: ['id', 'username', 'avatar', 'createdAt'],
-                    where: where
+                    where: {username: req.query.username}
                 }).then((user) => {
                     if (user) {
                         res.json(user);
