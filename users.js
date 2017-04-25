@@ -56,9 +56,25 @@ module.exports = {
         });
 
         router.get('/users', (req, res) => {
-            database.User.findAll().then((users) => {
-                res.json(users.map(mapUserProps));
-            });
+            let where = {};
+            if (req.query.username) {
+                where.username = req.query.username;
+                database.User.findOne({
+                    attributes: ['id', 'username', 'avatar', 'createdAt'],
+                    where: where
+                }).then((user) => {
+                    if (user) {
+                        res.json(user);
+                    } else {
+                        res.status(404).json({status: 404, error: 'Not Found', message: 'User Not Found'});
+                    }
+                });
+
+            } else {
+                database.User.findAll({attributes: ['id', 'username', 'avatar', 'createdAt']}).then((users) => {
+                    res.json(users);
+                });
+            }
         });
 
         const loadUser = (req, res, next) => {

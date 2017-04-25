@@ -2,13 +2,20 @@ module.exports = {
     route(router, database) {
         router.get('/games', (req, res) => {
             let where = {};
-            if(req.query.name) {
+            if (req.query.name) {
                 where.name = req.query.name;
+                database.Game.findOne({where: where}).then((game) => {
+                    if (game) {
+                        res.json(game);
+                    } else {
+                        res.status(404).json({ status: 404, error: 'Not Found', message: 'Game Not Found' });
+                    }
+                });
+            } else {
+                database.Game.findAll({where: where}).then((games) => {
+                    res.json(games);
+                });
             }
-            //TODO implement others
-            database.Game.findAll({where: where}).then((games) => {
-                res.json(games);
-            });
         });
 
         const loadGame = (req, res, next) => {
