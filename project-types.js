@@ -24,5 +24,14 @@ module.exports = {
                 res.json(projects);
             });
         });
+        router.get('/projectTypes/:projectTypeId/categories', (req, res) => {
+            database.ProjectTypeCategory.findAll({where:{projectTypeId:req.params.projectTypeId}}).then((projectType) => {
+                if (projectType) {
+                    res.json(projectType);
+                } else {
+                    res.status(404).json({ status: 404, error: 'Not Found', message: 'Project Type Not Found' });
+                }
+            });
+        });
     },
 };
