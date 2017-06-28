@@ -19,3 +19,16 @@ build/Release
 node_modules
 
 public/avatars
+
+*.imo
+*.ipr
+*.iws
+*.iml
+settings.json
+
+/apidoc
+/build
+/out
+/dataSources
+/.gradle
+/.ideaDataSources
