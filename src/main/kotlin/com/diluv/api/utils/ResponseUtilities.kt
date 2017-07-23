@@ -9,7 +9,7 @@ fun RoutingContext.asJSONResponse(statusCode: Int, data: Any): HttpServerRespons
     response.statusCode = statusCode
     response.putHeader("Content-Type", "application/json; charset=utf-8")
     response.putHeader("Access-Control-Allow-Origin", "*")
-    response.putHeader("Access-Control-Allow-Methods", "GET, POST")
+    response.putHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
     response.putHeader("Access-Control-Allow-Headers", "Content-Type, Authorization")
     response.end(Json.encodePrettily(data))
     return response

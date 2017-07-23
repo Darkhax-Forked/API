@@ -29,7 +29,7 @@ import java.util.List;
 @SuppressWarnings({"all", "unchecked", "rawtypes"})
 public class Analyticsbetakey extends TableImpl<AnalyticsbetakeyRecord> {
 
-    private static final long serialVersionUID = -545880683;
+    private static final long serialVersionUID = -468627898;
 
     /**
      * The reference instance of <code>diluv.analyticsBetaKey</code>
@@ -98,14 +98,6 @@ public class Analyticsbetakey extends TableImpl<AnalyticsbetakeyRecord> {
     @Override
     public List<UniqueKey<AnalyticsbetakeyRecord>> getKeys() {
         return Arrays.<UniqueKey<AnalyticsbetakeyRecord>>asList(Keys.KEY_ANALYTICSBETAKEY_PRIMARY);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public List<ForeignKey<AnalyticsbetakeyRecord, ?>> getReferences() {
-        return Arrays.<ForeignKey<AnalyticsbetakeyRecord, ?>>asList(Keys.ANALYTICSBETAKEY_IBFK_1);
     }
 
     /**

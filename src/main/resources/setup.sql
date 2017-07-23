@@ -4,6 +4,8 @@ CREATE TABLE game (
   website     VARCHAR(300)  NOT NULL,
   description VARCHAR(2000) NOT NULL,
 
+  slug        VARCHAR(200)  NOT NULL,
+
   PRIMARY KEY (id)
 );
 
@@ -28,7 +30,6 @@ CREATE TABLE user (
   password      VARCHAR(60)  NOT NULL,
 
   avatar        VARCHAR(500) NOT NULL,
-  points        BIGINT       NOT NULL DEFAULT 0,
 
   verifiedEmail BIT(1)       NOT NULL DEFAULT FALSE,
   mfaEnabled    BIT(1)       NOT NULL DEFAULT FALSE,
@@ -90,8 +91,9 @@ CREATE TABLE projectType (
 CREATE TABLE project (
   id               BIGINT        NOT NULL AUTO_INCREMENT,
   name             VARCHAR(255)  NOT NULL,
-  description      VARCHAR(5000) NOT NULL,
   shortDescription VARCHAR(300)  NOT NULL,
+  description      VARCHAR(5000) NOT NULL,
+  descriptionType  VARCHAR(255)  NOT NULL,
 
   slug             VARCHAR(200)  NOT NULL,
   logo             VARCHAR(255)  NOT NULL,
@@ -115,6 +117,8 @@ CREATE TABLE projectTypeCategory (
   name          VARCHAR(255)  NOT NULL,
   description   VARCHAR(2000) NOT NULL,
 
+  slug          VARCHAR(200)  NOT NULL,
+
   projectTypeId BIGINT        NOT NULL,
 
   PRIMARY KEY (id),
@@ -131,13 +135,15 @@ CREATE TABLE projectCategory (
 );
 
 CREATE TABLE projectMember (
-  id        BIGINT      NOT NULL AUTO_INCREMENT,
+  id         BIGINT      NOT NULL AUTO_INCREMENT,
 
-  role      VARCHAR(50) NOT NULL,
-  createdAt DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  role       VARCHAR(50) NOT NULL,
+  permission BIGINT      NOT NULL,
 
-  projectId BIGINT      NOT NULL,
-  userId    BIGINT      NOT NULL,
+  createdAt  DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+  projectId  BIGINT      NOT NULL,
+  userId     BIGINT      NOT NULL,
   PRIMARY KEY (id),
   FOREIGN KEY (userId) REFERENCES user (id),
   FOREIGN KEY (projectId) REFERENCES project (id)
@@ -148,18 +154,40 @@ CREATE TABLE projectFile (
   sha256      VARCHAR(64)  NOT NULL,
 
   fileName    VARCHAR(255) NOT NULL,
+  displayName VARCHAR(255) NOT NULL,
   size        BIGINT       NOT NULL,
 
+  downloads   BIGINT       NOT NULL DEFAULT 0,
   releaseType VARCHAR(255) NOT NULL,
-  displayName VARCHAR(255) NOT NULL,
-  downloads   BIGINT       NOT NULL,
+  status      VARCHAR(255) NOT NULL,
   createdAt   DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-  parentId    BIGINT       NOT NULL,
+  parentId    BIGINT,
   projectId   BIGINT       NOT NULL,
+  userId      BIGINT       NOT NULL,
+
   PRIMARY KEY (id),
   FOREIGN KEY (parentId) REFERENCES projectFile (id),
-  FOREIGN KEY (projectId) REFERENCES project (id)
+  FOREIGN KEY (projectId) REFERENCES project (id),
+  FOREIGN KEY (userId) REFERENCES user (id)
+);
+
+CREATE TABLE projectFileGameVersion (
+  projectFileId    BIGINT NOT NULL,
+  projectVersionId BIGINT NOT NULL,
+
+  PRIMARY KEY (projectFileId, projectVersionId),
+  FOREIGN KEY (projectFileId) REFERENCES projectFile (id),
+  FOREIGN KEY (projectVersionId) REFERENCES gameVersion (id)
+);
+
+CREATE TABLE projectFileProcessing (
+  projectFileId BIGINT       NOT NULL,
+  status        VARCHAR(255) NOT NULL,
+  startedAt     DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+  PRIMARY KEY (projectFileId),
+  FOREIGN KEY (projectFileId) REFERENCES projectFile (id)
 );
 
 CREATE TABLE projectComment (
@@ -180,16 +208,6 @@ CREATE TABLE projectComment (
   FOREIGN KEY (userId) REFERENCES user (id)
 );
 
-CREATE TABLE projectGameVersion (
-  projectId        BIGINT NOT NULL,
-  projectVersionId BIGINT NOT NULL,
-
-  PRIMARY KEY (projectId, projectVersionId),
-  FOREIGN KEY (projectId) REFERENCES project (id),
-  FOREIGN KEY (projectVersionId) REFERENCES gameVersion (id)
-);
-
-
 CREATE TABLE analyticsAuthAccessToken (
   id           BIGINT       NOT NULL AUTO_INCREMENT,
 
@@ -203,6 +221,7 @@ CREATE TABLE analyticsAuthAccessToken (
   PRIMARY KEY (id),
   FOREIGN KEY (userId) REFERENCES user (id)
 );
+
 CREATE TABLE analyticsAuthMFAToken (
   id        BIGINT       NOT NULL AUTO_INCREMENT,
 
@@ -213,6 +232,7 @@ CREATE TABLE analyticsAuthMFAToken (
   PRIMARY KEY (id),
   FOREIGN KEY (userId) REFERENCES user (id)
 );
+
 CREATE TABLE analyticsBetaKey (
   userID    BIGINT   NOT NULL,
 

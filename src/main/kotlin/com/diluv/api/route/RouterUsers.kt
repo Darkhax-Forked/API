@@ -1,8 +1,11 @@
 package com.diluv.api.route
 
+import com.diluv.api.jwt.JWT
 import com.diluv.api.models.Tables.USER
 import com.diluv.api.models.Tables.USERBETAKEY
-import com.diluv.api.utils.*
+import com.diluv.api.utils.asErrorResponse
+import com.diluv.api.utils.asSuccessResponse
+import com.diluv.api.utils.getAuthorizationToken
 import io.vertx.core.Handler
 import io.vertx.ext.web.Router
 import io.vertx.ext.web.RoutingContext
@@ -17,7 +20,7 @@ class RouterUsers(val conn: Connection) {
 
     fun createRouter(router: Router) {
         router.get("/users").handler(getUsers)
-        router.get("/users/:id").handler(getUserById)
+        router.get("/users/:username").handler(getUserByUsername)
         router.post("/users/generateBetaKey").handler(postCreateBetaKeys)
     }
 
@@ -43,7 +46,6 @@ class RouterUsers(val conn: Connection) {
 
             val userListOut = users.map {
                 mapOf(
-                        "id" to it.get(USER.ID),
                         "username" to it.get(USER.USERNAME),
                         "avatar" to it.get(USER.AVATAR),
                         "createdAt" to it.get(USER.CREATEDAT)
@@ -71,36 +73,23 @@ class RouterUsers(val conn: Connection) {
      * @apiSuccess {String} data.avatar The link to the avatar of the user.
      * @apiSuccess {String} data.createdAt The epoch the user was created at.
      */
-    val getUserById = Handler<RoutingContext> { event ->
-        val id = event.request().getParam("id")
-        try {
-            var userId: Long? = null
-            if (id == "me") {
-                val token = event.getAuthorizationToken()
-                if (token != null) {
-                    if (isTokenValid(conn, token)) {
-                        userId = getPayload(token).getLong("userId")
-                    } else {
-                        event.asErrorResponse(404, "")
-                    }
-                } else {
-                    event.asErrorResponse(404, "")
-                }
-            } else
-                userId = id.toLongOrNull()
-
-            if (userId != null) {
+    val getUserByUsername = Handler<RoutingContext> { event ->
+        val username = event.request().getParam("username")
+        if (username == "me") {
+            val token = event.getAuthorizationToken(conn)
+            if (token != null) {
+                val userId = JWT(token.toString()).data.getLong("userId")
                 val transaction = DSL.using(conn, SQLDialect.MYSQL)
 
-                val user = transaction.select(USER.ID, USER.USERNAME, USER.AVATAR, USER.CREATEDAT)
+                val user = transaction.select(USER.USERNAME, USER.EMAIL, USER.AVATAR, USER.CREATEDAT)
                         .from(USER)
                         .where(USER.ID.eq(userId))
                         .fetchOne()
 
                 if (user != null) {
                     val userOut = mapOf<String, Any>(
-                            "id" to user.get(USER.ID),
                             "username" to user.get(USER.USERNAME),
+                            "email" to user.get(USER.EMAIL),
                             "avatar" to user.get(USER.AVATAR),
                             "createdAt" to user.get(USER.CREATEDAT)
                     )
@@ -109,56 +98,64 @@ class RouterUsers(val conn: Connection) {
                     event.asErrorResponse(404, "User not found")
                 }
             }
-        } catch (e: Exception) {
-            e.printStackTrace()
-            event.asErrorResponse(500, "Internal Error")
+        } else {
+            val transaction = DSL.using(conn, SQLDialect.MYSQL)
+
+            val user = transaction.select(USER.USERNAME, USER.AVATAR, USER.CREATEDAT)
+                    .from(USER)
+                    .where(USER.USERNAME.eq(username))
+                    .fetchOne()
+
+            if (user != null) {
+                val userOut = mapOf<String, Any>(
+                        "username" to user.get(USER.USERNAME),
+                        "avatar" to user.get(USER.AVATAR),
+                        "createdAt" to user.get(USER.CREATEDAT)
+                )
+                event.asSuccessResponse(userOut)
+            } else {
+                event.asErrorResponse(404, "User not found")
+            }
         }
     }
 
     val postCreateBetaKeys = Handler<RoutingContext> { event ->
         val req = event.request()
         req.isExpectMultipart = true
-        val token = event.getAuthorizationToken()
+        val token = event.getAuthorizationToken(conn)
         if (token != null) {
+            val payload = token.data
+            val creationUserId = payload.getLong("userId")
+            val username = payload.getString("username")
+            //TODO Move away from hardcoded
 
-            if (isTokenValid(conn, token)) {
-                val payload = getPayload(token)
-                val creationUserId = payload.getLong("userId")
-                val username = payload.getString("username")
-                //TODO Move away from hardcoded
+            if (username == "lclc98") {
+                req.endHandler({
+                    val userId = req.getFormAttribute("userId").toLongOrNull()
+                    val quantity = req.getFormAttribute("quantity")?.toLong() ?: 1
+                    if (userId != null) {
+                        val random = SecureRandom()
+                        val keyList = arrayListOf<String>()
+                        //TODO Check duplicates
 
-                if (username == "lclc98") {
-                    req.endHandler({
-                        val userId = req.getFormAttribute("userId").toLongOrNull()
-                        val quantity = req.getFormAttribute("quantity")?.toLong() ?: 1
-                        if (userId != null) {
-                            val random = SecureRandom()
-                            val keyList = arrayListOf<String>()
-                            //TODO Check duplicates
+                        val transaction = DSL.using(conn, SQLDialect.MYSQL)
 
-                            val transaction = DSL.using(conn, SQLDialect.MYSQL)
+                        val insertInto = transaction.insertInto(USERBETAKEY, USERBETAKEY.USERID, USERBETAKEY.BETAKEY, USERBETAKEY.CREATIONUSERID)
 
-                            val insertInto = transaction.insertInto(USERBETAKEY, USERBETAKEY.USERID, USERBETAKEY.BETAKEY, USERBETAKEY.CREATIONUSERID)
-
-                            for (i in 0 until quantity) {
-                                val key = BigInteger(130, random).toString(32)
-                                insertInto.values(userId, key, creationUserId)
-                                keyList.add(key)
-                            }
-                            insertInto.execute()
-                            event.asSuccessResponse(keyList)
-                        } else {
-                            event.asErrorResponse(400, "The target userId is needed for this request")
+                        for (i in 0 until quantity) {
+                            val key = BigInteger(130, random).toString(32)
+                            insertInto.values(userId, key, creationUserId)
+                            keyList.add(key)
                         }
-                    })
-                } else {
-                    event.asErrorResponse(403, "User not authorized to make request")
-                }
+                        insertInto.execute()
+                        event.asSuccessResponse(keyList)
+                    } else {
+                        event.asErrorResponse(400, "The target userId is needed for this request")
+                    }
+                })
             } else {
-                event.asErrorResponse(403, "Token not authorized to make request")
+                event.asErrorResponse(403, "User not authorized to make request")
             }
-        } else {
-            event.asErrorResponse(401, "Token is needed to make this request")
         }
     }
 }

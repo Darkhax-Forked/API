@@ -29,7 +29,7 @@ import java.util.List;
 @SuppressWarnings({"all", "unchecked", "rawtypes"})
 public class Analyticsauthaccesstoken extends TableImpl<AnalyticsauthaccesstokenRecord> {
 
-    private static final long serialVersionUID = -2070584016;
+    private static final long serialVersionUID = -1145923113;
 
     /**
      * The reference instance of <code>diluv.analyticsAuthAccessToken</code>
@@ -121,14 +121,6 @@ public class Analyticsauthaccesstoken extends TableImpl<Analyticsauthaccesstoken
     @Override
     public List<UniqueKey<AnalyticsauthaccesstokenRecord>> getKeys() {
         return Arrays.<UniqueKey<AnalyticsauthaccesstokenRecord>>asList(Keys.KEY_ANALYTICSAUTHACCESSTOKEN_PRIMARY);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public List<ForeignKey<AnalyticsauthaccesstokenRecord, ?>> getReferences() {
-        return Arrays.<ForeignKey<AnalyticsauthaccesstokenRecord, ?>>asList(Keys.ANALYTICSAUTHACCESSTOKEN_IBFK_1);
     }
 
     /**

@@ -32,3 +32,5 @@ settings.json
 /dataSources
 /.gradle
 /.ideaDataSources
+
+/file-uploads

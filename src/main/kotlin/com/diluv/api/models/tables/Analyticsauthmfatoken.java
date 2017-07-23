@@ -29,7 +29,7 @@ import java.util.List;
 @SuppressWarnings({"all", "unchecked", "rawtypes"})
 public class Analyticsauthmfatoken extends TableImpl<AnalyticsauthmfatokenRecord> {
 
-    private static final long serialVersionUID = -600617642;
+    private static final long serialVersionUID = -164055975;
 
     /**
      * The reference instance of <code>diluv.analyticsAuthMFAToken</code>
@@ -116,14 +116,6 @@ public class Analyticsauthmfatoken extends TableImpl<AnalyticsauthmfatokenRecord
     @Override
     public List<UniqueKey<AnalyticsauthmfatokenRecord>> getKeys() {
         return Arrays.<UniqueKey<AnalyticsauthmfatokenRecord>>asList(Keys.KEY_ANALYTICSAUTHMFATOKEN_PRIMARY);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public List<ForeignKey<AnalyticsauthmfatokenRecord, ?>> getReferences() {
-        return Arrays.<ForeignKey<AnalyticsauthmfatokenRecord, ?>>asList(Keys.ANALYTICSAUTHMFATOKEN_IBFK_1);
     }
 
     /**

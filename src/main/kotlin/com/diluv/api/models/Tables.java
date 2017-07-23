@@ -78,9 +78,14 @@ public class Tables {
     public static final Projectfile PROJECTFILE = com.diluv.api.models.tables.Projectfile.PROJECTFILE;
 
     /**
-     * The table <code>diluv.projectGameVersion</code>.
+     * The table <code>diluv.projectFileGameVersion</code>.
      */
-    public static final Projectgameversion PROJECTGAMEVERSION = com.diluv.api.models.tables.Projectgameversion.PROJECTGAMEVERSION;
+    public static final Projectfilegameversion PROJECTFILEGAMEVERSION = com.diluv.api.models.tables.Projectfilegameversion.PROJECTFILEGAMEVERSION;
+
+    /**
+     * The table <code>diluv.projectFileProcessing</code>.
+     */
+    public static final Projectfileprocessing PROJECTFILEPROCESSING = com.diluv.api.models.tables.Projectfileprocessing.PROJECTFILEPROCESSING;
 
     /**
      * The table <code>diluv.projectMember</code>.

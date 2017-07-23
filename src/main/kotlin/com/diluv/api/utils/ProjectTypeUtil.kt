@@ -5,8 +5,8 @@ import org.jooq.SQLDialect
 import org.jooq.impl.DSL
 import java.sql.Connection
 
-fun getCategoriesByProjectTypeId(conn: Connection, projectTypeId: Long): List<Map<String, Any>> {
-    val transaction = DSL.using(conn, SQLDialect.MYSQL)
+fun Connection.getCategoriesByProjectTypeId(projectTypeId: Long): List<Map<String, Any>> {
+    val transaction = DSL.using(this, SQLDialect.MYSQL)
     val dbUserProject = transaction.select(PROJECTTYPECATEGORY.ID, PROJECTTYPECATEGORY.NAME, PROJECTTYPECATEGORY.DESCRIPTION)
             .from(PROJECTTYPECATEGORY)
             .where(PROJECTTYPECATEGORY.PROJECTTYPEID.eq(projectTypeId))
@@ -15,18 +15,17 @@ fun getCategoriesByProjectTypeId(conn: Connection, projectTypeId: Long): List<Ma
     if (dbUserProject != null) {
         return dbUserProject.map {
             mapOf(
-                    "id" to it.get(PROJECTTYPECATEGORY.ID),
                     "name" to it.get(PROJECTTYPECATEGORY.NAME),
                     "description" to it.get(PROJECTTYPECATEGORY.DESCRIPTION),
-                    "slug" to "/test"
+                    "slug" to it.get(PROJECTTYPECATEGORY.SLUG)
             )
         }
     }
     return listOf()
 }
 
-fun getProjectsByProjectTypeId(conn: Connection, projectTypeId: Long): List<Map<String, Any>> {
-    val transaction = DSL.using(conn, SQLDialect.MYSQL)
+fun Connection.getProjectsByProjectTypeId(projectTypeId: Long): List<Map<String, Any>> {
+    val transaction = DSL.using(this, SQLDialect.MYSQL)
     val dbUserProject = transaction.select(PROJECT.ID)
             .from(PROJECT)
             .where(PROJECT.PROJECTTYPEID.eq(projectTypeId))
@@ -34,14 +33,14 @@ fun getProjectsByProjectTypeId(conn: Connection, projectTypeId: Long): List<Map<
 
     if (dbUserProject != null) {
         return dbUserProject.map {
-            getProjectById(conn, it.get(PROJECT.ID))
+            this.getProjectById(it.get(PROJECT.ID))
         }
     }
     return listOf()
 }
 
-fun getProjectTypeById(conn: Connection, projectTypeId: Long): Map<String, Any> {
-    val transaction = DSL.using(conn, SQLDialect.MYSQL)
+fun Connection.getProjectTypeById(projectTypeId: Long): Map<String, Any> {
+    val transaction = DSL.using(this, SQLDialect.MYSQL)
     val dbUserProject = transaction.select(PROJECTTYPE.ID, PROJECTTYPE.NAME, PROJECTTYPE.DESCRIPTION, PROJECTTYPE.SLUG)
             .from(PROJECTTYPE)
             .where(PROJECTTYPE.ID.eq(projectTypeId))
@@ -49,12 +48,23 @@ fun getProjectTypeById(conn: Connection, projectTypeId: Long): Map<String, Any> 
 
     if (dbUserProject != null) {
         return mapOf(
-                "id" to dbUserProject.get(PROJECTTYPE.ID),
                 "name" to dbUserProject.get(PROJECTTYPE.NAME),
                 "description" to dbUserProject.get(PROJECTTYPE.DESCRIPTION),
                 "slug" to dbUserProject.get(PROJECTTYPE.SLUG),
-                "categories" to getCategoriesByProjectTypeId(conn, dbUserProject.get(PROJECTTYPE.ID))
+                "categories" to this.getCategoriesByProjectTypeId(dbUserProject.get(PROJECTTYPE.ID))
         )
     }
     return mapOf()
+}
+
+fun Connection.getProjectTypeIdBySlug(projectTypeSlug: String): Long? {
+    val transaction = DSL.using(this, SQLDialect.MYSQL)
+
+    val dbGame = transaction.select(PROJECTTYPE.ID)
+            .from(PROJECTTYPE)
+            .where(PROJECTTYPE.SLUG.eq(projectTypeSlug))
+            .fetchOne()
+    if (dbGame != null)
+        return dbGame.get(PROJECTTYPE.ID)
+    return null
 }

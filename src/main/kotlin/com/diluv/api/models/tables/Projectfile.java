@@ -29,7 +29,7 @@ import java.util.List;
 @SuppressWarnings({"all", "unchecked", "rawtypes"})
 public class Projectfile extends TableImpl<ProjectfileRecord> {
 
-    private static final long serialVersionUID = -1523297785;
+    private static final long serialVersionUID = 892226905;
 
     /**
      * The reference instance of <code>diluv.projectFile</code>
@@ -60,9 +60,19 @@ public class Projectfile extends TableImpl<ProjectfileRecord> {
     public final TableField<ProjectfileRecord, String> FILENAME = createField("fileName", org.jooq.impl.SQLDataType.VARCHAR.length(255).nullable(false), this, "");
 
     /**
+     * The column <code>diluv.projectFile.displayName</code>.
+     */
+    public final TableField<ProjectfileRecord, String> DISPLAYNAME = createField("displayName", org.jooq.impl.SQLDataType.VARCHAR.length(255).nullable(false), this, "");
+
+    /**
      * The column <code>diluv.projectFile.size</code>.
      */
     public final TableField<ProjectfileRecord, Long> SIZE = createField("size", org.jooq.impl.SQLDataType.BIGINT.nullable(false), this, "");
+
+    /**
+     * The column <code>diluv.projectFile.downloads</code>.
+     */
+    public final TableField<ProjectfileRecord, Long> DOWNLOADS = createField("downloads", org.jooq.impl.SQLDataType.BIGINT.nullable(false).defaultValue(org.jooq.impl.DSL.inline("0", org.jooq.impl.SQLDataType.BIGINT)), this, "");
 
     /**
      * The column <code>diluv.projectFile.releaseType</code>.
@@ -70,14 +80,9 @@ public class Projectfile extends TableImpl<ProjectfileRecord> {
     public final TableField<ProjectfileRecord, String> RELEASETYPE = createField("releaseType", org.jooq.impl.SQLDataType.VARCHAR.length(255).nullable(false), this, "");
 
     /**
-     * The column <code>diluv.projectFile.displayName</code>.
+     * The column <code>diluv.projectFile.status</code>.
      */
-    public final TableField<ProjectfileRecord, String> DISPLAYNAME = createField("displayName", org.jooq.impl.SQLDataType.VARCHAR.length(255).nullable(false), this, "");
-
-    /**
-     * The column <code>diluv.projectFile.downloads</code>.
-     */
-    public final TableField<ProjectfileRecord, Long> DOWNLOADS = createField("downloads", org.jooq.impl.SQLDataType.BIGINT.nullable(false), this, "");
+    public final TableField<ProjectfileRecord, String> STATUS = createField("status", org.jooq.impl.SQLDataType.VARCHAR.length(255).nullable(false), this, "");
 
     /**
      * The column <code>diluv.projectFile.createdAt</code>.
@@ -87,12 +92,17 @@ public class Projectfile extends TableImpl<ProjectfileRecord> {
     /**
      * The column <code>diluv.projectFile.parentId</code>.
      */
-    public final TableField<ProjectfileRecord, Long> PARENTID = createField("parentId", org.jooq.impl.SQLDataType.BIGINT.nullable(false), this, "");
+    public final TableField<ProjectfileRecord, Long> PARENTID = createField("parentId", org.jooq.impl.SQLDataType.BIGINT, this, "");
 
     /**
      * The column <code>diluv.projectFile.projectId</code>.
      */
     public final TableField<ProjectfileRecord, Long> PROJECTID = createField("projectId", org.jooq.impl.SQLDataType.BIGINT.nullable(false), this, "");
+
+    /**
+     * The column <code>diluv.projectFile.userId</code>.
+     */
+    public final TableField<ProjectfileRecord, Long> USERID = createField("userId", org.jooq.impl.SQLDataType.BIGINT.nullable(false), this, "");
 
     /**
      * Create a <code>diluv.projectFile</code> table reference

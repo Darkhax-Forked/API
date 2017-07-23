@@ -1,7 +1,7 @@
 package com.diluv.api.route
 
+import com.diluv.api.models.Tables
 import com.diluv.api.models.Tables.GAME
-import com.diluv.api.models.Tables.PROJECT
 import com.diluv.api.utils.*
 import io.vertx.core.Handler
 import io.vertx.ext.web.Router
@@ -14,11 +14,11 @@ class RouterGames(val conn: Connection) {
 
     fun createRouter(router: Router) {
         router.get("/games").handler(getGames)
-        router.get("/games/:gameId").handler(getGameById)
+        router.get("/games/:gameSlug").handler(getGameBySlug)
         //TODO add endpoint to get projects for a certain game
-        router.get("/games/:gameId/projectTypes").handler(getProjectTypesByGameId)
-        router.get("/games/:gameId/projectTypes/:projectTypeId").handler(getProjectTypeByProjectTypeIdByGameId)
-        router.get("/games/:gameId/projectTypes/:projectTypeId/projects").handler(getProjectsByProjectTypeIdByGameId)
+        router.get("/games/:gameSlug/projectTypes").handler(getProjectTypesByGameSlug)
+        router.get("/games/:gameSlug/projectTypes/:projectTypeSlug").handler(getProjectTypeByProjectTypeSlugByGameSlug)
+        router.get("/games/:gameSlug/projectTypes/:projectTypeSlug/projects").handler(getProjectsByProjectTypeSlugByGameSlug)
     }
 
     /**
@@ -43,7 +43,7 @@ class RouterGames(val conn: Connection) {
                 .fetch()
 
         val gameListOut = dbGame.map {
-            getGameById(conn, it.get(PROJECT.ID))
+            conn.getGameById(it.get(GAME.ID))
         }
         event.asSuccessResponse(gameListOut)
     }
@@ -63,17 +63,22 @@ class RouterGames(val conn: Connection) {
      * @apiSuccess {String} data.website The link to the game website.
      * @apiSuccess {String} data.description A description of the game.
      */
-    val getGameById = Handler<RoutingContext> { event ->
-        val gameId = event.request().getParam("gameId").toLongOrNull()
+    val getGameBySlug = Handler<RoutingContext> { event ->
+        val gameSlug = event.request().getParam("gameSlug")
 
-        if (gameId != null) {
-            val gameObj = getGameById(conn, gameId)
-            if (!gameObj.isEmpty())
-                event.asSuccessResponse(gameObj)
-            else
-                event.asErrorResponse(404, "Game not found")
+        if (gameSlug != null) {
+            val gameId = conn.getGameIdBySlug(gameSlug)
+            if (gameId != null) {
+                val gameObj = conn.getGameById(gameId)
+                if (!gameObj.isEmpty())
+                    event.asSuccessResponse(gameObj)
+                else
+                    event.asErrorResponse(404, "Game not found")
+            } else {
+                event.asErrorResponse(401, "Game not found")
+            }
         } else {
-            event.asErrorResponse(401, "Id is needed for this request")
+            event.asErrorResponse(401, "Slug is needed for this request")
         }
     }
 
@@ -90,36 +95,87 @@ class RouterGames(val conn: Connection) {
      * @apiSuccess {String} data.name The name of the project type.
      * @apiSuccess {String} data.description A description of the project type.
      */
-    val getProjectTypesByGameId = Handler<RoutingContext> { event ->
-        val gameId = event.request().getParam("gameId").toLongOrNull()
+    val getProjectTypesByGameSlug = Handler<RoutingContext> { event ->
+        val gameSlug = event.request().getParam("gameSlug")
 
-        if (gameId != null) {
-            event.asSuccessResponse(getProjectTypesByGameId(conn, gameId))
+        if (gameSlug != null) {
+            val gameId = conn.getGameIdBySlug(gameSlug)
+            if (gameId != null) {
+                event.asSuccessResponse(conn.getProjectTypesByGameId(gameId))
+            } else {
+                event.asErrorResponse(401, "Game not found")
+            }
         } else {
-            event.asErrorResponse(401, "An id is needed")
+            event.asErrorResponse(401, "A slug is needed")
         }
     }
 
-    val getProjectTypeByProjectTypeIdByGameId = Handler<RoutingContext> { event ->
-        val gameId = event.request().getParam("gameId").toLongOrNull()
-        val projectTypeId = event.request().getParam("projectTypeId").toLongOrNull()
+    val getProjectTypeByProjectTypeSlugByGameSlug = Handler<RoutingContext> { event ->
+        val gameSlug = event.request().getParam("gameSlug")
+        val projectTypeSlug = event.request().getParam("projectTypeSlug")
 
-        if (gameId != null && projectTypeId != null) {
-            event.asSuccessResponse(getProjectTypeById(conn, projectTypeId))
+        if (gameSlug != null && projectTypeSlug != null) {
+            val projectTypeId = conn.getProjectTypeIdBySlug(projectTypeSlug)
+            if (projectTypeId != null) {
+                event.asSuccessResponse(conn.getProjectTypeById(projectTypeId))
+            } else {
+                event.asErrorResponse(401, "Project type not found")
+            }
         } else {
-            event.asErrorResponse(401, "An id is needed")
+            event.asErrorResponse(401, "A slug is needed")
         }
     }
 
 
-    val getProjectsByProjectTypeIdByGameId = Handler<RoutingContext> { event ->
-        val gameId = event.request().getParam("gameId").toLongOrNull()
-        val projectTypeId = event.request().getParam("projectTypeId").toLongOrNull()
+    val getProjectsByProjectTypeSlugByGameSlug = Handler<RoutingContext> { event ->
+        val gameSlug = event.request().getParam("gameSlug")
+        val projectTypeSlug = event.request().getParam("projectTypeSlug")
 
-        if (gameId != null && projectTypeId != null) {
-            event.asSuccessResponse(getProjectsByProjectTypeId(conn, projectTypeId))
+        if (gameSlug != null && projectTypeSlug != null) {
+            val projectTypeId = conn.getProjectTypeIdBySlug(projectTypeSlug)
+            if (projectTypeId != null) {
+
+                val req = event.request()
+                val transaction = DSL.using(conn, SQLDialect.MYSQL)
+
+                val inputPerPage = req.getParam("perPage")
+
+                val dbProjectCount = transaction.select(DSL.count())
+                        .from(Tables.PROJECT)
+                        .where(Tables.PROJECT.PROJECTTYPEID.eq(projectTypeId))
+                        .fetchOne(0, Int::class.java)
+
+                val inputPage = req.getParam("page")
+                val inputOrder = req.getParam("order")
+                val inputOrderBy = req.getParam("orderBy")
+
+                getPageDetails(inputPage, inputPerPage, dbProjectCount, { page, offset, perPage, totalPageCount ->
+                    val dbProject = transaction.select(Tables.PROJECT.ID)
+                            .from(Tables.PROJECT)
+                            .where(Tables.PROJECT.PROJECTTYPEID.eq(projectTypeId))
+                            .orderBy(Tables.PROJECT.CREATEDAT.desc())
+                            .limit(offset, perPage)
+                            .fetch()
+
+                    val gameListOut = dbProject.map {
+                        conn.getProjectById(it.get(Tables.PROJECT.ID))
+                    }
+
+                    val ouputData = mapOf(
+                            "data" to gameListOut,
+                            "page" to page,
+                            "order" to "desc",
+                            "orderBy" to "newest",
+                            "perPage" to perPage,
+                            "totalPageCount" to totalPageCount
+                    )
+                    event.asSuccessResponse(ouputData)
+                })
+            } else {
+                event.asErrorResponse(401, "Project type not found")
+            }
         } else {
-            event.asErrorResponse(401, "An id is needed")
+            event.asErrorResponse(401, "A slug is needed")
         }
     }
 }

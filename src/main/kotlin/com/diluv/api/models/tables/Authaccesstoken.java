@@ -28,7 +28,7 @@ import java.util.List;
 @SuppressWarnings({"all", "unchecked", "rawtypes"})
 public class Authaccesstoken extends TableImpl<AuthaccesstokenRecord> {
 
-    private static final long serialVersionUID = -1784303744;
+    private static final long serialVersionUID = -279788331;
 
     /**
      * The reference instance of <code>diluv.authAccessToken</code>
@@ -102,14 +102,6 @@ public class Authaccesstoken extends TableImpl<AuthaccesstokenRecord> {
     @Override
     public List<UniqueKey<AuthaccesstokenRecord>> getKeys() {
         return Arrays.<UniqueKey<AuthaccesstokenRecord>>asList(Keys.KEY_AUTHACCESSTOKEN_PRIMARY, Keys.KEY_AUTHACCESSTOKEN_REFRESHTOKEN);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public List<ForeignKey<AuthaccesstokenRecord, ?>> getReferences() {
-        return Arrays.<ForeignKey<AuthaccesstokenRecord, ?>>asList(Keys.AUTHACCESSTOKEN_IBFK_1);
     }
 
     /**

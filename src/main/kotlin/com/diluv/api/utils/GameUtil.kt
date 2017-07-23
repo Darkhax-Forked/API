@@ -5,29 +5,29 @@ import org.jooq.SQLDialect
 import org.jooq.impl.DSL
 import java.sql.Connection
 
-fun getGameById(conn: Connection, gameId: Long): Map<String, Any> {
-    val transaction = DSL.using(conn, SQLDialect.MYSQL)
+fun Connection.getGameById(gameId: Long): Map<String, Any> {
+    val transaction = DSL.using(this, SQLDialect.MYSQL)
 
-    val gameOut = transaction.select(GAME.ID, GAME.NAME, GAME.WEBSITE, GAME.DESCRIPTION)
+    val gameOut = transaction.select(GAME.ID, GAME.NAME, GAME.WEBSITE, GAME.DESCRIPTION, GAME.SLUG)
             .from(GAME)
             .where(GAME.ID.eq(gameId))
             .fetchOne()
     if (gameOut != null) {
         return mapOf(
-                "id" to gameOut.get(GAME.ID),
                 "name" to gameOut.get(GAME.NAME),
                 "website" to gameOut.get(GAME.WEBSITE),
                 "description" to gameOut.get(GAME.DESCRIPTION),
-                "versions" to getGameVersionsByGameId(conn, gameId),
-                "projectTypes" to getProjectTypesByGameId(conn, gameId)
+                "slug" to gameOut.get(GAME.SLUG),
+                "versions" to this.getGameVersionsByGameId(gameId),
+                "projectTypes" to this.getProjectTypesByGameId(gameId)
         )
     } else {
         return mapOf()
     }
 }
 
-fun getGameVersionsByGameId(conn: Connection, gameId: Long): List<Map<String, Any>> {
-    val transaction = DSL.using(conn, SQLDialect.MYSQL)
+fun Connection.getGameVersionsByGameId(gameId: Long): List<Map<String, Any>> {
+    val transaction = DSL.using(this, SQLDialect.MYSQL)
 
     val gameOut = transaction.select(GAMEVERSION.VERSION, GAMEVERSION.WEBSITE, GAMEVERSION.CREATEDAT)
             .from(GAMEVERSION)
@@ -48,8 +48,8 @@ fun getGameVersionsByGameId(conn: Connection, gameId: Long): List<Map<String, An
     }
 }
 
-fun getProjectTypesByGameId(conn: Connection, gameId: Long): List<Map<String, Any?>> {
-    val transaction = DSL.using(conn, SQLDialect.MYSQL)
+fun Connection.getProjectTypesByGameId(gameId: Long): List<Map<String, Any?>> {
+    val transaction = DSL.using(this, SQLDialect.MYSQL)
 
     val dbProjectType = transaction.select(PROJECTTYPE.ID)
             .from(PROJECTTYPE)
@@ -57,7 +57,7 @@ fun getProjectTypesByGameId(conn: Connection, gameId: Long): List<Map<String, An
             .fetch()
 
     val projectTypeListOut = dbProjectType.map {
-        getProjectTypeById(conn, it.get(PROJECTTYPE.ID))
+        this.getProjectTypeById(it.get(PROJECTTYPE.ID))
     }
 
     if (projectTypeListOut != null) {
@@ -65,4 +65,16 @@ fun getProjectTypesByGameId(conn: Connection, gameId: Long): List<Map<String, An
     } else {
         return listOf()
     }
+}
+
+fun Connection.getGameIdBySlug(gameSlug: String): Long? {
+    val transaction = DSL.using(this, SQLDialect.MYSQL)
+
+    val dbGame = transaction.select(GAME.ID)
+            .from(GAME)
+            .where(GAME.SLUG.eq(gameSlug))
+            .fetchOne()
+    if (dbGame != null)
+        return dbGame.get(GAME.ID)
+    return null
 }

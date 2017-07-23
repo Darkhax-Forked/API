@@ -28,7 +28,7 @@ import java.util.List;
 @SuppressWarnings({"all", "unchecked", "rawtypes"})
 public class Game extends TableImpl<GameRecord> {
 
-    private static final long serialVersionUID = -1510548307;
+    private static final long serialVersionUID = -502237312;
 
     /**
      * The reference instance of <code>diluv.game</code>
@@ -62,6 +62,11 @@ public class Game extends TableImpl<GameRecord> {
      * The column <code>diluv.game.description</code>.
      */
     public final TableField<GameRecord, String> DESCRIPTION = createField("description", org.jooq.impl.SQLDataType.VARCHAR.length(2000).nullable(false), this, "");
+
+    /**
+     * The column <code>diluv.game.slug</code>.
+     */
+    public final TableField<GameRecord, String> SLUG = createField("slug", org.jooq.impl.SQLDataType.VARCHAR.length(200).nullable(false), this, "");
 
     /**
      * Create a <code>diluv.game</code> table reference

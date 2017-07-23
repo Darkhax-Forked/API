@@ -28,7 +28,7 @@ import java.util.List;
 @SuppressWarnings({"all", "unchecked", "rawtypes"})
 public class Projecttypecategory extends TableImpl<ProjecttypecategoryRecord> {
 
-    private static final long serialVersionUID = 1016405332;
+    private static final long serialVersionUID = -1918622631;
 
     /**
      * The reference instance of <code>diluv.projectTypeCategory</code>
@@ -57,6 +57,11 @@ public class Projecttypecategory extends TableImpl<ProjecttypecategoryRecord> {
      * The column <code>diluv.projectTypeCategory.description</code>.
      */
     public final TableField<ProjecttypecategoryRecord, String> DESCRIPTION = createField("description", org.jooq.impl.SQLDataType.VARCHAR.length(2000).nullable(false), this, "");
+
+    /**
+     * The column <code>diluv.projectTypeCategory.slug</code>.
+     */
+    public final TableField<ProjecttypecategoryRecord, String> SLUG = createField("slug", org.jooq.impl.SQLDataType.VARCHAR.length(200).nullable(false), this, "");
 
     /**
      * The column <code>diluv.projectTypeCategory.projectTypeId</code>.

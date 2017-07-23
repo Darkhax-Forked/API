@@ -29,7 +29,7 @@ import java.util.List;
 @SuppressWarnings({"all", "unchecked", "rawtypes"})
 public class Project extends TableImpl<ProjectRecord> {
 
-    private static final long serialVersionUID = -743995932;
+    private static final long serialVersionUID = -486451747;
 
     /**
      * The reference instance of <code>diluv.project</code>
@@ -55,14 +55,19 @@ public class Project extends TableImpl<ProjectRecord> {
     public final TableField<ProjectRecord, String> NAME = createField("name", org.jooq.impl.SQLDataType.VARCHAR.length(255).nullable(false), this, "");
 
     /**
+     * The column <code>diluv.project.shortDescription</code>.
+     */
+    public final TableField<ProjectRecord, String> SHORTDESCRIPTION = createField("shortDescription", org.jooq.impl.SQLDataType.VARCHAR.length(300).nullable(false), this, "");
+
+    /**
      * The column <code>diluv.project.description</code>.
      */
     public final TableField<ProjectRecord, String> DESCRIPTION = createField("description", org.jooq.impl.SQLDataType.VARCHAR.length(5000).nullable(false), this, "");
 
     /**
-     * The column <code>diluv.project.shortDescription</code>.
+     * The column <code>diluv.project.descriptionType</code>.
      */
-    public final TableField<ProjectRecord, String> SHORTDESCRIPTION = createField("shortDescription", org.jooq.impl.SQLDataType.VARCHAR.length(300).nullable(false), this, "");
+    public final TableField<ProjectRecord, String> DESCRIPTIONTYPE = createField("descriptionType", org.jooq.impl.SQLDataType.VARCHAR.length(255).nullable(false), this, "");
 
     /**
      * The column <code>diluv.project.slug</code>.
@@ -163,7 +168,7 @@ public class Project extends TableImpl<ProjectRecord> {
      */
     @Override
     public List<ForeignKey<ProjectRecord, ?>> getReferences() {
-        return Arrays.<ForeignKey<ProjectRecord, ?>>asList(Keys.PROJECT_IBFK_1, Keys.PROJECT_IBFK_2);
+        return Arrays.<ForeignKey<ProjectRecord, ?>>asList(Keys.PROJECT_IBFK_1);
     }
 
     /**

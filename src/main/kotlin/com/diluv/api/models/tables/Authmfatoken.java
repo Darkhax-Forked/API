@@ -28,7 +28,7 @@ import java.util.List;
 @SuppressWarnings({"all", "unchecked", "rawtypes"})
 public class Authmfatoken extends TableImpl<AuthmfatokenRecord> {
 
-    private static final long serialVersionUID = 150004798;
+    private static final long serialVersionUID = 1621089343;
 
     /**
      * The reference instance of <code>diluv.authMFAToken</code>
@@ -97,14 +97,6 @@ public class Authmfatoken extends TableImpl<AuthmfatokenRecord> {
     @Override
     public List<UniqueKey<AuthmfatokenRecord>> getKeys() {
         return Arrays.<UniqueKey<AuthmfatokenRecord>>asList(Keys.KEY_AUTHMFATOKEN_PRIMARY);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public List<ForeignKey<AuthmfatokenRecord, ?>> getReferences() {
-        return Arrays.<ForeignKey<AuthmfatokenRecord, ?>>asList(Keys.AUTHMFATOKEN_IBFK_1);
     }
 
     /**
