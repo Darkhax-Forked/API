@@ -76,7 +76,7 @@ class RouterUsers(val conn: Connection) {
     val getUserByUsername = Handler<RoutingContext> { event ->
         val username = event.request().getParam("username")
         if (username == "me") {
-            val token = event.getAuthorizationToken(conn)
+            val token = event.getAuthorizationToken(conn, true)
             if (token != null) {
                 val userId = JWT(token.toString()).data.getLong("userId")
                 val transaction = DSL.using(conn, SQLDialect.MYSQL)
@@ -122,7 +122,7 @@ class RouterUsers(val conn: Connection) {
     val postCreateBetaKeys = Handler<RoutingContext> { event ->
         val req = event.request()
         req.isExpectMultipart = true
-        val token = event.getAuthorizationToken(conn)
+        val token = event.getAuthorizationToken(conn, true)
         if (token != null) {
             val payload = token.data
             val creationUserId = payload.getLong("userId")

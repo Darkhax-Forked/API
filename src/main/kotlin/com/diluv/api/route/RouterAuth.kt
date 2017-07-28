@@ -132,7 +132,7 @@ class RouterAuth(val conn: Connection) {
     }
 
     val getMFA = Handler<RoutingContext> { event ->
-        val token = event.getAuthorizationToken(conn)
+        val token = event.getAuthorizationToken(conn, true)
         if (token != null) {
             val tokenText = token.toString()
             val transaction = DSL.using(conn, SQLDialect.MYSQL)
@@ -162,7 +162,7 @@ class RouterAuth(val conn: Connection) {
 
     val getRefreshToken = Handler<RoutingContext> { event ->
         //TODO DB valid check fix
-        val refreshToken = event.getAuthorizationToken(conn)
+        val refreshToken = event.getAuthorizationToken(conn, false)
         if (refreshToken != null) {
             val transaction = DSL.using(conn, SQLDialect.MYSQL)
 

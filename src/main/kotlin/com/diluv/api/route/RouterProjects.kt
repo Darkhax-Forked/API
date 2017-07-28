@@ -1,14 +1,11 @@
 package com.diluv.api.route
 
-import com.diluv.api.models.Tables.PROJECT
 import com.diluv.api.utils.*
 import com.diluv.catalejo.Catalejo
 import io.vertx.core.Handler
 import io.vertx.ext.web.Router
 import io.vertx.ext.web.RoutingContext
 import io.vertx.ext.web.handler.BodyHandler
-import org.jooq.SQLDialect
-import org.jooq.impl.DSL
 import java.io.File
 import java.sql.Connection
 
@@ -40,7 +37,7 @@ class RouterProjects(val conn: Connection) {
     val postProjects = Handler<RoutingContext> { event ->
         val req = event.request()
 
-        val token = event.getAuthorizationToken(conn)
+        val token = event.getAuthorizationToken(conn, false)
         if (token != null) {
             val userId = token.data.getLong("userId")
 
@@ -72,8 +69,6 @@ class RouterProjects(val conn: Connection) {
             } else {
                 event.asErrorResponse(404, errorMessage)
             }
-        } else {
-            event.asErrorResponse(404, "No token?")
         }
     }
 
@@ -83,7 +78,7 @@ class RouterProjects(val conn: Connection) {
         if (projectSlug != null) {
             val projectId = conn.getProjectIdBySlug(projectSlug)
             if (projectId != null) {
-                val token = event.getAuthorizationToken(conn)
+                val token = event.getAuthorizationToken(conn, true)
                 val projectObj = conn.getProjectById(projectId, token)
                 if (!projectObj.isEmpty()) {
                     event.asSuccessResponse(projectObj)
@@ -136,7 +131,7 @@ class RouterProjects(val conn: Connection) {
         if (projectSlug != null) {
             val req = event.request()
 
-            val token = event.getAuthorizationToken(conn)
+            val token = event.getAuthorizationToken(conn, true)
             if (token != null) {
                 val payload = token.data
                 val userId = payload.getLong("userId")

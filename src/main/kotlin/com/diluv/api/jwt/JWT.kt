@@ -1,14 +1,17 @@
 package com.diluv.api.jwt
 
+import com.diluv.api.models.Tables
 import io.vertx.core.json.JsonObject
-import java.util.*
-
+import org.apache.commons.codec.binary.Base64
+import org.jooq.SQLDialect
+import org.jooq.impl.DSL
+import java.sql.Connection
 
 class JWT() {
     constructor(token: String) : this() {
         val segment = token.split("\\.".toRegex())
-        val header = JsonObject(String(Base64.getUrlDecoder().decode(segment[0])))
-        val payload = JsonObject(String(Base64.getUrlDecoder().decode(segment[1])))
+        val header = JsonObject(String(Base64.decodeBase64(segment[0])))
+        val payload = JsonObject(String(Base64.decodeBase64(segment[1])))
 
         this.text = token
         if (payload.containsKey("exp"))
@@ -66,6 +69,26 @@ class JWT() {
         return true
     }
 
+    fun isTokenValid(conn: Connection): Boolean {
+        val transaction = DSL.using(conn, SQLDialect.MYSQL)
+
+        val tokenInfo = transaction.select(Tables.AUTHACCESSTOKEN.TOKEN)
+                .from(Tables.AUTHACCESSTOKEN)
+                .where(Tables.AUTHACCESSTOKEN.TOKEN.eq(this.toString()))
+                .fetchOne()
+        return tokenInfo != null
+    }
+
+    fun isRefreshTokenValid(conn: Connection): Boolean {
+        val transaction = DSL.using(conn, SQLDialect.MYSQL)
+
+        val tokenInfo = transaction.select(Tables.AUTHACCESSTOKEN.REFRESHTOKEN)
+                .from(Tables.AUTHACCESSTOKEN)
+                .where(Tables.AUTHACCESSTOKEN.REFRESHTOKEN.eq(this.toString()))
+                .fetchOne()
+        return tokenInfo != null
+    }
+
     override fun toString(): String {
         if (text != null)
             return text as String
@@ -94,6 +117,14 @@ class JWT() {
     }
 
     private fun base64urlEncode(bytes: ByteArray): String {
-        return Base64.getUrlEncoder().encodeToString(bytes)
+        return Base64.encodeBase64String(bytes)
     }
+}
+
+fun validToken(token: String): Boolean {
+    val segment = token.split("\\.".toRegex())
+    if (segment.size == 3)
+        if (Base64.isBase64(segment[0]) && Base64.isBase64(segment[1]))
+            return true
+    return false
 }
