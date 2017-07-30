@@ -37,6 +37,8 @@ dependencies {
     compile "io.vertx:vertx-web:$vertx_version"
     compile "io.vertx:vertx-web-client:$vertx_version"
 
+    compile "com.github.slugify:slugify:2.1.9"
+
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     compile "org.jetbrains.kotlin:kotlin-runtime:$kotlin_version"
 
@@ -44,7 +46,6 @@ dependencies {
     compile "org.bouncycastle:bcprov-jdk15on:1.57"
 
     compile "commons-validator:commons-validator:1.6"
-    compile "org.elasticsearch.client:transport:5.4.1"
 
     compile "org.jooq:jooq:3.9.3"
     compile "org.jooq:jooq-meta:3.9.3"
