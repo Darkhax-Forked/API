@@ -44,6 +44,7 @@ dependencies {
 
     compile "org.slf4j:slf4j-api:1.7.25"
     compile "org.bouncycastle:bcprov-jdk15on:1.57"
+    compile "commons-codec:commons-codec:1.10"
 
     compile "commons-validator:commons-validator:1.6"
 
