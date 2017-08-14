@@ -2,13 +2,9 @@ package com.diluv.api.utils
 
 import com.diluv.api.jwt.JWT
 import com.diluv.api.jwt.validToken
-import com.diluv.api.models.Tables.AUTHACCESSTOKEN
 import io.vertx.core.http.HttpHeaders
 import io.vertx.core.json.JsonObject
 import io.vertx.ext.web.RoutingContext
-import org.jooq.SQLDialect
-import org.jooq.impl.DSL
-import java.sql.Connection
 import java.util.regex.Pattern
 
 val BEARER: Pattern = Pattern.compile("^Bearer$", Pattern.CASE_INSENSITIVE)
@@ -43,28 +39,10 @@ fun RoutingContext.getToken(): String? {
     return null
 }
 
-/**
- * conn: The connection method
- * isToken: True if the token is a normal token, False if token is a refresh token
- */
-fun RoutingContext.getAuthorizationToken(conn: Connection, isToken: Boolean): JWT? {
-
+fun RoutingContext.getAuthorizationToken(): String? {
     val token = this.getToken()
-    if (token != null && validToken(token)) {
-        val jwt = JWT(token)
-        if (!jwt.isExpired()) {
-            if ((isToken && jwt.isTokenValid(conn)) || !isToken) {
-                return jwt
-            } else {
-                this.asErrorResponse(400, "Token is not valid")
-                return null
-            }
-        } else {
-            this.asErrorResponse(400, "Token is expired")
-            return null
-        }
-    } else {
-        this.asErrorResponse(400, "Token is not a valid format")
+    if (token != null && validToken(token))
+        return token
+    else
         return null
-    }
 }
