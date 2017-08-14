@@ -1,7 +1,5 @@
 package com.diluv.api.utils
 
-import java.sql.Connection
-
 fun getPageDetails(inputPage: String?, inputPerPage: String?, count: Int, callback: (page: Int, offset: Int, perPage: Int, totalPageCount: Int) -> Any) {
     var perPage = toIntOrDefaultValue(inputPerPage, 10)
 
@@ -20,12 +18,15 @@ fun getPageDetails(inputPage: String?, inputPerPage: String?, count: Int, callba
 
     var page = toIntOrDefaultValue(inputPage, 1)
 
-    if (page < 1) {
-        page = 1
-        //TODO Or error request back?
-    } else if (page > totalPageCount) {
+
+    //TODO Or error request back?
+    if (page > totalPageCount) {
         page = totalPageCount
         //TODO Or error request back?
+    }
+
+    if (page < 1) {
+        page = 1
     }
     callback(page, (page - 1) * perPage, perPage, totalPageCount)
 }

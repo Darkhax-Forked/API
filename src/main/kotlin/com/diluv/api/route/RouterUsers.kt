@@ -1,8 +1,11 @@
 package com.diluv.api.route
 
+import com.diluv.api.error.Errors
 import com.diluv.api.jwt.JWT
+import com.diluv.api.jwt.isTokenValid
 import com.diluv.api.models.Tables.USER
 import com.diluv.api.models.Tables.USERBETAKEY
+import com.diluv.api.permission.user.UserPermissionType
 import com.diluv.api.utils.asErrorResponse
 import com.diluv.api.utils.asSuccessResponse
 import com.diluv.api.utils.getAuthorizationToken
@@ -55,7 +58,7 @@ class RouterUsers(val conn: Connection) {
             event.asSuccessResponse(userListOut)
         } catch (e: Exception) {
             e.printStackTrace()
-            event.asErrorResponse(500, "Internal Error")
+            event.asErrorResponse(Errors.INTERNAL_SERVER_ERROR, "Internal Error")
         }
     }
 
@@ -76,26 +79,31 @@ class RouterUsers(val conn: Connection) {
     val getUserByUsername = Handler<RoutingContext> { event ->
         val username = event.request().getParam("username")
         if (username == "me") {
-            val token = event.getAuthorizationToken(conn, true)
+            val token = event.getAuthorizationToken()
             if (token != null) {
-                val userId = JWT(token.toString()).data.getLong("userId")
-                val transaction = DSL.using(conn, SQLDialect.MYSQL)
+                if (conn.isTokenValid(token)) {
+                    val jwt = JWT(token)
+                    if (!jwt.isExpired()) {
+                        val userId = jwt.data.getLong("userId")
+                        val transaction = DSL.using(conn, SQLDialect.MYSQL)
 
-                val user = transaction.select(USER.USERNAME, USER.EMAIL, USER.AVATAR, USER.CREATEDAT)
-                        .from(USER)
-                        .where(USER.ID.eq(userId))
-                        .fetchOne()
+                        val user = transaction.select(USER.USERNAME, USER.EMAIL, USER.AVATAR, USER.CREATEDAT)
+                                .from(USER)
+                                .where(USER.ID.eq(userId))
+                                .fetchOne()
 
-                if (user != null) {
-                    val userOut = mapOf<String, Any>(
-                            "username" to user.get(USER.USERNAME),
-                            "email" to user.get(USER.EMAIL),
-                            "avatar" to user.get(USER.AVATAR),
-                            "createdAt" to user.get(USER.CREATEDAT)
-                    )
-                    event.asSuccessResponse(userOut)
-                } else {
-                    event.asErrorResponse(404, "User not found")
+                        if (user != null) {
+                            val userOut = mapOf<String, Any>(
+                                    "username" to user.get(USER.USERNAME),
+                                    "email" to user.get(USER.EMAIL),
+                                    "avatar" to user.get(USER.AVATAR),
+                                    "createdAt" to user.get(USER.CREATEDAT)
+                            )
+                            event.asSuccessResponse(userOut)
+                        } else {
+                            event.asErrorResponse(Errors.NOT_FOUND, "User not found")
+                        }
+                    }
                 }
             }
         } else {
@@ -114,7 +122,7 @@ class RouterUsers(val conn: Connection) {
                 )
                 event.asSuccessResponse(userOut)
             } else {
-                event.asErrorResponse(404, "User not found")
+                event.asErrorResponse(Errors.NOT_FOUND, "User not found")
             }
         }
     }
@@ -122,39 +130,43 @@ class RouterUsers(val conn: Connection) {
     val postCreateBetaKeys = Handler<RoutingContext> { event ->
         val req = event.request()
         req.isExpectMultipart = true
-        val token = event.getAuthorizationToken(conn, true)
+        val token = event.getAuthorizationToken()
         if (token != null) {
-            val payload = token.data
-            val creationUserId = payload.getLong("userId")
-            val username = payload.getString("username")
-            //TODO Move away from hardcoded
+            val jwt = JWT(token)
+            if (!jwt.isExpired()) {
+                val payload = jwt.data
+                val creationUserId = payload.getLong("userId")
+                val permission = payload.getInteger("permission", 1)
 
-            if (username == "lclc98") {
-                req.endHandler({
-                    val userId = req.getFormAttribute("userId").toLongOrNull()
-                    val quantity = req.getFormAttribute("quantity")?.toLong() ?: 1
-                    if (userId != null) {
-                        val random = SecureRandom()
-                        val keyList = arrayListOf<String>()
-                        //TODO Check duplicates
+                //TODO Move away from hardcoded
 
-                        val transaction = DSL.using(conn, SQLDialect.MYSQL)
+                if (UserPermissionType.CREATE_BETA_KEYS.hasPermission(permission)) {
+                    req.endHandler({
+                        val userId = req.getFormAttribute("userId").toLongOrNull()
+                        val quantity = req.getFormAttribute("quantity")?.toLong() ?: 1
+                        if (userId != null) {
+                            val random = SecureRandom()
+                            val keyList = arrayListOf<String>()
+                            //TODO Check duplicates
 
-                        val insertInto = transaction.insertInto(USERBETAKEY, USERBETAKEY.USERID, USERBETAKEY.BETAKEY, USERBETAKEY.CREATIONUSERID)
+                            val transaction = DSL.using(conn, SQLDialect.MYSQL)
 
-                        for (i in 0 until quantity) {
-                            val key = BigInteger(130, random).toString(32)
-                            insertInto.values(userId, key, creationUserId)
-                            keyList.add(key)
+                            val insertInto = transaction.insertInto(USERBETAKEY, USERBETAKEY.USERID, USERBETAKEY.BETAKEY, USERBETAKEY.CREATIONUSERID)
+
+                            for (i in 0 until quantity) {
+                                val key = BigInteger(130, random).toString(32)
+                                insertInto.values(userId, key, creationUserId)
+                                keyList.add(key)
+                            }
+                            insertInto.execute()
+                            event.asSuccessResponse(keyList)
+                        } else {
+                            event.asErrorResponse(Errors.BAD_REQUEST, "The target userId is needed for this request")
                         }
-                        insertInto.execute()
-                        event.asSuccessResponse(keyList)
-                    } else {
-                        event.asErrorResponse(400, "The target userId is needed for this request")
-                    }
-                })
-            } else {
-                event.asErrorResponse(403, "User not authorized to make request")
+                    })
+                } else {
+                    event.asErrorResponse(Errors.FORBIDDEN, "User not authorized to make request")
+                }
             }
         }
     }

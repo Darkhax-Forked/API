@@ -1,7 +1,11 @@
 package com.diluv.api.route
 
+import com.diluv.api.error.Errors
+import com.diluv.api.jwt.JWT
+import com.diluv.api.jwt.isTokenValid
 import com.diluv.api.models.Tables
 import com.diluv.api.models.Tables.GAME
+import com.diluv.api.models.Tables.USER
 import com.diluv.api.utils.*
 import io.vertx.core.Handler
 import io.vertx.ext.web.Router
@@ -73,12 +77,12 @@ class RouterGames(val conn: Connection) {
                 if (!gameObj.isEmpty())
                     event.asSuccessResponse(gameObj)
                 else
-                    event.asErrorResponse(404, "Game not found")
+                    event.asErrorResponse(Errors.NOT_FOUND, "Game not found")
             } else {
-                event.asErrorResponse(401, "Game not found")
+                event.asErrorResponse(Errors.UNAUTHORIZED, "Game not found")
             }
         } else {
-            event.asErrorResponse(401, "Slug is needed for this request")
+            event.asErrorResponse(Errors.UNAUTHORIZED, "Slug is needed for this request")
         }
     }
 
@@ -103,10 +107,10 @@ class RouterGames(val conn: Connection) {
             if (gameId != null) {
                 event.asSuccessResponse(conn.getProjectTypesByGameId(gameId))
             } else {
-                event.asErrorResponse(401, "Game not found")
+                event.asErrorResponse(Errors.UNAUTHORIZED, "Game not found")
             }
         } else {
-            event.asErrorResponse(401, "A slug is needed")
+            event.asErrorResponse(Errors.UNAUTHORIZED, "A slug is needed")
         }
     }
 
@@ -117,12 +121,34 @@ class RouterGames(val conn: Connection) {
         if (gameSlug != null && projectTypeSlug != null) {
             val projectTypeId = conn.getProjectTypeIdBySlug(projectTypeSlug)
             if (projectTypeId != null) {
-                event.asSuccessResponse(conn.getProjectTypeById(projectTypeId))
+                var projectType = conn.getProjectTypeById(projectTypeId)
+                if (projectType.isNotEmpty()) {
+
+                    val token = event.getAuthorizationToken()
+                    if (token != null) {
+                        if (conn.isTokenValid(token)) {
+                            val jwt = JWT(token)
+                            if (!jwt.isExpired()) {
+                                val transaction = DSL.using(conn, SQLDialect.MYSQL)
+                                val userId = jwt.data.getLong("userId")
+
+                                val user = transaction.select(USER.PERMISSION)
+                                        .from(USER)
+                                        .where(USER.ID.eq(userId))
+                                        .fetchOne()
+                                        .get(USER.PERMISSION)
+
+                                projectType += mapOf("userPermissions" to user)
+                            }
+                        }
+                    }
+                }
+                event.asSuccessResponse(projectType)
             } else {
-                event.asErrorResponse(401, "Project type not found")
+                event.asErrorResponse(Errors.UNAUTHORIZED, "Project type not found")
             }
         } else {
-            event.asErrorResponse(401, "A slug is needed")
+            event.asErrorResponse(Errors.UNAUTHORIZED, "A slug is needed")
         }
     }
 
@@ -172,10 +198,10 @@ class RouterGames(val conn: Connection) {
                     event.asSuccessResponse(ouputData)
                 })
             } else {
-                event.asErrorResponse(401, "Project type not found")
+                event.asErrorResponse(Errors.UNAUTHORIZED, "Project type not found")
             }
         } else {
-            event.asErrorResponse(401, "A slug is needed")
+            event.asErrorResponse(Errors.UNAUTHORIZED, "A slug is needed")
         }
     }
 }

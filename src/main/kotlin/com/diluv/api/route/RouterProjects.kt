@@ -1,5 +1,8 @@
 package com.diluv.api.route
 
+import com.diluv.api.error.Errors
+import com.diluv.api.jwt.JWT
+import com.diluv.api.jwt.isTokenValid
 import com.diluv.api.utils.*
 import com.diluv.catalejo.Catalejo
 import io.vertx.core.Handler
@@ -21,53 +24,47 @@ class RouterProjects(val conn: Connection) {
 
         router.post("/projects").handler(postProjects)
         router.post("/projects/:projectSlug/files").handler(postProjectFiles)
-        router.options("/projects/:projectSlug/files").handler(respond)
-    }
-
-    val respond = Handler<RoutingContext> { event ->
-        val response = event.response()
-        response.statusCode = 200
-        response.putHeader("Content-Type", "application/json; charset=utf-8")
-        response.putHeader("Access-Control-Allow-Origin", "*")
-        response.putHeader("Access-Control-Allow-Methods", "POST")
-        response.putHeader("Access-Control-Allow-Headers", "Content-Type, Authorization")
-        response.end()
     }
 
     val postProjects = Handler<RoutingContext> { event ->
         val req = event.request()
 
-        val token = event.getAuthorizationToken(conn, false)
+        val token = event.getAuthorizationToken()
         if (token != null) {
-            val userId = token.data.getLong("userId")
+            if (conn.isTokenValid(token)) {
+                val jwt = JWT(token)
+                if (!jwt.isExpired()) {
+                    val userId = jwt.data.getLong("userId")
 
-            val name = req.getFormAttribute("name")
-            val description = req.getFormAttribute("description")
-            val shortDescription = req.getFormAttribute("shortDescription")
-            val logo = req.getFormAttribute("logo")
+                    val name = req.getFormAttribute("name")
+                    val description = req.getFormAttribute("description")
+                    val shortDescription = req.getFormAttribute("shortDescription")
+                    val logo = req.getFormAttribute("logo")
 //                    val projectTypeId = req.getFormAttribute("projectTypeId").toLongOrNull()
 
-            val errorMessage = arrayListOf<String>()
+                    val errorMessage = arrayListOf<String>()
 
-            if (name == null)
-                errorMessage.add("Project creation requires a project name")
-            if (description == null)
-                errorMessage.add("Project creation requires a description")
-            if (shortDescription == null)
-                errorMessage.add("Project creation requires a short description")
-            if (logo == null)
-                errorMessage.add("Project creation requires a logo")
-            //TODO
+                    if (name == null)
+                        errorMessage.add("Project creation requires a project name")
+                    if (description == null)
+                        errorMessage.add("Project creation requires a description")
+                    if (shortDescription == null)
+                        errorMessage.add("Project creation requires a short description")
+                    if (logo == null)
+                        errorMessage.add("Project creation requires a logo")
+                    //TODO
 //                    if (projectTypeId == null)
 //                        errorMessage.add("Project creation requires a project type id")
 
-            //TODO look into logo
-            if (errorMessage.size == 0) {
-                //todo generate slug
-                val slug = ""
+                    //TODO look into logo
+                    if (errorMessage.size == 0) {
+                        //todo generate slug
+                        val slug = ""
 //                        insertProject(conn, name, description, shortDescription, slug, logo, projectTypeId as Long, userId)
-            } else {
-                event.asErrorResponse(404, errorMessage)
+                    } else {
+                        event.asErrorResponse(Errors.NOT_FOUND, errorMessage)
+                    }
+                }
             }
         }
     }
@@ -78,15 +75,25 @@ class RouterProjects(val conn: Connection) {
         if (projectSlug != null) {
             val projectId = conn.getProjectIdBySlug(projectSlug)
             if (projectId != null) {
-                val token = event.getAuthorizationToken(conn, true)
+                var token = event.getAuthorizationToken()
+                if(token!=null) {
+                    if (conn.isTokenValid(token)) {
+                        val jwt = JWT(token)
+                        if (jwt.isExpired()) {
+                            token = null
+                        }
+                    }else{
+                        token = null
+                    }
+                }
                 val projectObj = conn.getProjectById(projectId, token)
                 if (!projectObj.isEmpty()) {
                     event.asSuccessResponse(projectObj)
                 } else {
-                    event.asErrorResponse(404, "Project not found")
+                    event.asErrorResponse(Errors.NOT_FOUND, "Project not found")
                 }
             } else {
-                event.asErrorResponse(401, "Project not found")
+                event.asErrorResponse(Errors.UNAUTHORIZED, "Project not found")
             }
         }
     }
@@ -101,12 +108,12 @@ class RouterProjects(val conn: Connection) {
                 if (!userListOut.isEmpty())
                     event.asSuccessResponse(userListOut)
                 else
-                    event.asErrorResponse(404, "Project not found")
+                    event.asErrorResponse(Errors.NOT_FOUND, "Project not found")
             } else {
-                event.asErrorResponse(401, "Project not found")
+                event.asErrorResponse(Errors.UNAUTHORIZED, "Project not found")
             }
         } else {
-            event.asErrorResponse(401, "An id is needed")
+            event.asErrorResponse(Errors.UNAUTHORIZED, "An id is needed")
         }
     }
 
@@ -118,10 +125,10 @@ class RouterProjects(val conn: Connection) {
             if (projectId != null) {
                 event.asSuccessResponse(conn.getProjectFilesById(projectId))
             } else {
-                event.asErrorResponse(401, "Project not found")
+                event.asErrorResponse(Errors.UNAUTHORIZED, "Project not found")
             }
         } else {
-            event.asErrorResponse(401, "An id is needed")
+            event.asErrorResponse(Errors.UNAUTHORIZED, "An id is needed")
         }
     }
 
@@ -131,43 +138,48 @@ class RouterProjects(val conn: Connection) {
         if (projectSlug != null) {
             val req = event.request()
 
-            val token = event.getAuthorizationToken(conn, true)
+            val token = event.getAuthorizationToken()
             if (token != null) {
-                val payload = token.data
-                val userId = payload.getLong("userId")
+                if (conn.isTokenValid(token)) {
+                    val jwt = JWT(token)
+                    if (!jwt.isExpired()) {
+                        val payload = jwt.data
+                        val userId = payload.getLong("userId")
 
-                if (event.fileUploads().size == 1) {
-                    val file = event.fileUploads().iterator().next()
-                    val size = file.size()
-                    val fileName = file.fileName()
+                        if (event.fileUploads().size == 1) {
+                            val file = event.fileUploads().iterator().next()
+                            val size = file.size()
+                            val fileName = file.fileName()
 
-                    val map = HashMap<String, Any>()
-                    val catalejo = Catalejo()
-                    catalejo.add(Catalejo.SHA_256_READER)
-                    catalejo.readFileMeta(map, File(file.uploadedFileName()))
+                            val map = HashMap<String, Any>()
+                            val catalejo = Catalejo()
+                            catalejo.add(Catalejo.SHA_256_READER)
+                            catalejo.readFileMeta(map, File(file.uploadedFileName()))
 
-                    var displayName = req.getFormAttribute("displayName")
-                    var releaseType = req.getFormAttribute("releaseType")
+                            var displayName = req.getFormAttribute("displayName")
+                            var releaseType = req.getFormAttribute("releaseType")
 
-                    var parentId: Long? = null
-                    if (req.getFormAttribute("parentId") != null)
-                        parentId = req.getFormAttribute("parentId").toLongOrNull()
+                            var parentId: Long? = null
+                            if (req.getFormAttribute("parentId") != null)
+                                parentId = req.getFormAttribute("parentId").toLongOrNull()
 
-                    if (displayName == null)
-                        displayName = fileName
+                            if (displayName == null)
+                                displayName = fileName
 
-                    if (releaseType == null)
-                        releaseType = "alpha"
+                            if (releaseType == null)
+                                releaseType = "alpha"
 
 
-                    val sha256 = map["SHA-256"]
-                    println(map)
-                    if (sha256 != null) {
-                        val id = conn.insertProjectFiles(sha256 as String, fileName, displayName, size, releaseType, "Review", parentId, projectSlug, userId)
-                        if (id != null) {
-                            //TODO Insert into project processing
-                        } else {
-                            //TODO Failed to insert
+                            val sha256 = map["SHA-256"]
+                            println(map)
+                            if (sha256 != null) {
+                                val id = conn.insertProjectFiles(sha256 as String, fileName, displayName, size, releaseType, "Review", parentId, projectSlug, userId)
+                                if (id != null) {
+                                    //TODO Insert into project processing
+                                } else {
+                                    //TODO Failed to insert
+                                }
+                            }
                         }
                     }
                 }
@@ -183,10 +195,10 @@ class RouterProjects(val conn: Connection) {
             if (projectId != null) {
                 event.asSuccessResponse(conn.getProjectCategoriesById(projectId))
             } else {
-                event.asErrorResponse(401, "Project categories not found")
+                event.asErrorResponse(Errors.UNAUTHORIZED, "Project categories not found")
             }
         } else {
-            event.asErrorResponse(401, "An id is needed")
+            event.asErrorResponse(Errors.UNAUTHORIZED, "An id is needed")
         }
     }
 }

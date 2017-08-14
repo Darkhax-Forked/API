@@ -6,7 +6,7 @@ import org.jooq.SQLDialect
 import org.jooq.impl.DSL
 import java.sql.Connection
 
-fun Connection.getProjectById(projectId: Long, token: JWT? = null): Map<String, Any> {
+fun Connection.getProjectById(projectId: Long, token: String? = null): Map<String, Any> {
     val transaction = DSL.using(this, SQLDialect.MYSQL)
     val dbUserProject = transaction.select(PROJECT.ID, PROJECT.NAME, PROJECT.DESCRIPTION, PROJECT.SHORTDESCRIPTION, PROJECT.USERID, PROJECT.SLUG, PROJECT.LOGO, PROJECT.TOTALDOWNLOADS, PROJECT.CREATEDAT, PROJECT.UPDATEDAT)
             .from(PROJECT)

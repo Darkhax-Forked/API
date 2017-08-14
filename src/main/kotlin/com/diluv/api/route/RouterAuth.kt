@@ -1,5 +1,9 @@
 package com.diluv.api.route
 
+import com.diluv.api.error.Errors
+import com.diluv.api.jwt.JWT
+import com.diluv.api.jwt.isRefreshTokenValid
+import com.diluv.api.jwt.isTokenValid
 import com.diluv.api.models.Tables.*
 import com.diluv.api.models.tables.records.UserRecord
 import com.diluv.api.utils.*
@@ -32,7 +36,7 @@ class RouterAuth(val conn: Connection) {
         val jwtData = JsonObject().apply {
             put("userId", userId)
             put("username", username)
-            put("permissions", 1)
+            put("randomData", UUID.randomUUID().toString())
         }
 
         val jwtToken = encodeToken(data = jwtData, issuer = "token", expiresInMinutes = 60)
@@ -82,14 +86,15 @@ class RouterAuth(val conn: Connection) {
 
             val transaction = DSL.using(conn, SQLDialect.MYSQL)
             if (errorMessage.size == 0) {
-                val user: UserRecord
-                //TODO Catch TooManyRowsException
+                var user: UserRecord?
                 if (isUsername) {
                     user = transaction.selectFrom(USER)
-                            .where(USER.USERNAME.eq(inputUsernameEmail)).fetchOne()
+                            .where(USER.USERNAME.eq(inputUsernameEmail))
+                            .fetchAny()
                 } else {
                     user = transaction.selectFrom(USER)
-                            .where(USER.EMAIL.eq(inputUsernameEmail)).fetchOne()
+                            .where(USER.EMAIL.eq(inputUsernameEmail))
+                            .fetchAny()
                 }
 
                 if (user != null) {
@@ -120,73 +125,87 @@ class RouterAuth(val conn: Connection) {
                             event.asSuccessResponse(createAccessToken(userId, username))
                         }
                     } else {
-                        event.asErrorResponse(401, "The password is incorrect")
+                        event.asErrorResponse(Errors.UNAUTHORIZED, "The password is incorrect")
                     }
                 } else {
-                    event.asErrorResponse(401, "The user doesnt\'t exist")
+                    event.asErrorResponse(Errors.UNAUTHORIZED, "The user doesn't exist")
                 }
             } else {
-                event.asErrorResponse(400, errorMessage)
+                event.asErrorResponse(Errors.BAD_REQUEST, errorMessage)
             }
         })
     }
 
     val getMFA = Handler<RoutingContext> { event ->
-        val token = event.getAuthorizationToken(conn, true)
+        val token = event.getAuthorizationToken()
         if (token != null) {
-            val tokenText = token.toString()
-            val transaction = DSL.using(conn, SQLDialect.MYSQL)
-            val mfaToken = transaction.select(AUTHMFATOKEN.TOKEN)
-                    .from(AUTHMFATOKEN)
-                    .where(AUTHMFATOKEN.TOKEN.eq(tokenText))
-                    .fetchOne()
+            if (conn.isTokenValid(token)) {
+                val jwt = JWT(token)
+                if (!jwt.isExpired()) {
+                    val tokenText = token.toString()
+                    val transaction = DSL.using(conn, SQLDialect.MYSQL)
+                    val mfaToken = transaction.select(AUTHMFATOKEN.TOKEN)
+                            .from(AUTHMFATOKEN)
+                            .where(AUTHMFATOKEN.TOKEN.eq(tokenText))
+                            .fetchOne()
 
-            if (mfaToken != null) {
-                val username = token.data.getString("username")
-                val userId = token.data.getLong("userId")
+                    if (mfaToken != null) {
+                        val username = jwt.data.getString("username")
+                        val userId = jwt.data.getLong("userId")
 
-                transaction.delete(AUTHMFATOKEN)
-                        .where(AUTHMFATOKEN.TOKEN.eq(tokenText))
-                        .execute()
+                        transaction.delete(AUTHMFATOKEN)
+                                .where(AUTHMFATOKEN.TOKEN.eq(tokenText))
+                                .execute()
 
-                transaction.insertInto(ANALYTICSAUTHMFATOKEN, ANALYTICSAUTHMFATOKEN.USERID, ANALYTICSAUTHMFATOKEN.TOKEN)
-                        .values(userId, tokenText)
-                        .execute()
+                        transaction.insertInto(ANALYTICSAUTHMFATOKEN, ANALYTICSAUTHMFATOKEN.USERID, ANALYTICSAUTHMFATOKEN.TOKEN)
+                                .values(userId, tokenText)
+                                .execute()
 
-                event.asSuccessResponse(createAccessToken(userId, username))
-            } else
-                event.asErrorResponse(401, "MFA Token not found")
+                        event.asSuccessResponse(createAccessToken(userId, username))
+                    } else
+                        event.asErrorResponse(Errors.UNAUTHORIZED, "MFA Token not found")
+                } else {
+                    event.asErrorResponse(Errors.BAD_REQUEST, "Token is expired")
+                }
+            } else {
+                event.asErrorResponse(Errors.BAD_REQUEST, "Token is not valid")
+            }
         }
         //TODO Fix token valid call DB
     }
 
     val getRefreshToken = Handler<RoutingContext> { event ->
         //TODO DB valid check fix
-        val refreshToken = event.getAuthorizationToken(conn, false)
+        val refreshToken = event.getAuthorizationToken()
         if (refreshToken != null) {
-            val transaction = DSL.using(conn, SQLDialect.MYSQL)
+            if (conn.isRefreshTokenValid(refreshToken)) {
+                val jwt = JWT(refreshToken)
+                if (!jwt.isExpired()) {
+                    val transaction = DSL.using(conn, SQLDialect.MYSQL)
 
-            val refreshTokeText = refreshToken.toString()
-            val tokenInfo = transaction.select(AUTHACCESSTOKEN.TOKEN)
-                    .from(AUTHACCESSTOKEN)
-                    .where(AUTHACCESSTOKEN.REFRESHTOKEN.eq(refreshTokeText))
-                    .fetchOne()
+                    val refreshTokeText = refreshToken.toString()
+                    val tokenInfo = transaction.select(AUTHACCESSTOKEN.TOKEN)
+                            .from(AUTHACCESSTOKEN)
+                            .where(AUTHACCESSTOKEN.REFRESHTOKEN.eq(refreshTokeText))
+                            .fetchOne()
 
-            if (tokenInfo != null) {
-                val username = refreshToken.data.getString("username")
-                val userId = refreshToken.data.getLong("userId")
+                    if (tokenInfo != null) {
+                        val userId = jwt.data.getLong("userId")
+                        val username = jwt.data.getString("username")
 
-                transaction.batch(
-                        transaction.delete(AUTHACCESSTOKEN)
-                                .where(AUTHACCESSTOKEN.REFRESHTOKEN.eq(refreshTokeText)),
+                        transaction.batch(
+                                transaction.delete(AUTHACCESSTOKEN)
+                                        .where(AUTHACCESSTOKEN.REFRESHTOKEN.eq(refreshTokeText)),
 
-                        transaction.insertInto(ANALYTICSAUTHACCESSTOKEN, ANALYTICSAUTHACCESSTOKEN.USERID, ANALYTICSAUTHACCESSTOKEN.TOKEN, ANALYTICSAUTHACCESSTOKEN.REFRESHTOKEN)
-                                .values(userId, tokenInfo.get(AUTHACCESSTOKEN.TOKEN), refreshTokeText)
-                ).execute()
+                                transaction.insertInto(ANALYTICSAUTHACCESSTOKEN, ANALYTICSAUTHACCESSTOKEN.USERID, ANALYTICSAUTHACCESSTOKEN.TOKEN, ANALYTICSAUTHACCESSTOKEN.REFRESHTOKEN)
+                                        .values(userId, tokenInfo.get(AUTHACCESSTOKEN.TOKEN), refreshTokeText)
+                        ).execute()
 
-                event.asSuccessResponse(createAccessToken(userId, username))
+                        event.asSuccessResponse(createAccessToken(userId, username))
+                    }
+                }
             } else
-                event.asErrorResponse(401, "Refresh Token not found")
+                event.asErrorResponse(Errors.BAD_REQUEST, "Refresh Token is not valid")
         }
     }
 
@@ -201,7 +220,6 @@ class RouterAuth(val conn: Connection) {
             val password = req.getFormAttribute("password")
             val passwordConfirm = req.getFormAttribute("passwordConfirm")
             val recaptchaResponse = req.getFormAttribute("g-recaptcha-response")
-            val betaKey = req.getFormAttribute("betaKey")
 
             val errorMessage = arrayListOf<String>()
 
@@ -223,8 +241,6 @@ class RouterAuth(val conn: Connection) {
                 errorMessage.add("Password is not valid")
             if (recaptchaResponse == null)
                 errorMessage.add("Registering requires a recaptcha response")
-            if (betaKey == null)  // Beta Temporary
-                errorMessage.add("Registering in beta needs a key")
 
             if (errorMessage.size == 0) {
                 val transaction = DSL.using(conn, SQLDialect.MYSQL)
@@ -234,9 +250,9 @@ class RouterAuth(val conn: Connection) {
                         .fetchOne()
                 if (user != null) {
                     if (user.get(USER.EMAIL) == email)
-                        event.asErrorResponse(400, "Email is already used, please use a different email")
-                    if (user.get(USER.USERNAME) == username)
-                        event.asErrorResponse(400, "Username is already used, please use a different username")
+                        event.asErrorResponse(Errors.BAD_REQUEST, "Email is already used, please use a different email")
+                    else if (user.get(USER.USERNAME) == username)
+                        event.asErrorResponse(Errors.BAD_REQUEST, "Username is already used, please use a different username")
                 } else {
                     val client = WebClient.create(event.vertx())
 
@@ -249,14 +265,14 @@ class RouterAuth(val conn: Connection) {
                                 val salt = ByteArray(16)
                                 SecureRandom().nextBytes(salt)
                                 val passwordHash = OpenBSDBCrypt.generate(password.toCharArray(), salt, 10)
-                                val userResults = transaction.insertInto(USER, USER.EMAIL, USER.USERNAME, USER.PASSWORD, USER.AVATAR)
-                                        .values(email, username, passwordHash, "")
+                                val userResults = transaction.insertInto(USER, USER.EMAIL, USER.USERNAME, USER.PASSWORD, USER.PERMISSION, USER.AVATAR)
+                                        .values(email, username, passwordHash, 0, "")
                                         .returning(USER.ID)
                                         .fetchOne()
 
                                 event.asSuccessResponse(createAccessToken(userResults.get(USER.ID), username))
                             } else {
-                                event.asErrorResponse(400, "Recaptcha is not valid")
+                                event.asErrorResponse(Errors.UNAUTHORIZED, "Recaptcha is not valid")
                             }
                         } else {
                             //TODO
@@ -265,7 +281,7 @@ class RouterAuth(val conn: Connection) {
                     })
                 }
             } else {
-                event.asErrorResponse(400, errorMessage)
+                event.asErrorResponse(Errors.BAD_REQUEST, errorMessage)
             }
         })
     }

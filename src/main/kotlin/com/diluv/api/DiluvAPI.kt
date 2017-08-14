@@ -1,5 +1,6 @@
 package com.diluv.api
 
+import com.diluv.api.error.Errors
 import com.diluv.api.route.RouterAuth
 import com.diluv.api.route.RouterGames
 import com.diluv.api.route.RouterProjects
@@ -37,14 +38,23 @@ class DiluvAPI(val conn: Connection) : AbstractVerticle() {
 
         router.mountSubRouter("/v1", v1)
 
+        router.get("/teapot").handler({ event ->
+            val res = event.response()
+            res.statusCode = Errors.I_AM_A_TEAPOT.statusCode
+            res.end("The server refuses the attempt to brew coffee with a teapot.")
+        })
         router.options().handler { ctx ->
+            //TODO Implement proper preflight checks
             ctx.asSuccessResponse(listOf())
         }
-        router.route().failureHandler { ctx ->
+
+        router.route().handler({ ctx ->
+            ctx.fail(404)
+        }).failureHandler { ctx ->
             if (ctx.statusCode() == 404) {
-                ctx.asErrorResponse(404, "Endpoint not found")
+                ctx.asErrorResponse(Errors.NOT_FOUND, null)
             } else if (ctx.statusCode() == 500) {
-                ctx.asErrorResponse(500, "Internal Server Error")
+                ctx.asErrorResponse(Errors.INTERNAL_SERVER_ERROR, null)
             } else {
                 ctx.next()
             }

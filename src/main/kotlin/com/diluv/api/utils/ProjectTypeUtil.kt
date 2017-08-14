@@ -1,6 +1,7 @@
 package com.diluv.api.utils
 
 import com.diluv.api.models.Tables.*
+import com.diluv.api.permission.user.UserPermissionType
 import org.jooq.SQLDialect
 import org.jooq.impl.DSL
 import java.sql.Connection
@@ -41,17 +42,24 @@ fun Connection.getProjectsByProjectTypeId(projectTypeId: Long): List<Map<String,
 
 fun Connection.getProjectTypeById(projectTypeId: Long): Map<String, Any> {
     val transaction = DSL.using(this, SQLDialect.MYSQL)
+
     val dbUserProject = transaction.select(PROJECTTYPE.ID, PROJECTTYPE.NAME, PROJECTTYPE.DESCRIPTION, PROJECTTYPE.SLUG)
             .from(PROJECTTYPE)
             .where(PROJECTTYPE.ID.eq(projectTypeId))
             .fetchOne()
 
     if (dbUserProject != null) {
+        val dbPermission = transaction.select(PROJECTTYPEPERMISSION.PERMISSIONCREATE)
+                .from(PROJECTTYPEPERMISSION)
+                .where(PROJECTTYPEPERMISSION.ID.eq(projectTypeId))
+                .fetchOne()
+
         return mapOf(
                 "name" to dbUserProject.get(PROJECTTYPE.NAME),
                 "description" to dbUserProject.get(PROJECTTYPE.DESCRIPTION),
                 "slug" to dbUserProject.get(PROJECTTYPE.SLUG),
-                "categories" to this.getCategoriesByProjectTypeId(dbUserProject.get(PROJECTTYPE.ID))
+                "categories" to this.getCategoriesByProjectTypeId(dbUserProject.get(PROJECTTYPE.ID)),
+                "permission" to dbPermission.get(PROJECTTYPEPERMISSION.PERMISSIONCREATE)
         )
     }
     return mapOf()
