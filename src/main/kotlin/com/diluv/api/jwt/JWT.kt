@@ -69,26 +69,6 @@ class JWT() {
         return true
     }
 
-    fun isTokenValid(conn: Connection): Boolean {
-        val transaction = DSL.using(conn, SQLDialect.MYSQL)
-
-        val tokenInfo = transaction.select(Tables.AUTHACCESSTOKEN.TOKEN)
-                .from(Tables.AUTHACCESSTOKEN)
-                .where(Tables.AUTHACCESSTOKEN.TOKEN.eq(this.toString()))
-                .fetchOne()
-        return tokenInfo != null
-    }
-
-    fun isRefreshTokenValid(conn: Connection): Boolean {
-        val transaction = DSL.using(conn, SQLDialect.MYSQL)
-
-        val tokenInfo = transaction.select(Tables.AUTHACCESSTOKEN.REFRESHTOKEN)
-                .from(Tables.AUTHACCESSTOKEN)
-                .where(Tables.AUTHACCESSTOKEN.REFRESHTOKEN.eq(this.toString()))
-                .fetchOne()
-        return tokenInfo != null
-    }
-
     override fun toString(): String {
         if (text != null)
             return text as String
@@ -127,4 +107,24 @@ fun validToken(token: String): Boolean {
         if (Base64.isBase64(segment[0]) && Base64.isBase64(segment[1]))
             return true
     return false
+}
+
+fun Connection.isTokenValid(token:String): Boolean {
+    val transaction = DSL.using(this, SQLDialect.MYSQL)
+
+    val tokenInfo = transaction.select(Tables.AUTHACCESSTOKEN.TOKEN)
+            .from(Tables.AUTHACCESSTOKEN)
+            .where(Tables.AUTHACCESSTOKEN.TOKEN.eq(token))
+            .fetchOne()
+    return tokenInfo != null
+}
+
+fun Connection.isRefreshTokenValid(token:String): Boolean {
+    val transaction = DSL.using(this, SQLDialect.MYSQL)
+
+    val tokenInfo = transaction.select(Tables.AUTHACCESSTOKEN.REFRESHTOKEN)
+            .from(Tables.AUTHACCESSTOKEN)
+            .where(Tables.AUTHACCESSTOKEN.REFRESHTOKEN.eq(token))
+            .fetchOne()
+    return tokenInfo != null
 }
