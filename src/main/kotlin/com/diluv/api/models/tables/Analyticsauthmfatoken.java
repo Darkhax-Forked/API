@@ -29,7 +29,7 @@ import java.util.List;
 @SuppressWarnings({"all", "unchecked", "rawtypes"})
 public class Analyticsauthmfatoken extends TableImpl<AnalyticsauthmfatokenRecord> {
 
-    private static final long serialVersionUID = -164055975;
+    private static final long serialVersionUID = -1648030253;
 
     /**
      * The reference instance of <code>diluv.analyticsAuthMFAToken</code>
@@ -52,7 +52,7 @@ public class Analyticsauthmfatoken extends TableImpl<AnalyticsauthmfatokenRecord
     /**
      * The column <code>diluv.analyticsAuthMFAToken.token</code>.
      */
-    public final TableField<AnalyticsauthmfatokenRecord, String> TOKEN = createField("token", org.jooq.impl.SQLDataType.VARCHAR.length(255).nullable(false), this, "");
+    public final TableField<AnalyticsauthmfatokenRecord, String> TOKEN = createField("token", org.jooq.impl.SQLDataType.VARCHAR.length(500).nullable(false), this, "");
 
     /**
      * The column <code>diluv.analyticsAuthMFAToken.createdAt</code>.
@@ -116,6 +116,14 @@ public class Analyticsauthmfatoken extends TableImpl<AnalyticsauthmfatokenRecord
     @Override
     public List<UniqueKey<AnalyticsauthmfatokenRecord>> getKeys() {
         return Arrays.<UniqueKey<AnalyticsauthmfatokenRecord>>asList(Keys.KEY_ANALYTICSAUTHMFATOKEN_PRIMARY);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<ForeignKey<AnalyticsauthmfatokenRecord, ?>> getReferences() {
+        return Arrays.<ForeignKey<AnalyticsauthmfatokenRecord, ?>>asList(Keys.ANALYTICSAUTHMFATOKEN_IBFK_1);
     }
 
     /**

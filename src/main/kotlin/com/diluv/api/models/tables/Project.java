@@ -29,7 +29,7 @@ import java.util.List;
 @SuppressWarnings({"all", "unchecked", "rawtypes"})
 public class Project extends TableImpl<ProjectRecord> {
 
-    private static final long serialVersionUID = -486451747;
+    private static final long serialVersionUID = 1778526482;
 
     /**
      * The reference instance of <code>diluv.project</code>
@@ -168,7 +168,7 @@ public class Project extends TableImpl<ProjectRecord> {
      */
     @Override
     public List<ForeignKey<ProjectRecord, ?>> getReferences() {
-        return Arrays.<ForeignKey<ProjectRecord, ?>>asList(Keys.PROJECT_IBFK_1);
+        return Arrays.<ForeignKey<ProjectRecord, ?>>asList(Keys.PROJECT_IBFK_1, Keys.PROJECT_IBFK_2);
     }
 
     /**

@@ -29,7 +29,7 @@ import java.util.List;
 @SuppressWarnings({"all", "unchecked", "rawtypes"})
 public class User extends TableImpl<UserRecord> {
 
-    private static final long serialVersionUID = -2082023577;
+    private static final long serialVersionUID = 1376332883;
 
     /**
      * The reference instance of <code>diluv.user</code>
@@ -63,6 +63,11 @@ public class User extends TableImpl<UserRecord> {
      * The column <code>diluv.user.password</code>.
      */
     public final TableField<UserRecord, String> PASSWORD = createField("password", org.jooq.impl.SQLDataType.VARCHAR.length(60).nullable(false), this, "");
+
+    /**
+     * The column <code>diluv.user.permission</code>.
+     */
+    public final TableField<UserRecord, Integer> PERMISSION = createField("permission", org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "");
 
     /**
      * The column <code>diluv.user.avatar</code>.

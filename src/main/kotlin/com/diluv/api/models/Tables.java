@@ -103,6 +103,11 @@ public class Tables {
     public static final Projecttypecategory PROJECTTYPECATEGORY = com.diluv.api.models.tables.Projecttypecategory.PROJECTTYPECATEGORY;
 
     /**
+     * The table <code>diluv.projectTypePermission</code>.
+     */
+    public static final Projecttypepermission PROJECTTYPEPERMISSION = com.diluv.api.models.tables.Projecttypepermission.PROJECTTYPEPERMISSION;
+
+    /**
      * The table <code>diluv.user</code>.
      */
     public static final User USER = com.diluv.api.models.tables.User.USER;

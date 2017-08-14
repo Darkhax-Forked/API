@@ -29,6 +29,7 @@ CREATE TABLE user (
   username      VARCHAR(20)  NOT NULL UNIQUE,
   password      VARCHAR(60)  NOT NULL,
 
+  permission    INTEGER      NOT NULL,
   avatar        VARCHAR(500) NOT NULL,
 
   verifiedEmail BIT(1)       NOT NULL DEFAULT FALSE,
@@ -46,8 +47,8 @@ CREATE TABLE user (
 );
 
 CREATE TABLE authAccessToken (
-  token        VARCHAR(255) NOT NULL,
-  refreshToken VARCHAR(255) NOT NULL UNIQUE,
+  token        VARCHAR(500) NOT NULL,
+  refreshToken VARCHAR(500) NOT NULL UNIQUE,
 
   userID       BIGINT       NOT NULL,
 
@@ -56,7 +57,7 @@ CREATE TABLE authAccessToken (
 );
 
 CREATE TABLE authMFAToken (
-  token  VARCHAR(255) NOT NULL,
+  token  VARCHAR(500) NOT NULL,
 
   userID BIGINT       NOT NULL,
   PRIMARY KEY (token),
@@ -83,9 +84,20 @@ CREATE TABLE projectType (
   description VARCHAR(2000) NOT NULL,
   slug        VARCHAR(200)  NOT NULL,
 
+  maxByteSize BIGINT        NOT NULL,
+
   gameId      BIGINT        NOT NULL,
   PRIMARY KEY (id),
   FOREIGN KEY (gameId) REFERENCES game (id)
+);
+
+CREATE TABLE projectTypePermission (
+  id               BIGINT  NOT NULL AUTO_INCREMENT,
+
+  permissionCreate INTEGER NOT NULL,
+
+  PRIMARY KEY (id),
+  FOREIGN KEY (id) REFERENCES projectType (id)
 );
 
 CREATE TABLE project (
@@ -138,7 +150,7 @@ CREATE TABLE projectMember (
   id         BIGINT      NOT NULL AUTO_INCREMENT,
 
   role       VARCHAR(50) NOT NULL,
-  permission BIGINT      NOT NULL,
+  permission INTEGER     NOT NULL,
 
   createdAt  DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
@@ -211,8 +223,8 @@ CREATE TABLE projectComment (
 CREATE TABLE analyticsAuthAccessToken (
   id           BIGINT       NOT NULL AUTO_INCREMENT,
 
-  token        VARCHAR(255) NOT NULL,
-  refreshToken VARCHAR(255) NOT NULL,
+  token        VARCHAR(500) NOT NULL,
+  refreshToken VARCHAR(500) NOT NULL,
 
   createdAt    DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
@@ -225,7 +237,7 @@ CREATE TABLE analyticsAuthAccessToken (
 CREATE TABLE analyticsAuthMFAToken (
   id        BIGINT       NOT NULL AUTO_INCREMENT,
 
-  token     VARCHAR(255) NOT NULL,
+  token     VARCHAR(500) NOT NULL,
   createdAt DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
   userId    BIGINT       NOT NULL,

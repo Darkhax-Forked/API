@@ -29,7 +29,7 @@ import java.util.List;
 @SuppressWarnings({"all", "unchecked", "rawtypes"})
 public class Projectmember extends TableImpl<ProjectmemberRecord> {
 
-    private static final long serialVersionUID = 886104030;
+    private static final long serialVersionUID = 827952039;
 
     /**
      * The reference instance of <code>diluv.projectMember</code>
@@ -57,7 +57,7 @@ public class Projectmember extends TableImpl<ProjectmemberRecord> {
     /**
      * The column <code>diluv.projectMember.permission</code>.
      */
-    public final TableField<ProjectmemberRecord, Long> PERMISSION = createField("permission", org.jooq.impl.SQLDataType.BIGINT.nullable(false), this, "");
+    public final TableField<ProjectmemberRecord, Integer> PERMISSION = createField("permission", org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "");
 
     /**
      * The column <code>diluv.projectMember.createdAt</code>.
@@ -133,7 +133,7 @@ public class Projectmember extends TableImpl<ProjectmemberRecord> {
      */
     @Override
     public List<ForeignKey<ProjectmemberRecord, ?>> getReferences() {
-        return Arrays.<ForeignKey<ProjectmemberRecord, ?>>asList(Keys.PROJECTMEMBER_IBFK_2);
+        return Arrays.<ForeignKey<ProjectmemberRecord, ?>>asList(Keys.PROJECTMEMBER_IBFK_2, Keys.PROJECTMEMBER_IBFK_1);
     }
 
     /**

@@ -28,7 +28,7 @@ import java.util.List;
 @SuppressWarnings({"all", "unchecked", "rawtypes"})
 public class Projecttype extends TableImpl<ProjecttypeRecord> {
 
-    private static final long serialVersionUID = 941871809;
+    private static final long serialVersionUID = -1650773950;
 
     /**
      * The reference instance of <code>diluv.projectType</code>
@@ -62,6 +62,11 @@ public class Projecttype extends TableImpl<ProjecttypeRecord> {
      * The column <code>diluv.projectType.slug</code>.
      */
     public final TableField<ProjecttypeRecord, String> SLUG = createField("slug", org.jooq.impl.SQLDataType.VARCHAR.length(200).nullable(false), this, "");
+
+    /**
+     * The column <code>diluv.projectType.maxByteSize</code>.
+     */
+    public final TableField<ProjecttypeRecord, Long> MAXBYTESIZE = createField("maxByteSize", org.jooq.impl.SQLDataType.BIGINT.nullable(false), this, "");
 
     /**
      * The column <code>diluv.projectType.gameId</code>.

@@ -28,7 +28,7 @@ import java.util.List;
 @SuppressWarnings({"all", "unchecked", "rawtypes"})
 public class Diluv extends SchemaImpl {
 
-    private static final long serialVersionUID = -2076433365;
+    private static final long serialVersionUID = -1356800644;
 
     /**
      * The reference instance of <code>diluv</code>
@@ -116,6 +116,11 @@ public class Diluv extends SchemaImpl {
     public final Projecttypecategory PROJECTTYPECATEGORY = com.diluv.api.models.tables.Projecttypecategory.PROJECTTYPECATEGORY;
 
     /**
+     * The table <code>diluv.projectTypePermission</code>.
+     */
+    public final Projecttypepermission PROJECTTYPEPERMISSION = com.diluv.api.models.tables.Projecttypepermission.PROJECTTYPEPERMISSION;
+
+    /**
      * The table <code>diluv.user</code>.
      */
     public final User USER = com.diluv.api.models.tables.User.USER;
@@ -166,6 +171,7 @@ public class Diluv extends SchemaImpl {
                 Projectmember.PROJECTMEMBER,
                 Projecttype.PROJECTTYPE,
                 Projecttypecategory.PROJECTTYPECATEGORY,
+                Projecttypepermission.PROJECTTYPEPERMISSION,
                 User.USER,
                 Userbetakey.USERBETAKEY);
     }

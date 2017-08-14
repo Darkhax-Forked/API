@@ -28,7 +28,7 @@ import java.util.List;
 @SuppressWarnings({"all", "unchecked", "rawtypes"})
 public class Authmfatoken extends TableImpl<AuthmfatokenRecord> {
 
-    private static final long serialVersionUID = 1621089343;
+    private static final long serialVersionUID = 1407795067;
 
     /**
      * The reference instance of <code>diluv.authMFAToken</code>
@@ -46,7 +46,7 @@ public class Authmfatoken extends TableImpl<AuthmfatokenRecord> {
     /**
      * The column <code>diluv.authMFAToken.token</code>.
      */
-    public final TableField<AuthmfatokenRecord, String> TOKEN = createField("token", org.jooq.impl.SQLDataType.VARCHAR.length(255).nullable(false), this, "");
+    public final TableField<AuthmfatokenRecord, String> TOKEN = createField("token", org.jooq.impl.SQLDataType.VARCHAR.length(500).nullable(false), this, "");
 
     /**
      * The column <code>diluv.authMFAToken.userID</code>.
@@ -97,6 +97,14 @@ public class Authmfatoken extends TableImpl<AuthmfatokenRecord> {
     @Override
     public List<UniqueKey<AuthmfatokenRecord>> getKeys() {
         return Arrays.<UniqueKey<AuthmfatokenRecord>>asList(Keys.KEY_AUTHMFATOKEN_PRIMARY);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<ForeignKey<AuthmfatokenRecord, ?>> getReferences() {
+        return Arrays.<ForeignKey<AuthmfatokenRecord, ?>>asList(Keys.AUTHMFATOKEN_IBFK_1);
     }
 
     /**

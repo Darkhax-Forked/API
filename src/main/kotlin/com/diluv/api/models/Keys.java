@@ -42,6 +42,7 @@ public class Keys {
     public static final Identity<ProjectmemberRecord, Long> IDENTITY_PROJECTMEMBER = Identities0.IDENTITY_PROJECTMEMBER;
     public static final Identity<ProjecttypeRecord, Long> IDENTITY_PROJECTTYPE = Identities0.IDENTITY_PROJECTTYPE;
     public static final Identity<ProjecttypecategoryRecord, Long> IDENTITY_PROJECTTYPECATEGORY = Identities0.IDENTITY_PROJECTTYPECATEGORY;
+    public static final Identity<ProjecttypepermissionRecord, Long> IDENTITY_PROJECTTYPEPERMISSION = Identities0.IDENTITY_PROJECTTYPEPERMISSION;
     public static final Identity<UserRecord, Long> IDENTITY_USER = Identities0.IDENTITY_USER;
 
     // -------------------------------------------------------------------------
@@ -65,6 +66,7 @@ public class Keys {
     public static final UniqueKey<ProjectmemberRecord> KEY_PROJECTMEMBER_PRIMARY = UniqueKeys0.KEY_PROJECTMEMBER_PRIMARY;
     public static final UniqueKey<ProjecttypeRecord> KEY_PROJECTTYPE_PRIMARY = UniqueKeys0.KEY_PROJECTTYPE_PRIMARY;
     public static final UniqueKey<ProjecttypecategoryRecord> KEY_PROJECTTYPECATEGORY_PRIMARY = UniqueKeys0.KEY_PROJECTTYPECATEGORY_PRIMARY;
+    public static final UniqueKey<ProjecttypepermissionRecord> KEY_PROJECTTYPEPERMISSION_PRIMARY = UniqueKeys0.KEY_PROJECTTYPEPERMISSION_PRIMARY;
     public static final UniqueKey<UserRecord> KEY_USER_PRIMARY = UniqueKeys0.KEY_USER_PRIMARY;
     public static final UniqueKey<UserRecord> KEY_USER_EMAIL = UniqueKeys0.KEY_USER_EMAIL;
     public static final UniqueKey<UserRecord> KEY_USER_USERNAME = UniqueKeys0.KEY_USER_USERNAME;
@@ -74,20 +76,30 @@ public class Keys {
     // FOREIGN KEY definitions
     // -------------------------------------------------------------------------
 
+    public static final ForeignKey<AnalyticsauthaccesstokenRecord, UserRecord> ANALYTICSAUTHACCESSTOKEN_IBFK_1 = ForeignKeys0.ANALYTICSAUTHACCESSTOKEN_IBFK_1;
+    public static final ForeignKey<AnalyticsauthmfatokenRecord, UserRecord> ANALYTICSAUTHMFATOKEN_IBFK_1 = ForeignKeys0.ANALYTICSAUTHMFATOKEN_IBFK_1;
+    public static final ForeignKey<AnalyticsbetakeyRecord, UserRecord> ANALYTICSBETAKEY_IBFK_1 = ForeignKeys0.ANALYTICSBETAKEY_IBFK_1;
+    public static final ForeignKey<AuthaccesstokenRecord, UserRecord> AUTHACCESSTOKEN_IBFK_1 = ForeignKeys0.AUTHACCESSTOKEN_IBFK_1;
+    public static final ForeignKey<AuthmfatokenRecord, UserRecord> AUTHMFATOKEN_IBFK_1 = ForeignKeys0.AUTHMFATOKEN_IBFK_1;
     public static final ForeignKey<GameversionRecord, GameRecord> GAMEVERSION_IBFK_1 = ForeignKeys0.GAMEVERSION_IBFK_1;
     public static final ForeignKey<ProjectRecord, ProjecttypeRecord> PROJECT_IBFK_1 = ForeignKeys0.PROJECT_IBFK_1;
+    public static final ForeignKey<ProjectRecord, UserRecord> PROJECT_IBFK_2 = ForeignKeys0.PROJECT_IBFK_2;
     public static final ForeignKey<ProjectcategoryRecord, ProjectRecord> PROJECTCATEGORY_IBFK_1 = ForeignKeys0.PROJECTCATEGORY_IBFK_1;
     public static final ForeignKey<ProjectcategoryRecord, ProjecttypecategoryRecord> PROJECTCATEGORY_IBFK_2 = ForeignKeys0.PROJECTCATEGORY_IBFK_2;
     public static final ForeignKey<ProjectcommentRecord, ProjectcommentRecord> PROJECTCOMMENT_IBFK_1 = ForeignKeys0.PROJECTCOMMENT_IBFK_1;
     public static final ForeignKey<ProjectcommentRecord, ProjectRecord> PROJECTCOMMENT_IBFK_2 = ForeignKeys0.PROJECTCOMMENT_IBFK_2;
+    public static final ForeignKey<ProjectcommentRecord, UserRecord> PROJECTCOMMENT_IBFK_3 = ForeignKeys0.PROJECTCOMMENT_IBFK_3;
     public static final ForeignKey<ProjectfileRecord, ProjectfileRecord> PROJECTFILE_IBFK_1 = ForeignKeys0.PROJECTFILE_IBFK_1;
     public static final ForeignKey<ProjectfileRecord, ProjectRecord> PROJECTFILE_IBFK_2 = ForeignKeys0.PROJECTFILE_IBFK_2;
+    public static final ForeignKey<ProjectfileRecord, UserRecord> PROJECTFILE_IBFK_3 = ForeignKeys0.PROJECTFILE_IBFK_3;
     public static final ForeignKey<ProjectfilegameversionRecord, ProjectfileRecord> PROJECTFILEGAMEVERSION_IBFK_1 = ForeignKeys0.PROJECTFILEGAMEVERSION_IBFK_1;
     public static final ForeignKey<ProjectfilegameversionRecord, GameversionRecord> PROJECTFILEGAMEVERSION_IBFK_2 = ForeignKeys0.PROJECTFILEGAMEVERSION_IBFK_2;
     public static final ForeignKey<ProjectfileprocessingRecord, ProjectfileRecord> PROJECTFILEPROCESSING_IBFK_1 = ForeignKeys0.PROJECTFILEPROCESSING_IBFK_1;
     public static final ForeignKey<ProjectmemberRecord, ProjectRecord> PROJECTMEMBER_IBFK_2 = ForeignKeys0.PROJECTMEMBER_IBFK_2;
+    public static final ForeignKey<ProjectmemberRecord, UserRecord> PROJECTMEMBER_IBFK_1 = ForeignKeys0.PROJECTMEMBER_IBFK_1;
     public static final ForeignKey<ProjecttypeRecord, GameRecord> PROJECTTYPE_IBFK_1 = ForeignKeys0.PROJECTTYPE_IBFK_1;
     public static final ForeignKey<ProjecttypecategoryRecord, ProjecttypeRecord> PROJECTTYPECATEGORY_IBFK_1 = ForeignKeys0.PROJECTTYPECATEGORY_IBFK_1;
+    public static final ForeignKey<ProjecttypepermissionRecord, ProjecttypeRecord> PROJECTTYPEPERMISSION_IBFK_1 = ForeignKeys0.PROJECTTYPEPERMISSION_IBFK_1;
     public static final ForeignKey<UserbetakeyRecord, UserRecord> USERBETAKEY_IBFK_1 = ForeignKeys0.USERBETAKEY_IBFK_1;
     public static final ForeignKey<UserbetakeyRecord, UserRecord> USERBETAKEY_IBFK_2 = ForeignKeys0.USERBETAKEY_IBFK_2;
 
@@ -106,6 +118,7 @@ public class Keys {
         public static Identity<ProjectmemberRecord, Long> IDENTITY_PROJECTMEMBER = createIdentity(Projectmember.PROJECTMEMBER, Projectmember.PROJECTMEMBER.ID);
         public static Identity<ProjecttypeRecord, Long> IDENTITY_PROJECTTYPE = createIdentity(Projecttype.PROJECTTYPE, Projecttype.PROJECTTYPE.ID);
         public static Identity<ProjecttypecategoryRecord, Long> IDENTITY_PROJECTTYPECATEGORY = createIdentity(Projecttypecategory.PROJECTTYPECATEGORY, Projecttypecategory.PROJECTTYPECATEGORY.ID);
+        public static Identity<ProjecttypepermissionRecord, Long> IDENTITY_PROJECTTYPEPERMISSION = createIdentity(Projecttypepermission.PROJECTTYPEPERMISSION, Projecttypepermission.PROJECTTYPEPERMISSION.ID);
         public static Identity<UserRecord, Long> IDENTITY_USER = createIdentity(User.USER, User.USER.ID);
     }
 
@@ -127,6 +140,7 @@ public class Keys {
         public static final UniqueKey<ProjectmemberRecord> KEY_PROJECTMEMBER_PRIMARY = createUniqueKey(Projectmember.PROJECTMEMBER, "KEY_projectMember_PRIMARY", Projectmember.PROJECTMEMBER.ID);
         public static final UniqueKey<ProjecttypeRecord> KEY_PROJECTTYPE_PRIMARY = createUniqueKey(Projecttype.PROJECTTYPE, "KEY_projectType_PRIMARY", Projecttype.PROJECTTYPE.ID);
         public static final UniqueKey<ProjecttypecategoryRecord> KEY_PROJECTTYPECATEGORY_PRIMARY = createUniqueKey(Projecttypecategory.PROJECTTYPECATEGORY, "KEY_projectTypeCategory_PRIMARY", Projecttypecategory.PROJECTTYPECATEGORY.ID);
+        public static final UniqueKey<ProjecttypepermissionRecord> KEY_PROJECTTYPEPERMISSION_PRIMARY = createUniqueKey(Projecttypepermission.PROJECTTYPEPERMISSION, "KEY_projectTypePermission_PRIMARY", Projecttypepermission.PROJECTTYPEPERMISSION.ID);
         public static final UniqueKey<UserRecord> KEY_USER_PRIMARY = createUniqueKey(User.USER, "KEY_user_PRIMARY", User.USER.ID);
         public static final UniqueKey<UserRecord> KEY_USER_EMAIL = createUniqueKey(User.USER, "KEY_user_email", User.USER.EMAIL);
         public static final UniqueKey<UserRecord> KEY_USER_USERNAME = createUniqueKey(User.USER, "KEY_user_username", User.USER.USERNAME);
@@ -134,20 +148,30 @@ public class Keys {
     }
 
     private static class ForeignKeys0 extends AbstractKeys {
+        public static final ForeignKey<AnalyticsauthaccesstokenRecord, UserRecord> ANALYTICSAUTHACCESSTOKEN_IBFK_1 = createForeignKey(com.diluv.api.models.Keys.KEY_USER_PRIMARY, Analyticsauthaccesstoken.ANALYTICSAUTHACCESSTOKEN, "analyticsAuthAccessToken_ibfk_1", Analyticsauthaccesstoken.ANALYTICSAUTHACCESSTOKEN.USERID);
+        public static final ForeignKey<AnalyticsauthmfatokenRecord, UserRecord> ANALYTICSAUTHMFATOKEN_IBFK_1 = createForeignKey(com.diluv.api.models.Keys.KEY_USER_PRIMARY, Analyticsauthmfatoken.ANALYTICSAUTHMFATOKEN, "analyticsAuthMFAToken_ibfk_1", Analyticsauthmfatoken.ANALYTICSAUTHMFATOKEN.USERID);
+        public static final ForeignKey<AnalyticsbetakeyRecord, UserRecord> ANALYTICSBETAKEY_IBFK_1 = createForeignKey(com.diluv.api.models.Keys.KEY_USER_PRIMARY, Analyticsbetakey.ANALYTICSBETAKEY, "analyticsBetaKey_ibfk_1", Analyticsbetakey.ANALYTICSBETAKEY.USERID);
+        public static final ForeignKey<AuthaccesstokenRecord, UserRecord> AUTHACCESSTOKEN_IBFK_1 = createForeignKey(com.diluv.api.models.Keys.KEY_USER_PRIMARY, Authaccesstoken.AUTHACCESSTOKEN, "authAccessToken_ibfk_1", Authaccesstoken.AUTHACCESSTOKEN.USERID);
+        public static final ForeignKey<AuthmfatokenRecord, UserRecord> AUTHMFATOKEN_IBFK_1 = createForeignKey(com.diluv.api.models.Keys.KEY_USER_PRIMARY, Authmfatoken.AUTHMFATOKEN, "authMFAToken_ibfk_1", Authmfatoken.AUTHMFATOKEN.USERID);
         public static final ForeignKey<GameversionRecord, GameRecord> GAMEVERSION_IBFK_1 = createForeignKey(com.diluv.api.models.Keys.KEY_GAME_PRIMARY, Gameversion.GAMEVERSION, "gameVersion_ibfk_1", Gameversion.GAMEVERSION.GAMEID);
         public static final ForeignKey<ProjectRecord, ProjecttypeRecord> PROJECT_IBFK_1 = createForeignKey(com.diluv.api.models.Keys.KEY_PROJECTTYPE_PRIMARY, Project.PROJECT, "project_ibfk_1", Project.PROJECT.PROJECTTYPEID);
+        public static final ForeignKey<ProjectRecord, UserRecord> PROJECT_IBFK_2 = createForeignKey(com.diluv.api.models.Keys.KEY_USER_PRIMARY, Project.PROJECT, "project_ibfk_2", Project.PROJECT.USERID);
         public static final ForeignKey<ProjectcategoryRecord, ProjectRecord> PROJECTCATEGORY_IBFK_1 = createForeignKey(com.diluv.api.models.Keys.KEY_PROJECT_PRIMARY, Projectcategory.PROJECTCATEGORY, "projectCategory_ibfk_1", Projectcategory.PROJECTCATEGORY.PROJECTID);
         public static final ForeignKey<ProjectcategoryRecord, ProjecttypecategoryRecord> PROJECTCATEGORY_IBFK_2 = createForeignKey(com.diluv.api.models.Keys.KEY_PROJECTTYPECATEGORY_PRIMARY, Projectcategory.PROJECTCATEGORY, "projectCategory_ibfk_2", Projectcategory.PROJECTCATEGORY.PROJECTTYPECATEGORYID);
         public static final ForeignKey<ProjectcommentRecord, ProjectcommentRecord> PROJECTCOMMENT_IBFK_1 = createForeignKey(com.diluv.api.models.Keys.KEY_PROJECTCOMMENT_PRIMARY, Projectcomment.PROJECTCOMMENT, "projectComment_ibfk_1", Projectcomment.PROJECTCOMMENT.PARENTID);
         public static final ForeignKey<ProjectcommentRecord, ProjectRecord> PROJECTCOMMENT_IBFK_2 = createForeignKey(com.diluv.api.models.Keys.KEY_PROJECT_PRIMARY, Projectcomment.PROJECTCOMMENT, "projectComment_ibfk_2", Projectcomment.PROJECTCOMMENT.PROJECTID);
+        public static final ForeignKey<ProjectcommentRecord, UserRecord> PROJECTCOMMENT_IBFK_3 = createForeignKey(com.diluv.api.models.Keys.KEY_USER_PRIMARY, Projectcomment.PROJECTCOMMENT, "projectComment_ibfk_3", Projectcomment.PROJECTCOMMENT.USERID);
         public static final ForeignKey<ProjectfileRecord, ProjectfileRecord> PROJECTFILE_IBFK_1 = createForeignKey(com.diluv.api.models.Keys.KEY_PROJECTFILE_PRIMARY, Projectfile.PROJECTFILE, "projectFile_ibfk_1", Projectfile.PROJECTFILE.PARENTID);
         public static final ForeignKey<ProjectfileRecord, ProjectRecord> PROJECTFILE_IBFK_2 = createForeignKey(com.diluv.api.models.Keys.KEY_PROJECT_PRIMARY, Projectfile.PROJECTFILE, "projectFile_ibfk_2", Projectfile.PROJECTFILE.PROJECTID);
+        public static final ForeignKey<ProjectfileRecord, UserRecord> PROJECTFILE_IBFK_3 = createForeignKey(com.diluv.api.models.Keys.KEY_USER_PRIMARY, Projectfile.PROJECTFILE, "projectFile_ibfk_3", Projectfile.PROJECTFILE.USERID);
         public static final ForeignKey<ProjectfilegameversionRecord, ProjectfileRecord> PROJECTFILEGAMEVERSION_IBFK_1 = createForeignKey(com.diluv.api.models.Keys.KEY_PROJECTFILE_PRIMARY, Projectfilegameversion.PROJECTFILEGAMEVERSION, "projectFileGameVersion_ibfk_1", Projectfilegameversion.PROJECTFILEGAMEVERSION.PROJECTFILEID);
         public static final ForeignKey<ProjectfilegameversionRecord, GameversionRecord> PROJECTFILEGAMEVERSION_IBFK_2 = createForeignKey(com.diluv.api.models.Keys.KEY_GAMEVERSION_PRIMARY, Projectfilegameversion.PROJECTFILEGAMEVERSION, "projectFileGameVersion_ibfk_2", Projectfilegameversion.PROJECTFILEGAMEVERSION.PROJECTVERSIONID);
         public static final ForeignKey<ProjectfileprocessingRecord, ProjectfileRecord> PROJECTFILEPROCESSING_IBFK_1 = createForeignKey(com.diluv.api.models.Keys.KEY_PROJECTFILE_PRIMARY, Projectfileprocessing.PROJECTFILEPROCESSING, "projectFileProcessing_ibfk_1", Projectfileprocessing.PROJECTFILEPROCESSING.PROJECTFILEID);
         public static final ForeignKey<ProjectmemberRecord, ProjectRecord> PROJECTMEMBER_IBFK_2 = createForeignKey(com.diluv.api.models.Keys.KEY_PROJECT_PRIMARY, Projectmember.PROJECTMEMBER, "projectMember_ibfk_2", Projectmember.PROJECTMEMBER.PROJECTID);
+        public static final ForeignKey<ProjectmemberRecord, UserRecord> PROJECTMEMBER_IBFK_1 = createForeignKey(com.diluv.api.models.Keys.KEY_USER_PRIMARY, Projectmember.PROJECTMEMBER, "projectMember_ibfk_1", Projectmember.PROJECTMEMBER.USERID);
         public static final ForeignKey<ProjecttypeRecord, GameRecord> PROJECTTYPE_IBFK_1 = createForeignKey(com.diluv.api.models.Keys.KEY_GAME_PRIMARY, Projecttype.PROJECTTYPE, "projectType_ibfk_1", Projecttype.PROJECTTYPE.GAMEID);
         public static final ForeignKey<ProjecttypecategoryRecord, ProjecttypeRecord> PROJECTTYPECATEGORY_IBFK_1 = createForeignKey(com.diluv.api.models.Keys.KEY_PROJECTTYPE_PRIMARY, Projecttypecategory.PROJECTTYPECATEGORY, "projectTypeCategory_ibfk_1", Projecttypecategory.PROJECTTYPECATEGORY.PROJECTTYPEID);
+        public static final ForeignKey<ProjecttypepermissionRecord, ProjecttypeRecord> PROJECTTYPEPERMISSION_IBFK_1 = createForeignKey(com.diluv.api.models.Keys.KEY_PROJECTTYPE_PRIMARY, Projecttypepermission.PROJECTTYPEPERMISSION, "projectTypePermission_ibfk_1", Projecttypepermission.PROJECTTYPEPERMISSION.ID);
         public static final ForeignKey<UserbetakeyRecord, UserRecord> USERBETAKEY_IBFK_1 = createForeignKey(com.diluv.api.models.Keys.KEY_USER_PRIMARY, Userbetakey.USERBETAKEY, "userBetaKey_ibfk_1", Userbetakey.USERBETAKEY.USERID);
         public static final ForeignKey<UserbetakeyRecord, UserRecord> USERBETAKEY_IBFK_2 = createForeignKey(com.diluv.api.models.Keys.KEY_USER_PRIMARY, Userbetakey.USERBETAKEY, "userBetaKey_ibfk_2", Userbetakey.USERBETAKEY.CREATIONUSERID);
     }

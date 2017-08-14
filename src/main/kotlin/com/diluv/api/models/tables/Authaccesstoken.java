@@ -28,7 +28,7 @@ import java.util.List;
 @SuppressWarnings({"all", "unchecked", "rawtypes"})
 public class Authaccesstoken extends TableImpl<AuthaccesstokenRecord> {
 
-    private static final long serialVersionUID = -279788331;
+    private static final long serialVersionUID = -360610746;
 
     /**
      * The reference instance of <code>diluv.authAccessToken</code>
@@ -46,12 +46,12 @@ public class Authaccesstoken extends TableImpl<AuthaccesstokenRecord> {
     /**
      * The column <code>diluv.authAccessToken.token</code>.
      */
-    public final TableField<AuthaccesstokenRecord, String> TOKEN = createField("token", org.jooq.impl.SQLDataType.VARCHAR.length(255).nullable(false), this, "");
+    public final TableField<AuthaccesstokenRecord, String> TOKEN = createField("token", org.jooq.impl.SQLDataType.VARCHAR.length(500).nullable(false), this, "");
 
     /**
      * The column <code>diluv.authAccessToken.refreshToken</code>.
      */
-    public final TableField<AuthaccesstokenRecord, String> REFRESHTOKEN = createField("refreshToken", org.jooq.impl.SQLDataType.VARCHAR.length(255).nullable(false), this, "");
+    public final TableField<AuthaccesstokenRecord, String> REFRESHTOKEN = createField("refreshToken", org.jooq.impl.SQLDataType.VARCHAR.length(500).nullable(false), this, "");
 
     /**
      * The column <code>diluv.authAccessToken.userID</code>.
@@ -102,6 +102,14 @@ public class Authaccesstoken extends TableImpl<AuthaccesstokenRecord> {
     @Override
     public List<UniqueKey<AuthaccesstokenRecord>> getKeys() {
         return Arrays.<UniqueKey<AuthaccesstokenRecord>>asList(Keys.KEY_AUTHACCESSTOKEN_PRIMARY, Keys.KEY_AUTHACCESSTOKEN_REFRESHTOKEN);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<ForeignKey<AuthaccesstokenRecord, ?>> getReferences() {
+        return Arrays.<ForeignKey<AuthaccesstokenRecord, ?>>asList(Keys.AUTHACCESSTOKEN_IBFK_1);
     }
 
     /**
