@@ -32,147 +32,147 @@ public class Keys {
     // IDENTITY definitions
     // -------------------------------------------------------------------------
 
-    public static final Identity<AnalyticsauthaccesstokenRecord, Long> IDENTITY_ANALYTICSAUTHACCESSTOKEN = Identities0.IDENTITY_ANALYTICSAUTHACCESSTOKEN;
-    public static final Identity<AnalyticsauthmfatokenRecord, Long> IDENTITY_ANALYTICSAUTHMFATOKEN = Identities0.IDENTITY_ANALYTICSAUTHMFATOKEN;
+    public static final Identity<AnalyticsAuthAccessTokenRecord, Long> IDENTITY_ANALYTICS_AUTH_ACCESS_TOKEN = Identities0.IDENTITY_ANALYTICS_AUTH_ACCESS_TOKEN;
+    public static final Identity<AnalyticsAuthMfaTokenRecord, Long> IDENTITY_ANALYTICS_AUTH_MFA_TOKEN = Identities0.IDENTITY_ANALYTICS_AUTH_MFA_TOKEN;
     public static final Identity<GameRecord, Long> IDENTITY_GAME = Identities0.IDENTITY_GAME;
-    public static final Identity<GameversionRecord, Long> IDENTITY_GAMEVERSION = Identities0.IDENTITY_GAMEVERSION;
+    public static final Identity<GameVersionRecord, Long> IDENTITY_GAME_VERSION = Identities0.IDENTITY_GAME_VERSION;
     public static final Identity<ProjectRecord, Long> IDENTITY_PROJECT = Identities0.IDENTITY_PROJECT;
-    public static final Identity<ProjectcommentRecord, Long> IDENTITY_PROJECTCOMMENT = Identities0.IDENTITY_PROJECTCOMMENT;
-    public static final Identity<ProjectfileRecord, Long> IDENTITY_PROJECTFILE = Identities0.IDENTITY_PROJECTFILE;
-    public static final Identity<ProjectmemberRecord, Long> IDENTITY_PROJECTMEMBER = Identities0.IDENTITY_PROJECTMEMBER;
-    public static final Identity<ProjecttypeRecord, Long> IDENTITY_PROJECTTYPE = Identities0.IDENTITY_PROJECTTYPE;
-    public static final Identity<ProjecttypecategoryRecord, Long> IDENTITY_PROJECTTYPECATEGORY = Identities0.IDENTITY_PROJECTTYPECATEGORY;
-    public static final Identity<ProjecttypepermissionRecord, Long> IDENTITY_PROJECTTYPEPERMISSION = Identities0.IDENTITY_PROJECTTYPEPERMISSION;
+    public static final Identity<ProjectCommentRecord, Long> IDENTITY_PROJECT_COMMENT = Identities0.IDENTITY_PROJECT_COMMENT;
+    public static final Identity<ProjectFileRecord, Long> IDENTITY_PROJECT_FILE = Identities0.IDENTITY_PROJECT_FILE;
+    public static final Identity<ProjectMemberRecord, Long> IDENTITY_PROJECT_MEMBER = Identities0.IDENTITY_PROJECT_MEMBER;
+    public static final Identity<ProjectTypeRecord, Long> IDENTITY_PROJECT_TYPE = Identities0.IDENTITY_PROJECT_TYPE;
+    public static final Identity<ProjectTypeCategoryRecord, Long> IDENTITY_PROJECT_TYPE_CATEGORY = Identities0.IDENTITY_PROJECT_TYPE_CATEGORY;
+    public static final Identity<ProjectTypePermissionRecord, Long> IDENTITY_PROJECT_TYPE_PERMISSION = Identities0.IDENTITY_PROJECT_TYPE_PERMISSION;
     public static final Identity<UserRecord, Long> IDENTITY_USER = Identities0.IDENTITY_USER;
 
     // -------------------------------------------------------------------------
     // UNIQUE and PRIMARY KEY definitions
     // -------------------------------------------------------------------------
 
-    public static final UniqueKey<AnalyticsauthaccesstokenRecord> KEY_ANALYTICSAUTHACCESSTOKEN_PRIMARY = UniqueKeys0.KEY_ANALYTICSAUTHACCESSTOKEN_PRIMARY;
-    public static final UniqueKey<AnalyticsauthmfatokenRecord> KEY_ANALYTICSAUTHMFATOKEN_PRIMARY = UniqueKeys0.KEY_ANALYTICSAUTHMFATOKEN_PRIMARY;
-    public static final UniqueKey<AnalyticsbetakeyRecord> KEY_ANALYTICSBETAKEY_PRIMARY = UniqueKeys0.KEY_ANALYTICSBETAKEY_PRIMARY;
-    public static final UniqueKey<AuthaccesstokenRecord> KEY_AUTHACCESSTOKEN_PRIMARY = UniqueKeys0.KEY_AUTHACCESSTOKEN_PRIMARY;
-    public static final UniqueKey<AuthaccesstokenRecord> KEY_AUTHACCESSTOKEN_REFRESHTOKEN = UniqueKeys0.KEY_AUTHACCESSTOKEN_REFRESHTOKEN;
-    public static final UniqueKey<AuthmfatokenRecord> KEY_AUTHMFATOKEN_PRIMARY = UniqueKeys0.KEY_AUTHMFATOKEN_PRIMARY;
+    public static final UniqueKey<AnalyticsAuthAccessTokenRecord> KEY_ANALYTICS_AUTH_ACCESS_TOKEN_PRIMARY = UniqueKeys0.KEY_ANALYTICS_AUTH_ACCESS_TOKEN_PRIMARY;
+    public static final UniqueKey<AnalyticsAuthMfaTokenRecord> KEY_ANALYTICS_AUTH_MFA_TOKEN_PRIMARY = UniqueKeys0.KEY_ANALYTICS_AUTH_MFA_TOKEN_PRIMARY;
+    public static final UniqueKey<AnalyticsBetaKeyRecord> KEY_ANALYTICS_BETA_KEY_PRIMARY = UniqueKeys0.KEY_ANALYTICS_BETA_KEY_PRIMARY;
+    public static final UniqueKey<AuthAccessTokenRecord> KEY_AUTH_ACCESS_TOKEN_PRIMARY = UniqueKeys0.KEY_AUTH_ACCESS_TOKEN_PRIMARY;
+    public static final UniqueKey<AuthAccessTokenRecord> KEY_AUTH_ACCESS_TOKEN_REFRESH_TOKEN = UniqueKeys0.KEY_AUTH_ACCESS_TOKEN_REFRESH_TOKEN;
+    public static final UniqueKey<AuthMfaTokenRecord> KEY_AUTH_MFA_TOKEN_PRIMARY = UniqueKeys0.KEY_AUTH_MFA_TOKEN_PRIMARY;
     public static final UniqueKey<GameRecord> KEY_GAME_PRIMARY = UniqueKeys0.KEY_GAME_PRIMARY;
-    public static final UniqueKey<GameversionRecord> KEY_GAMEVERSION_PRIMARY = UniqueKeys0.KEY_GAMEVERSION_PRIMARY;
+    public static final UniqueKey<GameVersionRecord> KEY_GAME_VERSION_PRIMARY = UniqueKeys0.KEY_GAME_VERSION_PRIMARY;
     public static final UniqueKey<ProjectRecord> KEY_PROJECT_PRIMARY = UniqueKeys0.KEY_PROJECT_PRIMARY;
-    public static final UniqueKey<ProjectcategoryRecord> KEY_PROJECTCATEGORY_PRIMARY = UniqueKeys0.KEY_PROJECTCATEGORY_PRIMARY;
-    public static final UniqueKey<ProjectcommentRecord> KEY_PROJECTCOMMENT_PRIMARY = UniqueKeys0.KEY_PROJECTCOMMENT_PRIMARY;
-    public static final UniqueKey<ProjectfileRecord> KEY_PROJECTFILE_PRIMARY = UniqueKeys0.KEY_PROJECTFILE_PRIMARY;
-    public static final UniqueKey<ProjectfilegameversionRecord> KEY_PROJECTFILEGAMEVERSION_PRIMARY = UniqueKeys0.KEY_PROJECTFILEGAMEVERSION_PRIMARY;
-    public static final UniqueKey<ProjectfileprocessingRecord> KEY_PROJECTFILEPROCESSING_PRIMARY = UniqueKeys0.KEY_PROJECTFILEPROCESSING_PRIMARY;
-    public static final UniqueKey<ProjectmemberRecord> KEY_PROJECTMEMBER_PRIMARY = UniqueKeys0.KEY_PROJECTMEMBER_PRIMARY;
-    public static final UniqueKey<ProjecttypeRecord> KEY_PROJECTTYPE_PRIMARY = UniqueKeys0.KEY_PROJECTTYPE_PRIMARY;
-    public static final UniqueKey<ProjecttypecategoryRecord> KEY_PROJECTTYPECATEGORY_PRIMARY = UniqueKeys0.KEY_PROJECTTYPECATEGORY_PRIMARY;
-    public static final UniqueKey<ProjecttypepermissionRecord> KEY_PROJECTTYPEPERMISSION_PRIMARY = UniqueKeys0.KEY_PROJECTTYPEPERMISSION_PRIMARY;
+    public static final UniqueKey<ProjectCategoryRecord> KEY_PROJECT_CATEGORY_PRIMARY = UniqueKeys0.KEY_PROJECT_CATEGORY_PRIMARY;
+    public static final UniqueKey<ProjectCommentRecord> KEY_PROJECT_COMMENT_PRIMARY = UniqueKeys0.KEY_PROJECT_COMMENT_PRIMARY;
+    public static final UniqueKey<ProjectFileRecord> KEY_PROJECT_FILE_PRIMARY = UniqueKeys0.KEY_PROJECT_FILE_PRIMARY;
+    public static final UniqueKey<ProjectFileGameVersionRecord> KEY_PROJECT_FILE_GAME_VERSION_PRIMARY = UniqueKeys0.KEY_PROJECT_FILE_GAME_VERSION_PRIMARY;
+    public static final UniqueKey<ProjectFileProcessingRecord> KEY_PROJECT_FILE_PROCESSING_PRIMARY = UniqueKeys0.KEY_PROJECT_FILE_PROCESSING_PRIMARY;
+    public static final UniqueKey<ProjectMemberRecord> KEY_PROJECT_MEMBER_PRIMARY = UniqueKeys0.KEY_PROJECT_MEMBER_PRIMARY;
+    public static final UniqueKey<ProjectTypeRecord> KEY_PROJECT_TYPE_PRIMARY = UniqueKeys0.KEY_PROJECT_TYPE_PRIMARY;
+    public static final UniqueKey<ProjectTypeCategoryRecord> KEY_PROJECT_TYPE_CATEGORY_PRIMARY = UniqueKeys0.KEY_PROJECT_TYPE_CATEGORY_PRIMARY;
+    public static final UniqueKey<ProjectTypePermissionRecord> KEY_PROJECT_TYPE_PERMISSION_PRIMARY = UniqueKeys0.KEY_PROJECT_TYPE_PERMISSION_PRIMARY;
     public static final UniqueKey<UserRecord> KEY_USER_PRIMARY = UniqueKeys0.KEY_USER_PRIMARY;
     public static final UniqueKey<UserRecord> KEY_USER_EMAIL = UniqueKeys0.KEY_USER_EMAIL;
     public static final UniqueKey<UserRecord> KEY_USER_USERNAME = UniqueKeys0.KEY_USER_USERNAME;
-    public static final UniqueKey<UserbetakeyRecord> KEY_USERBETAKEY_PRIMARY = UniqueKeys0.KEY_USERBETAKEY_PRIMARY;
+    public static final UniqueKey<UserBetaKeyRecord> KEY_USER_BETA_KEY_PRIMARY = UniqueKeys0.KEY_USER_BETA_KEY_PRIMARY;
 
     // -------------------------------------------------------------------------
     // FOREIGN KEY definitions
     // -------------------------------------------------------------------------
 
-    public static final ForeignKey<AnalyticsauthaccesstokenRecord, UserRecord> ANALYTICSAUTHACCESSTOKEN_IBFK_1 = ForeignKeys0.ANALYTICSAUTHACCESSTOKEN_IBFK_1;
-    public static final ForeignKey<AnalyticsauthmfatokenRecord, UserRecord> ANALYTICSAUTHMFATOKEN_IBFK_1 = ForeignKeys0.ANALYTICSAUTHMFATOKEN_IBFK_1;
-    public static final ForeignKey<AnalyticsbetakeyRecord, UserRecord> ANALYTICSBETAKEY_IBFK_1 = ForeignKeys0.ANALYTICSBETAKEY_IBFK_1;
-    public static final ForeignKey<AuthaccesstokenRecord, UserRecord> AUTHACCESSTOKEN_IBFK_1 = ForeignKeys0.AUTHACCESSTOKEN_IBFK_1;
-    public static final ForeignKey<AuthmfatokenRecord, UserRecord> AUTHMFATOKEN_IBFK_1 = ForeignKeys0.AUTHMFATOKEN_IBFK_1;
-    public static final ForeignKey<GameversionRecord, GameRecord> GAMEVERSION_IBFK_1 = ForeignKeys0.GAMEVERSION_IBFK_1;
-    public static final ForeignKey<ProjectRecord, ProjecttypeRecord> PROJECT_IBFK_1 = ForeignKeys0.PROJECT_IBFK_1;
+    public static final ForeignKey<AnalyticsAuthAccessTokenRecord, UserRecord> ANALYTICS_AUTH_ACCESS_TOKEN_IBFK_1 = ForeignKeys0.ANALYTICS_AUTH_ACCESS_TOKEN_IBFK_1;
+    public static final ForeignKey<AnalyticsAuthMfaTokenRecord, UserRecord> ANALYTICS_AUTH_MFA_TOKEN_IBFK_1 = ForeignKeys0.ANALYTICS_AUTH_MFA_TOKEN_IBFK_1;
+    public static final ForeignKey<AnalyticsBetaKeyRecord, UserRecord> ANALYTICS_BETA_KEY_IBFK_1 = ForeignKeys0.ANALYTICS_BETA_KEY_IBFK_1;
+    public static final ForeignKey<AuthAccessTokenRecord, UserRecord> AUTH_ACCESS_TOKEN_IBFK_1 = ForeignKeys0.AUTH_ACCESS_TOKEN_IBFK_1;
+    public static final ForeignKey<AuthMfaTokenRecord, UserRecord> AUTH_MFA_TOKEN_IBFK_1 = ForeignKeys0.AUTH_MFA_TOKEN_IBFK_1;
+    public static final ForeignKey<GameVersionRecord, GameRecord> GAME_VERSION_IBFK_1 = ForeignKeys0.GAME_VERSION_IBFK_1;
+    public static final ForeignKey<ProjectRecord, ProjectTypeRecord> PROJECT_IBFK_1 = ForeignKeys0.PROJECT_IBFK_1;
     public static final ForeignKey<ProjectRecord, UserRecord> PROJECT_IBFK_2 = ForeignKeys0.PROJECT_IBFK_2;
-    public static final ForeignKey<ProjectcategoryRecord, ProjectRecord> PROJECTCATEGORY_IBFK_1 = ForeignKeys0.PROJECTCATEGORY_IBFK_1;
-    public static final ForeignKey<ProjectcategoryRecord, ProjecttypecategoryRecord> PROJECTCATEGORY_IBFK_2 = ForeignKeys0.PROJECTCATEGORY_IBFK_2;
-    public static final ForeignKey<ProjectcommentRecord, ProjectcommentRecord> PROJECTCOMMENT_IBFK_1 = ForeignKeys0.PROJECTCOMMENT_IBFK_1;
-    public static final ForeignKey<ProjectcommentRecord, ProjectRecord> PROJECTCOMMENT_IBFK_2 = ForeignKeys0.PROJECTCOMMENT_IBFK_2;
-    public static final ForeignKey<ProjectcommentRecord, UserRecord> PROJECTCOMMENT_IBFK_3 = ForeignKeys0.PROJECTCOMMENT_IBFK_3;
-    public static final ForeignKey<ProjectfileRecord, ProjectfileRecord> PROJECTFILE_IBFK_1 = ForeignKeys0.PROJECTFILE_IBFK_1;
-    public static final ForeignKey<ProjectfileRecord, ProjectRecord> PROJECTFILE_IBFK_2 = ForeignKeys0.PROJECTFILE_IBFK_2;
-    public static final ForeignKey<ProjectfileRecord, UserRecord> PROJECTFILE_IBFK_3 = ForeignKeys0.PROJECTFILE_IBFK_3;
-    public static final ForeignKey<ProjectfilegameversionRecord, ProjectfileRecord> PROJECTFILEGAMEVERSION_IBFK_1 = ForeignKeys0.PROJECTFILEGAMEVERSION_IBFK_1;
-    public static final ForeignKey<ProjectfilegameversionRecord, GameversionRecord> PROJECTFILEGAMEVERSION_IBFK_2 = ForeignKeys0.PROJECTFILEGAMEVERSION_IBFK_2;
-    public static final ForeignKey<ProjectfileprocessingRecord, ProjectfileRecord> PROJECTFILEPROCESSING_IBFK_1 = ForeignKeys0.PROJECTFILEPROCESSING_IBFK_1;
-    public static final ForeignKey<ProjectmemberRecord, ProjectRecord> PROJECTMEMBER_IBFK_2 = ForeignKeys0.PROJECTMEMBER_IBFK_2;
-    public static final ForeignKey<ProjectmemberRecord, UserRecord> PROJECTMEMBER_IBFK_1 = ForeignKeys0.PROJECTMEMBER_IBFK_1;
-    public static final ForeignKey<ProjecttypeRecord, GameRecord> PROJECTTYPE_IBFK_1 = ForeignKeys0.PROJECTTYPE_IBFK_1;
-    public static final ForeignKey<ProjecttypecategoryRecord, ProjecttypeRecord> PROJECTTYPECATEGORY_IBFK_1 = ForeignKeys0.PROJECTTYPECATEGORY_IBFK_1;
-    public static final ForeignKey<ProjecttypepermissionRecord, ProjecttypeRecord> PROJECTTYPEPERMISSION_IBFK_1 = ForeignKeys0.PROJECTTYPEPERMISSION_IBFK_1;
-    public static final ForeignKey<UserbetakeyRecord, UserRecord> USERBETAKEY_IBFK_1 = ForeignKeys0.USERBETAKEY_IBFK_1;
-    public static final ForeignKey<UserbetakeyRecord, UserRecord> USERBETAKEY_IBFK_2 = ForeignKeys0.USERBETAKEY_IBFK_2;
+    public static final ForeignKey<ProjectCategoryRecord, ProjectRecord> PROJECT_CATEGORY_IBFK_1 = ForeignKeys0.PROJECT_CATEGORY_IBFK_1;
+    public static final ForeignKey<ProjectCategoryRecord, ProjectTypeCategoryRecord> PROJECT_CATEGORY_IBFK_2 = ForeignKeys0.PROJECT_CATEGORY_IBFK_2;
+    public static final ForeignKey<ProjectCommentRecord, ProjectCommentRecord> PROJECT_COMMENT_IBFK_1 = ForeignKeys0.PROJECT_COMMENT_IBFK_1;
+    public static final ForeignKey<ProjectCommentRecord, ProjectRecord> PROJECT_COMMENT_IBFK_2 = ForeignKeys0.PROJECT_COMMENT_IBFK_2;
+    public static final ForeignKey<ProjectCommentRecord, UserRecord> PROJECT_COMMENT_IBFK_3 = ForeignKeys0.PROJECT_COMMENT_IBFK_3;
+    public static final ForeignKey<ProjectFileRecord, ProjectFileRecord> PROJECT_FILE_IBFK_1 = ForeignKeys0.PROJECT_FILE_IBFK_1;
+    public static final ForeignKey<ProjectFileRecord, ProjectRecord> PROJECT_FILE_IBFK_2 = ForeignKeys0.PROJECT_FILE_IBFK_2;
+    public static final ForeignKey<ProjectFileRecord, UserRecord> PROJECT_FILE_IBFK_3 = ForeignKeys0.PROJECT_FILE_IBFK_3;
+    public static final ForeignKey<ProjectFileGameVersionRecord, ProjectFileRecord> PROJECT_FILE_GAME_VERSION_IBFK_1 = ForeignKeys0.PROJECT_FILE_GAME_VERSION_IBFK_1;
+    public static final ForeignKey<ProjectFileGameVersionRecord, GameVersionRecord> PROJECT_FILE_GAME_VERSION_IBFK_2 = ForeignKeys0.PROJECT_FILE_GAME_VERSION_IBFK_2;
+    public static final ForeignKey<ProjectFileProcessingRecord, ProjectFileRecord> PROJECT_FILE_PROCESSING_IBFK_1 = ForeignKeys0.PROJECT_FILE_PROCESSING_IBFK_1;
+    public static final ForeignKey<ProjectMemberRecord, ProjectRecord> PROJECT_MEMBER_IBFK_2 = ForeignKeys0.PROJECT_MEMBER_IBFK_2;
+    public static final ForeignKey<ProjectMemberRecord, UserRecord> PROJECT_MEMBER_IBFK_1 = ForeignKeys0.PROJECT_MEMBER_IBFK_1;
+    public static final ForeignKey<ProjectTypeRecord, GameRecord> PROJECT_TYPE_IBFK_1 = ForeignKeys0.PROJECT_TYPE_IBFK_1;
+    public static final ForeignKey<ProjectTypeCategoryRecord, ProjectTypeRecord> PROJECT_TYPE_CATEGORY_IBFK_1 = ForeignKeys0.PROJECT_TYPE_CATEGORY_IBFK_1;
+    public static final ForeignKey<ProjectTypePermissionRecord, ProjectTypeRecord> PROJECT_TYPE_PERMISSION_IBFK_1 = ForeignKeys0.PROJECT_TYPE_PERMISSION_IBFK_1;
+    public static final ForeignKey<UserBetaKeyRecord, UserRecord> USER_BETA_KEY_IBFK_1 = ForeignKeys0.USER_BETA_KEY_IBFK_1;
+    public static final ForeignKey<UserBetaKeyRecord, UserRecord> USER_BETA_KEY_IBFK_2 = ForeignKeys0.USER_BETA_KEY_IBFK_2;
 
     // -------------------------------------------------------------------------
     // [#1459] distribute members to avoid static initialisers > 64kb
     // -------------------------------------------------------------------------
 
     private static class Identities0 extends AbstractKeys {
-        public static Identity<AnalyticsauthaccesstokenRecord, Long> IDENTITY_ANALYTICSAUTHACCESSTOKEN = createIdentity(Analyticsauthaccesstoken.ANALYTICSAUTHACCESSTOKEN, Analyticsauthaccesstoken.ANALYTICSAUTHACCESSTOKEN.ID);
-        public static Identity<AnalyticsauthmfatokenRecord, Long> IDENTITY_ANALYTICSAUTHMFATOKEN = createIdentity(Analyticsauthmfatoken.ANALYTICSAUTHMFATOKEN, Analyticsauthmfatoken.ANALYTICSAUTHMFATOKEN.ID);
+        public static Identity<AnalyticsAuthAccessTokenRecord, Long> IDENTITY_ANALYTICS_AUTH_ACCESS_TOKEN = createIdentity(AnalyticsAuthAccessToken.ANALYTICS_AUTH_ACCESS_TOKEN, AnalyticsAuthAccessToken.ANALYTICS_AUTH_ACCESS_TOKEN.ID);
+        public static Identity<AnalyticsAuthMfaTokenRecord, Long> IDENTITY_ANALYTICS_AUTH_MFA_TOKEN = createIdentity(AnalyticsAuthMfaToken.ANALYTICS_AUTH_MFA_TOKEN, AnalyticsAuthMfaToken.ANALYTICS_AUTH_MFA_TOKEN.ID);
         public static Identity<GameRecord, Long> IDENTITY_GAME = createIdentity(Game.GAME, Game.GAME.ID);
-        public static Identity<GameversionRecord, Long> IDENTITY_GAMEVERSION = createIdentity(Gameversion.GAMEVERSION, Gameversion.GAMEVERSION.ID);
+        public static Identity<GameVersionRecord, Long> IDENTITY_GAME_VERSION = createIdentity(GameVersion.GAME_VERSION, GameVersion.GAME_VERSION.ID);
         public static Identity<ProjectRecord, Long> IDENTITY_PROJECT = createIdentity(Project.PROJECT, Project.PROJECT.ID);
-        public static Identity<ProjectcommentRecord, Long> IDENTITY_PROJECTCOMMENT = createIdentity(Projectcomment.PROJECTCOMMENT, Projectcomment.PROJECTCOMMENT.ID);
-        public static Identity<ProjectfileRecord, Long> IDENTITY_PROJECTFILE = createIdentity(Projectfile.PROJECTFILE, Projectfile.PROJECTFILE.ID);
-        public static Identity<ProjectmemberRecord, Long> IDENTITY_PROJECTMEMBER = createIdentity(Projectmember.PROJECTMEMBER, Projectmember.PROJECTMEMBER.ID);
-        public static Identity<ProjecttypeRecord, Long> IDENTITY_PROJECTTYPE = createIdentity(Projecttype.PROJECTTYPE, Projecttype.PROJECTTYPE.ID);
-        public static Identity<ProjecttypecategoryRecord, Long> IDENTITY_PROJECTTYPECATEGORY = createIdentity(Projecttypecategory.PROJECTTYPECATEGORY, Projecttypecategory.PROJECTTYPECATEGORY.ID);
-        public static Identity<ProjecttypepermissionRecord, Long> IDENTITY_PROJECTTYPEPERMISSION = createIdentity(Projecttypepermission.PROJECTTYPEPERMISSION, Projecttypepermission.PROJECTTYPEPERMISSION.ID);
+        public static Identity<ProjectCommentRecord, Long> IDENTITY_PROJECT_COMMENT = createIdentity(ProjectComment.PROJECT_COMMENT, ProjectComment.PROJECT_COMMENT.ID);
+        public static Identity<ProjectFileRecord, Long> IDENTITY_PROJECT_FILE = createIdentity(ProjectFile.PROJECT_FILE, ProjectFile.PROJECT_FILE.ID);
+        public static Identity<ProjectMemberRecord, Long> IDENTITY_PROJECT_MEMBER = createIdentity(ProjectMember.PROJECT_MEMBER, ProjectMember.PROJECT_MEMBER.ID);
+        public static Identity<ProjectTypeRecord, Long> IDENTITY_PROJECT_TYPE = createIdentity(ProjectType.PROJECT_TYPE, ProjectType.PROJECT_TYPE.ID);
+        public static Identity<ProjectTypeCategoryRecord, Long> IDENTITY_PROJECT_TYPE_CATEGORY = createIdentity(ProjectTypeCategory.PROJECT_TYPE_CATEGORY, ProjectTypeCategory.PROJECT_TYPE_CATEGORY.ID);
+        public static Identity<ProjectTypePermissionRecord, Long> IDENTITY_PROJECT_TYPE_PERMISSION = createIdentity(ProjectTypePermission.PROJECT_TYPE_PERMISSION, ProjectTypePermission.PROJECT_TYPE_PERMISSION.ID);
         public static Identity<UserRecord, Long> IDENTITY_USER = createIdentity(User.USER, User.USER.ID);
     }
 
     private static class UniqueKeys0 extends AbstractKeys {
-        public static final UniqueKey<AnalyticsauthaccesstokenRecord> KEY_ANALYTICSAUTHACCESSTOKEN_PRIMARY = createUniqueKey(Analyticsauthaccesstoken.ANALYTICSAUTHACCESSTOKEN, "KEY_analyticsAuthAccessToken_PRIMARY", Analyticsauthaccesstoken.ANALYTICSAUTHACCESSTOKEN.ID);
-        public static final UniqueKey<AnalyticsauthmfatokenRecord> KEY_ANALYTICSAUTHMFATOKEN_PRIMARY = createUniqueKey(Analyticsauthmfatoken.ANALYTICSAUTHMFATOKEN, "KEY_analyticsAuthMFAToken_PRIMARY", Analyticsauthmfatoken.ANALYTICSAUTHMFATOKEN.ID);
-        public static final UniqueKey<AnalyticsbetakeyRecord> KEY_ANALYTICSBETAKEY_PRIMARY = createUniqueKey(Analyticsbetakey.ANALYTICSBETAKEY, "KEY_analyticsBetaKey_PRIMARY", Analyticsbetakey.ANALYTICSBETAKEY.USERID);
-        public static final UniqueKey<AuthaccesstokenRecord> KEY_AUTHACCESSTOKEN_PRIMARY = createUniqueKey(Authaccesstoken.AUTHACCESSTOKEN, "KEY_authAccessToken_PRIMARY", Authaccesstoken.AUTHACCESSTOKEN.TOKEN);
-        public static final UniqueKey<AuthaccesstokenRecord> KEY_AUTHACCESSTOKEN_REFRESHTOKEN = createUniqueKey(Authaccesstoken.AUTHACCESSTOKEN, "KEY_authAccessToken_refreshToken", Authaccesstoken.AUTHACCESSTOKEN.REFRESHTOKEN);
-        public static final UniqueKey<AuthmfatokenRecord> KEY_AUTHMFATOKEN_PRIMARY = createUniqueKey(Authmfatoken.AUTHMFATOKEN, "KEY_authMFAToken_PRIMARY", Authmfatoken.AUTHMFATOKEN.TOKEN);
-        public static final UniqueKey<GameRecord> KEY_GAME_PRIMARY = createUniqueKey(Game.GAME, "KEY_game_PRIMARY", Game.GAME.ID);
-        public static final UniqueKey<GameversionRecord> KEY_GAMEVERSION_PRIMARY = createUniqueKey(Gameversion.GAMEVERSION, "KEY_gameVersion_PRIMARY", Gameversion.GAMEVERSION.ID);
-        public static final UniqueKey<ProjectRecord> KEY_PROJECT_PRIMARY = createUniqueKey(Project.PROJECT, "KEY_project_PRIMARY", Project.PROJECT.ID);
-        public static final UniqueKey<ProjectcategoryRecord> KEY_PROJECTCATEGORY_PRIMARY = createUniqueKey(Projectcategory.PROJECTCATEGORY, "KEY_projectCategory_PRIMARY", Projectcategory.PROJECTCATEGORY.PROJECTID, Projectcategory.PROJECTCATEGORY.PROJECTTYPECATEGORYID);
-        public static final UniqueKey<ProjectcommentRecord> KEY_PROJECTCOMMENT_PRIMARY = createUniqueKey(Projectcomment.PROJECTCOMMENT, "KEY_projectComment_PRIMARY", Projectcomment.PROJECTCOMMENT.ID);
-        public static final UniqueKey<ProjectfileRecord> KEY_PROJECTFILE_PRIMARY = createUniqueKey(Projectfile.PROJECTFILE, "KEY_projectFile_PRIMARY", Projectfile.PROJECTFILE.ID);
-        public static final UniqueKey<ProjectfilegameversionRecord> KEY_PROJECTFILEGAMEVERSION_PRIMARY = createUniqueKey(Projectfilegameversion.PROJECTFILEGAMEVERSION, "KEY_projectFileGameVersion_PRIMARY", Projectfilegameversion.PROJECTFILEGAMEVERSION.PROJECTFILEID, Projectfilegameversion.PROJECTFILEGAMEVERSION.PROJECTVERSIONID);
-        public static final UniqueKey<ProjectfileprocessingRecord> KEY_PROJECTFILEPROCESSING_PRIMARY = createUniqueKey(Projectfileprocessing.PROJECTFILEPROCESSING, "KEY_projectFileProcessing_PRIMARY", Projectfileprocessing.PROJECTFILEPROCESSING.PROJECTFILEID);
-        public static final UniqueKey<ProjectmemberRecord> KEY_PROJECTMEMBER_PRIMARY = createUniqueKey(Projectmember.PROJECTMEMBER, "KEY_projectMember_PRIMARY", Projectmember.PROJECTMEMBER.ID);
-        public static final UniqueKey<ProjecttypeRecord> KEY_PROJECTTYPE_PRIMARY = createUniqueKey(Projecttype.PROJECTTYPE, "KEY_projectType_PRIMARY", Projecttype.PROJECTTYPE.ID);
-        public static final UniqueKey<ProjecttypecategoryRecord> KEY_PROJECTTYPECATEGORY_PRIMARY = createUniqueKey(Projecttypecategory.PROJECTTYPECATEGORY, "KEY_projectTypeCategory_PRIMARY", Projecttypecategory.PROJECTTYPECATEGORY.ID);
-        public static final UniqueKey<ProjecttypepermissionRecord> KEY_PROJECTTYPEPERMISSION_PRIMARY = createUniqueKey(Projecttypepermission.PROJECTTYPEPERMISSION, "KEY_projectTypePermission_PRIMARY", Projecttypepermission.PROJECTTYPEPERMISSION.ID);
-        public static final UniqueKey<UserRecord> KEY_USER_PRIMARY = createUniqueKey(User.USER, "KEY_user_PRIMARY", User.USER.ID);
-        public static final UniqueKey<UserRecord> KEY_USER_EMAIL = createUniqueKey(User.USER, "KEY_user_email", User.USER.EMAIL);
-        public static final UniqueKey<UserRecord> KEY_USER_USERNAME = createUniqueKey(User.USER, "KEY_user_username", User.USER.USERNAME);
-        public static final UniqueKey<UserbetakeyRecord> KEY_USERBETAKEY_PRIMARY = createUniqueKey(Userbetakey.USERBETAKEY, "KEY_userBetaKey_PRIMARY", Userbetakey.USERBETAKEY.BETAKEY);
+        public static final UniqueKey<AnalyticsAuthAccessTokenRecord> KEY_ANALYTICS_AUTH_ACCESS_TOKEN_PRIMARY = createUniqueKey(AnalyticsAuthAccessToken.ANALYTICS_AUTH_ACCESS_TOKEN, "KEY_ANALYTICS_AUTH_ACCESS_TOKEN_PRIMARY", AnalyticsAuthAccessToken.ANALYTICS_AUTH_ACCESS_TOKEN.ID);
+        public static final UniqueKey<AnalyticsAuthMfaTokenRecord> KEY_ANALYTICS_AUTH_MFA_TOKEN_PRIMARY = createUniqueKey(AnalyticsAuthMfaToken.ANALYTICS_AUTH_MFA_TOKEN, "KEY_ANALYTICS_AUTH_MFA_TOKEN_PRIMARY", AnalyticsAuthMfaToken.ANALYTICS_AUTH_MFA_TOKEN.ID);
+        public static final UniqueKey<AnalyticsBetaKeyRecord> KEY_ANALYTICS_BETA_KEY_PRIMARY = createUniqueKey(AnalyticsBetaKey.ANALYTICS_BETA_KEY, "KEY_ANALYTICS_BETA_KEY_PRIMARY", AnalyticsBetaKey.ANALYTICS_BETA_KEY.USER_ID);
+        public static final UniqueKey<AuthAccessTokenRecord> KEY_AUTH_ACCESS_TOKEN_PRIMARY = createUniqueKey(AuthAccessToken.AUTH_ACCESS_TOKEN, "KEY_AUTH_ACCESS_TOKEN_PRIMARY", AuthAccessToken.AUTH_ACCESS_TOKEN.TOKEN);
+        public static final UniqueKey<AuthAccessTokenRecord> KEY_AUTH_ACCESS_TOKEN_REFRESH_TOKEN = createUniqueKey(AuthAccessToken.AUTH_ACCESS_TOKEN, "KEY_AUTH_ACCESS_TOKEN_REFRESH_TOKEN", AuthAccessToken.AUTH_ACCESS_TOKEN.REFRESH_TOKEN);
+        public static final UniqueKey<AuthMfaTokenRecord> KEY_AUTH_MFA_TOKEN_PRIMARY = createUniqueKey(AuthMfaToken.AUTH_MFA_TOKEN, "KEY_AUTH_MFA_TOKEN_PRIMARY", AuthMfaToken.AUTH_MFA_TOKEN.TOKEN);
+        public static final UniqueKey<GameRecord> KEY_GAME_PRIMARY = createUniqueKey(Game.GAME, "KEY_GAME_PRIMARY", Game.GAME.ID);
+        public static final UniqueKey<GameVersionRecord> KEY_GAME_VERSION_PRIMARY = createUniqueKey(GameVersion.GAME_VERSION, "KEY_GAME_VERSION_PRIMARY", GameVersion.GAME_VERSION.ID);
+        public static final UniqueKey<ProjectRecord> KEY_PROJECT_PRIMARY = createUniqueKey(Project.PROJECT, "KEY_PROJECT_PRIMARY", Project.PROJECT.ID);
+        public static final UniqueKey<ProjectCategoryRecord> KEY_PROJECT_CATEGORY_PRIMARY = createUniqueKey(ProjectCategory.PROJECT_CATEGORY, "KEY_PROJECT_CATEGORY_PRIMARY", ProjectCategory.PROJECT_CATEGORY.PROJECT_ID, ProjectCategory.PROJECT_CATEGORY.PROJECT_TYPE_CATEGORY_ID);
+        public static final UniqueKey<ProjectCommentRecord> KEY_PROJECT_COMMENT_PRIMARY = createUniqueKey(ProjectComment.PROJECT_COMMENT, "KEY_PROJECT_COMMENT_PRIMARY", ProjectComment.PROJECT_COMMENT.ID);
+        public static final UniqueKey<ProjectFileRecord> KEY_PROJECT_FILE_PRIMARY = createUniqueKey(ProjectFile.PROJECT_FILE, "KEY_PROJECT_FILE_PRIMARY", ProjectFile.PROJECT_FILE.ID);
+        public static final UniqueKey<ProjectFileGameVersionRecord> KEY_PROJECT_FILE_GAME_VERSION_PRIMARY = createUniqueKey(ProjectFileGameVersion.PROJECT_FILE_GAME_VERSION, "KEY_PROJECT_FILE_GAME_VERSION_PRIMARY", ProjectFileGameVersion.PROJECT_FILE_GAME_VERSION.PROJECT_FILE_ID, ProjectFileGameVersion.PROJECT_FILE_GAME_VERSION.PROJECT_VERSION_ID);
+        public static final UniqueKey<ProjectFileProcessingRecord> KEY_PROJECT_FILE_PROCESSING_PRIMARY = createUniqueKey(ProjectFileProcessing.PROJECT_FILE_PROCESSING, "KEY_PROJECT_FILE_PROCESSING_PRIMARY", ProjectFileProcessing.PROJECT_FILE_PROCESSING.PROJECT_FILE_ID);
+        public static final UniqueKey<ProjectMemberRecord> KEY_PROJECT_MEMBER_PRIMARY = createUniqueKey(ProjectMember.PROJECT_MEMBER, "KEY_PROJECT_MEMBER_PRIMARY", ProjectMember.PROJECT_MEMBER.ID);
+        public static final UniqueKey<ProjectTypeRecord> KEY_PROJECT_TYPE_PRIMARY = createUniqueKey(ProjectType.PROJECT_TYPE, "KEY_PROJECT_TYPE_PRIMARY", ProjectType.PROJECT_TYPE.ID);
+        public static final UniqueKey<ProjectTypeCategoryRecord> KEY_PROJECT_TYPE_CATEGORY_PRIMARY = createUniqueKey(ProjectTypeCategory.PROJECT_TYPE_CATEGORY, "KEY_PROJECT_TYPE_CATEGORY_PRIMARY", ProjectTypeCategory.PROJECT_TYPE_CATEGORY.ID);
+        public static final UniqueKey<ProjectTypePermissionRecord> KEY_PROJECT_TYPE_PERMISSION_PRIMARY = createUniqueKey(ProjectTypePermission.PROJECT_TYPE_PERMISSION, "KEY_PROJECT_TYPE_PERMISSION_PRIMARY", ProjectTypePermission.PROJECT_TYPE_PERMISSION.ID);
+        public static final UniqueKey<UserRecord> KEY_USER_PRIMARY = createUniqueKey(User.USER, "KEY_USER_PRIMARY", User.USER.ID);
+        public static final UniqueKey<UserRecord> KEY_USER_EMAIL = createUniqueKey(User.USER, "KEY_USER_EMAIL", User.USER.EMAIL);
+        public static final UniqueKey<UserRecord> KEY_USER_USERNAME = createUniqueKey(User.USER, "KEY_USER_USERNAME", User.USER.USERNAME);
+        public static final UniqueKey<UserBetaKeyRecord> KEY_USER_BETA_KEY_PRIMARY = createUniqueKey(UserBetaKey.USER_BETA_KEY, "KEY_USER_BETA_KEY_PRIMARY", UserBetaKey.USER_BETA_KEY.BETA_KEY);
     }
 
     private static class ForeignKeys0 extends AbstractKeys {
-        public static final ForeignKey<AnalyticsauthaccesstokenRecord, UserRecord> ANALYTICSAUTHACCESSTOKEN_IBFK_1 = createForeignKey(com.diluv.api.models.Keys.KEY_USER_PRIMARY, Analyticsauthaccesstoken.ANALYTICSAUTHACCESSTOKEN, "analyticsAuthAccessToken_ibfk_1", Analyticsauthaccesstoken.ANALYTICSAUTHACCESSTOKEN.USERID);
-        public static final ForeignKey<AnalyticsauthmfatokenRecord, UserRecord> ANALYTICSAUTHMFATOKEN_IBFK_1 = createForeignKey(com.diluv.api.models.Keys.KEY_USER_PRIMARY, Analyticsauthmfatoken.ANALYTICSAUTHMFATOKEN, "analyticsAuthMFAToken_ibfk_1", Analyticsauthmfatoken.ANALYTICSAUTHMFATOKEN.USERID);
-        public static final ForeignKey<AnalyticsbetakeyRecord, UserRecord> ANALYTICSBETAKEY_IBFK_1 = createForeignKey(com.diluv.api.models.Keys.KEY_USER_PRIMARY, Analyticsbetakey.ANALYTICSBETAKEY, "analyticsBetaKey_ibfk_1", Analyticsbetakey.ANALYTICSBETAKEY.USERID);
-        public static final ForeignKey<AuthaccesstokenRecord, UserRecord> AUTHACCESSTOKEN_IBFK_1 = createForeignKey(com.diluv.api.models.Keys.KEY_USER_PRIMARY, Authaccesstoken.AUTHACCESSTOKEN, "authAccessToken_ibfk_1", Authaccesstoken.AUTHACCESSTOKEN.USERID);
-        public static final ForeignKey<AuthmfatokenRecord, UserRecord> AUTHMFATOKEN_IBFK_1 = createForeignKey(com.diluv.api.models.Keys.KEY_USER_PRIMARY, Authmfatoken.AUTHMFATOKEN, "authMFAToken_ibfk_1", Authmfatoken.AUTHMFATOKEN.USERID);
-        public static final ForeignKey<GameversionRecord, GameRecord> GAMEVERSION_IBFK_1 = createForeignKey(com.diluv.api.models.Keys.KEY_GAME_PRIMARY, Gameversion.GAMEVERSION, "gameVersion_ibfk_1", Gameversion.GAMEVERSION.GAMEID);
-        public static final ForeignKey<ProjectRecord, ProjecttypeRecord> PROJECT_IBFK_1 = createForeignKey(com.diluv.api.models.Keys.KEY_PROJECTTYPE_PRIMARY, Project.PROJECT, "project_ibfk_1", Project.PROJECT.PROJECTTYPEID);
-        public static final ForeignKey<ProjectRecord, UserRecord> PROJECT_IBFK_2 = createForeignKey(com.diluv.api.models.Keys.KEY_USER_PRIMARY, Project.PROJECT, "project_ibfk_2", Project.PROJECT.USERID);
-        public static final ForeignKey<ProjectcategoryRecord, ProjectRecord> PROJECTCATEGORY_IBFK_1 = createForeignKey(com.diluv.api.models.Keys.KEY_PROJECT_PRIMARY, Projectcategory.PROJECTCATEGORY, "projectCategory_ibfk_1", Projectcategory.PROJECTCATEGORY.PROJECTID);
-        public static final ForeignKey<ProjectcategoryRecord, ProjecttypecategoryRecord> PROJECTCATEGORY_IBFK_2 = createForeignKey(com.diluv.api.models.Keys.KEY_PROJECTTYPECATEGORY_PRIMARY, Projectcategory.PROJECTCATEGORY, "projectCategory_ibfk_2", Projectcategory.PROJECTCATEGORY.PROJECTTYPECATEGORYID);
-        public static final ForeignKey<ProjectcommentRecord, ProjectcommentRecord> PROJECTCOMMENT_IBFK_1 = createForeignKey(com.diluv.api.models.Keys.KEY_PROJECTCOMMENT_PRIMARY, Projectcomment.PROJECTCOMMENT, "projectComment_ibfk_1", Projectcomment.PROJECTCOMMENT.PARENTID);
-        public static final ForeignKey<ProjectcommentRecord, ProjectRecord> PROJECTCOMMENT_IBFK_2 = createForeignKey(com.diluv.api.models.Keys.KEY_PROJECT_PRIMARY, Projectcomment.PROJECTCOMMENT, "projectComment_ibfk_2", Projectcomment.PROJECTCOMMENT.PROJECTID);
-        public static final ForeignKey<ProjectcommentRecord, UserRecord> PROJECTCOMMENT_IBFK_3 = createForeignKey(com.diluv.api.models.Keys.KEY_USER_PRIMARY, Projectcomment.PROJECTCOMMENT, "projectComment_ibfk_3", Projectcomment.PROJECTCOMMENT.USERID);
-        public static final ForeignKey<ProjectfileRecord, ProjectfileRecord> PROJECTFILE_IBFK_1 = createForeignKey(com.diluv.api.models.Keys.KEY_PROJECTFILE_PRIMARY, Projectfile.PROJECTFILE, "projectFile_ibfk_1", Projectfile.PROJECTFILE.PARENTID);
-        public static final ForeignKey<ProjectfileRecord, ProjectRecord> PROJECTFILE_IBFK_2 = createForeignKey(com.diluv.api.models.Keys.KEY_PROJECT_PRIMARY, Projectfile.PROJECTFILE, "projectFile_ibfk_2", Projectfile.PROJECTFILE.PROJECTID);
-        public static final ForeignKey<ProjectfileRecord, UserRecord> PROJECTFILE_IBFK_3 = createForeignKey(com.diluv.api.models.Keys.KEY_USER_PRIMARY, Projectfile.PROJECTFILE, "projectFile_ibfk_3", Projectfile.PROJECTFILE.USERID);
-        public static final ForeignKey<ProjectfilegameversionRecord, ProjectfileRecord> PROJECTFILEGAMEVERSION_IBFK_1 = createForeignKey(com.diluv.api.models.Keys.KEY_PROJECTFILE_PRIMARY, Projectfilegameversion.PROJECTFILEGAMEVERSION, "projectFileGameVersion_ibfk_1", Projectfilegameversion.PROJECTFILEGAMEVERSION.PROJECTFILEID);
-        public static final ForeignKey<ProjectfilegameversionRecord, GameversionRecord> PROJECTFILEGAMEVERSION_IBFK_2 = createForeignKey(com.diluv.api.models.Keys.KEY_GAMEVERSION_PRIMARY, Projectfilegameversion.PROJECTFILEGAMEVERSION, "projectFileGameVersion_ibfk_2", Projectfilegameversion.PROJECTFILEGAMEVERSION.PROJECTVERSIONID);
-        public static final ForeignKey<ProjectfileprocessingRecord, ProjectfileRecord> PROJECTFILEPROCESSING_IBFK_1 = createForeignKey(com.diluv.api.models.Keys.KEY_PROJECTFILE_PRIMARY, Projectfileprocessing.PROJECTFILEPROCESSING, "projectFileProcessing_ibfk_1", Projectfileprocessing.PROJECTFILEPROCESSING.PROJECTFILEID);
-        public static final ForeignKey<ProjectmemberRecord, ProjectRecord> PROJECTMEMBER_IBFK_2 = createForeignKey(com.diluv.api.models.Keys.KEY_PROJECT_PRIMARY, Projectmember.PROJECTMEMBER, "projectMember_ibfk_2", Projectmember.PROJECTMEMBER.PROJECTID);
-        public static final ForeignKey<ProjectmemberRecord, UserRecord> PROJECTMEMBER_IBFK_1 = createForeignKey(com.diluv.api.models.Keys.KEY_USER_PRIMARY, Projectmember.PROJECTMEMBER, "projectMember_ibfk_1", Projectmember.PROJECTMEMBER.USERID);
-        public static final ForeignKey<ProjecttypeRecord, GameRecord> PROJECTTYPE_IBFK_1 = createForeignKey(com.diluv.api.models.Keys.KEY_GAME_PRIMARY, Projecttype.PROJECTTYPE, "projectType_ibfk_1", Projecttype.PROJECTTYPE.GAMEID);
-        public static final ForeignKey<ProjecttypecategoryRecord, ProjecttypeRecord> PROJECTTYPECATEGORY_IBFK_1 = createForeignKey(com.diluv.api.models.Keys.KEY_PROJECTTYPE_PRIMARY, Projecttypecategory.PROJECTTYPECATEGORY, "projectTypeCategory_ibfk_1", Projecttypecategory.PROJECTTYPECATEGORY.PROJECTTYPEID);
-        public static final ForeignKey<ProjecttypepermissionRecord, ProjecttypeRecord> PROJECTTYPEPERMISSION_IBFK_1 = createForeignKey(com.diluv.api.models.Keys.KEY_PROJECTTYPE_PRIMARY, Projecttypepermission.PROJECTTYPEPERMISSION, "projectTypePermission_ibfk_1", Projecttypepermission.PROJECTTYPEPERMISSION.ID);
-        public static final ForeignKey<UserbetakeyRecord, UserRecord> USERBETAKEY_IBFK_1 = createForeignKey(com.diluv.api.models.Keys.KEY_USER_PRIMARY, Userbetakey.USERBETAKEY, "userBetaKey_ibfk_1", Userbetakey.USERBETAKEY.USERID);
-        public static final ForeignKey<UserbetakeyRecord, UserRecord> USERBETAKEY_IBFK_2 = createForeignKey(com.diluv.api.models.Keys.KEY_USER_PRIMARY, Userbetakey.USERBETAKEY, "userBetaKey_ibfk_2", Userbetakey.USERBETAKEY.CREATIONUSERID);
+        public static final ForeignKey<AnalyticsAuthAccessTokenRecord, UserRecord> ANALYTICS_AUTH_ACCESS_TOKEN_IBFK_1 = createForeignKey(com.diluv.api.models.Keys.KEY_USER_PRIMARY, AnalyticsAuthAccessToken.ANALYTICS_AUTH_ACCESS_TOKEN, "ANALYTICS_AUTH_ACCESS_TOKEN_ibfk_1", AnalyticsAuthAccessToken.ANALYTICS_AUTH_ACCESS_TOKEN.USER_ID);
+        public static final ForeignKey<AnalyticsAuthMfaTokenRecord, UserRecord> ANALYTICS_AUTH_MFA_TOKEN_IBFK_1 = createForeignKey(com.diluv.api.models.Keys.KEY_USER_PRIMARY, AnalyticsAuthMfaToken.ANALYTICS_AUTH_MFA_TOKEN, "ANALYTICS_AUTH_MFA_TOKEN_ibfk_1", AnalyticsAuthMfaToken.ANALYTICS_AUTH_MFA_TOKEN.USER_ID);
+        public static final ForeignKey<AnalyticsBetaKeyRecord, UserRecord> ANALYTICS_BETA_KEY_IBFK_1 = createForeignKey(com.diluv.api.models.Keys.KEY_USER_PRIMARY, AnalyticsBetaKey.ANALYTICS_BETA_KEY, "ANALYTICS_BETA_KEY_ibfk_1", AnalyticsBetaKey.ANALYTICS_BETA_KEY.USER_ID);
+        public static final ForeignKey<AuthAccessTokenRecord, UserRecord> AUTH_ACCESS_TOKEN_IBFK_1 = createForeignKey(com.diluv.api.models.Keys.KEY_USER_PRIMARY, AuthAccessToken.AUTH_ACCESS_TOKEN, "AUTH_ACCESS_TOKEN_ibfk_1", AuthAccessToken.AUTH_ACCESS_TOKEN.USER_ID);
+        public static final ForeignKey<AuthMfaTokenRecord, UserRecord> AUTH_MFA_TOKEN_IBFK_1 = createForeignKey(com.diluv.api.models.Keys.KEY_USER_PRIMARY, AuthMfaToken.AUTH_MFA_TOKEN, "AUTH_MFA_TOKEN_ibfk_1", AuthMfaToken.AUTH_MFA_TOKEN.USER_ID);
+        public static final ForeignKey<GameVersionRecord, GameRecord> GAME_VERSION_IBFK_1 = createForeignKey(com.diluv.api.models.Keys.KEY_GAME_PRIMARY, GameVersion.GAME_VERSION, "GAME_VERSION_ibfk_1", GameVersion.GAME_VERSION.GAME_ID);
+        public static final ForeignKey<ProjectRecord, ProjectTypeRecord> PROJECT_IBFK_1 = createForeignKey(com.diluv.api.models.Keys.KEY_PROJECT_TYPE_PRIMARY, Project.PROJECT, "PROJECT_ibfk_1", Project.PROJECT.PROJECT_TYPE_ID);
+        public static final ForeignKey<ProjectRecord, UserRecord> PROJECT_IBFK_2 = createForeignKey(com.diluv.api.models.Keys.KEY_USER_PRIMARY, Project.PROJECT, "PROJECT_ibfk_2", Project.PROJECT.USER_ID);
+        public static final ForeignKey<ProjectCategoryRecord, ProjectRecord> PROJECT_CATEGORY_IBFK_1 = createForeignKey(com.diluv.api.models.Keys.KEY_PROJECT_PRIMARY, ProjectCategory.PROJECT_CATEGORY, "PROJECT_CATEGORY_ibfk_1", ProjectCategory.PROJECT_CATEGORY.PROJECT_ID);
+        public static final ForeignKey<ProjectCategoryRecord, ProjectTypeCategoryRecord> PROJECT_CATEGORY_IBFK_2 = createForeignKey(com.diluv.api.models.Keys.KEY_PROJECT_TYPE_CATEGORY_PRIMARY, ProjectCategory.PROJECT_CATEGORY, "PROJECT_CATEGORY_ibfk_2", ProjectCategory.PROJECT_CATEGORY.PROJECT_TYPE_CATEGORY_ID);
+        public static final ForeignKey<ProjectCommentRecord, ProjectCommentRecord> PROJECT_COMMENT_IBFK_1 = createForeignKey(com.diluv.api.models.Keys.KEY_PROJECT_COMMENT_PRIMARY, ProjectComment.PROJECT_COMMENT, "PROJECT_COMMENT_ibfk_1", ProjectComment.PROJECT_COMMENT.PARENT_ID);
+        public static final ForeignKey<ProjectCommentRecord, ProjectRecord> PROJECT_COMMENT_IBFK_2 = createForeignKey(com.diluv.api.models.Keys.KEY_PROJECT_PRIMARY, ProjectComment.PROJECT_COMMENT, "PROJECT_COMMENT_ibfk_2", ProjectComment.PROJECT_COMMENT.PROJECT_ID);
+        public static final ForeignKey<ProjectCommentRecord, UserRecord> PROJECT_COMMENT_IBFK_3 = createForeignKey(com.diluv.api.models.Keys.KEY_USER_PRIMARY, ProjectComment.PROJECT_COMMENT, "PROJECT_COMMENT_ibfk_3", ProjectComment.PROJECT_COMMENT.USER_ID);
+        public static final ForeignKey<ProjectFileRecord, ProjectFileRecord> PROJECT_FILE_IBFK_1 = createForeignKey(com.diluv.api.models.Keys.KEY_PROJECT_FILE_PRIMARY, ProjectFile.PROJECT_FILE, "PROJECT_FILE_ibfk_1", ProjectFile.PROJECT_FILE.PARENT_ID);
+        public static final ForeignKey<ProjectFileRecord, ProjectRecord> PROJECT_FILE_IBFK_2 = createForeignKey(com.diluv.api.models.Keys.KEY_PROJECT_PRIMARY, ProjectFile.PROJECT_FILE, "PROJECT_FILE_ibfk_2", ProjectFile.PROJECT_FILE.PROJECT_ID);
+        public static final ForeignKey<ProjectFileRecord, UserRecord> PROJECT_FILE_IBFK_3 = createForeignKey(com.diluv.api.models.Keys.KEY_USER_PRIMARY, ProjectFile.PROJECT_FILE, "PROJECT_FILE_ibfk_3", ProjectFile.PROJECT_FILE.USER_ID);
+        public static final ForeignKey<ProjectFileGameVersionRecord, ProjectFileRecord> PROJECT_FILE_GAME_VERSION_IBFK_1 = createForeignKey(com.diluv.api.models.Keys.KEY_PROJECT_FILE_PRIMARY, ProjectFileGameVersion.PROJECT_FILE_GAME_VERSION, "PROJECT_FILE_GAME_VERSION_ibfk_1", ProjectFileGameVersion.PROJECT_FILE_GAME_VERSION.PROJECT_FILE_ID);
+        public static final ForeignKey<ProjectFileGameVersionRecord, GameVersionRecord> PROJECT_FILE_GAME_VERSION_IBFK_2 = createForeignKey(com.diluv.api.models.Keys.KEY_GAME_VERSION_PRIMARY, ProjectFileGameVersion.PROJECT_FILE_GAME_VERSION, "PROJECT_FILE_GAME_VERSION_ibfk_2", ProjectFileGameVersion.PROJECT_FILE_GAME_VERSION.PROJECT_VERSION_ID);
+        public static final ForeignKey<ProjectFileProcessingRecord, ProjectFileRecord> PROJECT_FILE_PROCESSING_IBFK_1 = createForeignKey(com.diluv.api.models.Keys.KEY_PROJECT_FILE_PRIMARY, ProjectFileProcessing.PROJECT_FILE_PROCESSING, "PROJECT_FILE_PROCESSING_ibfk_1", ProjectFileProcessing.PROJECT_FILE_PROCESSING.PROJECT_FILE_ID);
+        public static final ForeignKey<ProjectMemberRecord, ProjectRecord> PROJECT_MEMBER_IBFK_2 = createForeignKey(com.diluv.api.models.Keys.KEY_PROJECT_PRIMARY, ProjectMember.PROJECT_MEMBER, "PROJECT_MEMBER_ibfk_2", ProjectMember.PROJECT_MEMBER.PROJECT_ID);
+        public static final ForeignKey<ProjectMemberRecord, UserRecord> PROJECT_MEMBER_IBFK_1 = createForeignKey(com.diluv.api.models.Keys.KEY_USER_PRIMARY, ProjectMember.PROJECT_MEMBER, "PROJECT_MEMBER_ibfk_1", ProjectMember.PROJECT_MEMBER.USER_ID);
+        public static final ForeignKey<ProjectTypeRecord, GameRecord> PROJECT_TYPE_IBFK_1 = createForeignKey(com.diluv.api.models.Keys.KEY_GAME_PRIMARY, ProjectType.PROJECT_TYPE, "PROJECT_TYPE_ibfk_1", ProjectType.PROJECT_TYPE.GAME_ID);
+        public static final ForeignKey<ProjectTypeCategoryRecord, ProjectTypeRecord> PROJECT_TYPE_CATEGORY_IBFK_1 = createForeignKey(com.diluv.api.models.Keys.KEY_PROJECT_TYPE_PRIMARY, ProjectTypeCategory.PROJECT_TYPE_CATEGORY, "PROJECT_TYPE_CATEGORY_ibfk_1", ProjectTypeCategory.PROJECT_TYPE_CATEGORY.PROJECT_TYPE_ID);
+        public static final ForeignKey<ProjectTypePermissionRecord, ProjectTypeRecord> PROJECT_TYPE_PERMISSION_IBFK_1 = createForeignKey(com.diluv.api.models.Keys.KEY_PROJECT_TYPE_PRIMARY, ProjectTypePermission.PROJECT_TYPE_PERMISSION, "PROJECT_TYPE_PERMISSION_ibfk_1", ProjectTypePermission.PROJECT_TYPE_PERMISSION.ID);
+        public static final ForeignKey<UserBetaKeyRecord, UserRecord> USER_BETA_KEY_IBFK_1 = createForeignKey(com.diluv.api.models.Keys.KEY_USER_PRIMARY, UserBetaKey.USER_BETA_KEY, "USER_BETA_KEY_ibfk_1", UserBetaKey.USER_BETA_KEY.USER_ID);
+        public static final ForeignKey<UserBetaKeyRecord, UserRecord> USER_BETA_KEY_IBFK_2 = createForeignKey(com.diluv.api.models.Keys.KEY_USER_PRIMARY, UserBetaKey.USER_BETA_KEY, "USER_BETA_KEY_ibfk_2", UserBetaKey.USER_BETA_KEY.CREATION_USER_ID);
     }
 }

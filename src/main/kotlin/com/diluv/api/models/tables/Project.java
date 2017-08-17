@@ -29,10 +29,10 @@ import java.util.List;
 @SuppressWarnings({"all", "unchecked", "rawtypes"})
 public class Project extends TableImpl<ProjectRecord> {
 
-    private static final long serialVersionUID = 1778526482;
+    private static final long serialVersionUID = -1908984522;
 
     /**
-     * The reference instance of <code>diluv.project</code>
+     * The reference instance of <code>diluv.PROJECT</code>
      */
     public static final Project PROJECT = new Project();
 
@@ -45,79 +45,79 @@ public class Project extends TableImpl<ProjectRecord> {
     }
 
     /**
-     * The column <code>diluv.project.id</code>.
+     * The column <code>diluv.PROJECT.ID</code>.
      */
-    public final TableField<ProjectRecord, Long> ID = createField("id", org.jooq.impl.SQLDataType.BIGINT.nullable(false), this, "");
+    public final TableField<ProjectRecord, Long> ID = createField("ID", org.jooq.impl.SQLDataType.BIGINT.nullable(false), this, "");
 
     /**
-     * The column <code>diluv.project.name</code>.
+     * The column <code>diluv.PROJECT.NAME</code>.
      */
-    public final TableField<ProjectRecord, String> NAME = createField("name", org.jooq.impl.SQLDataType.VARCHAR.length(255).nullable(false), this, "");
+    public final TableField<ProjectRecord, String> NAME = createField("NAME", org.jooq.impl.SQLDataType.VARCHAR.length(255).nullable(false), this, "");
 
     /**
-     * The column <code>diluv.project.shortDescription</code>.
+     * The column <code>diluv.PROJECT.SHORT_DESCRIPTION</code>.
      */
-    public final TableField<ProjectRecord, String> SHORTDESCRIPTION = createField("shortDescription", org.jooq.impl.SQLDataType.VARCHAR.length(300).nullable(false), this, "");
+    public final TableField<ProjectRecord, String> SHORT_DESCRIPTION = createField("SHORT_DESCRIPTION", org.jooq.impl.SQLDataType.VARCHAR.length(300).nullable(false), this, "");
 
     /**
-     * The column <code>diluv.project.description</code>.
+     * The column <code>diluv.PROJECT.DESCRIPTION</code>.
      */
-    public final TableField<ProjectRecord, String> DESCRIPTION = createField("description", org.jooq.impl.SQLDataType.VARCHAR.length(5000).nullable(false), this, "");
+    public final TableField<ProjectRecord, String> DESCRIPTION = createField("DESCRIPTION", org.jooq.impl.SQLDataType.VARCHAR.length(5000).nullable(false), this, "");
 
     /**
-     * The column <code>diluv.project.descriptionType</code>.
+     * The column <code>diluv.PROJECT.DESCRIPTION_TYPE</code>.
      */
-    public final TableField<ProjectRecord, String> DESCRIPTIONTYPE = createField("descriptionType", org.jooq.impl.SQLDataType.VARCHAR.length(255).nullable(false), this, "");
+    public final TableField<ProjectRecord, String> DESCRIPTION_TYPE = createField("DESCRIPTION_TYPE", org.jooq.impl.SQLDataType.VARCHAR.length(255).nullable(false), this, "");
 
     /**
-     * The column <code>diluv.project.slug</code>.
+     * The column <code>diluv.PROJECT.SLUG</code>.
      */
-    public final TableField<ProjectRecord, String> SLUG = createField("slug", org.jooq.impl.SQLDataType.VARCHAR.length(200).nullable(false), this, "");
+    public final TableField<ProjectRecord, String> SLUG = createField("SLUG", org.jooq.impl.SQLDataType.VARCHAR.length(200).nullable(false), this, "");
 
     /**
-     * The column <code>diluv.project.logo</code>.
+     * The column <code>diluv.PROJECT.LOGO</code>.
      */
-    public final TableField<ProjectRecord, String> LOGO = createField("logo", org.jooq.impl.SQLDataType.VARCHAR.length(255).nullable(false), this, "");
+    public final TableField<ProjectRecord, String> LOGO = createField("LOGO", org.jooq.impl.SQLDataType.VARCHAR.length(255).nullable(false), this, "");
 
     /**
-     * The column <code>diluv.project.totalDownloads</code>.
+     * The column <code>diluv.PROJECT.TOTAL_DOWNLOADS</code>.
      */
-    public final TableField<ProjectRecord, Long> TOTALDOWNLOADS = createField("totalDownloads", org.jooq.impl.SQLDataType.BIGINT.nullable(false).defaultValue(org.jooq.impl.DSL.inline("0", org.jooq.impl.SQLDataType.BIGINT)), this, "");
+    public final TableField<ProjectRecord, Long> TOTAL_DOWNLOADS = createField("TOTAL_DOWNLOADS", org.jooq.impl.SQLDataType.BIGINT.nullable(false).defaultValue(org.jooq.impl.DSL.inline("0", org.jooq.impl.SQLDataType.BIGINT)), this, "");
 
     /**
-     * The column <code>diluv.project.deleted</code>.
+     * The column <code>diluv.PROJECT.DELETED</code>.
      */
-    public final TableField<ProjectRecord, Boolean> DELETED = createField("deleted", org.jooq.impl.SQLDataType.BIT.nullable(false).defaultValue(org.jooq.impl.DSL.inline("b'0'", org.jooq.impl.SQLDataType.BIT)), this, "");
+    public final TableField<ProjectRecord, Boolean> DELETED = createField("DELETED", org.jooq.impl.SQLDataType.BIT.nullable(false).defaultValue(org.jooq.impl.DSL.inline("b'0'", org.jooq.impl.SQLDataType.BIT)), this, "");
 
     /**
-     * The column <code>diluv.project.updatedAt</code>.
+     * The column <code>diluv.PROJECT.UPDATED_AT</code>.
      */
-    public final TableField<ProjectRecord, Timestamp> UPDATEDAT = createField("updatedAt", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false).defaultValue(org.jooq.impl.DSL.inline("CURRENT_TIMESTAMP", org.jooq.impl.SQLDataType.TIMESTAMP)), this, "");
+    public final TableField<ProjectRecord, Timestamp> UPDATED_AT = createField("UPDATED_AT", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false).defaultValue(org.jooq.impl.DSL.inline("CURRENT_TIMESTAMP", org.jooq.impl.SQLDataType.TIMESTAMP)), this, "");
 
     /**
-     * The column <code>diluv.project.createdAt</code>.
+     * The column <code>diluv.PROJECT.CREATED_AT</code>.
      */
-    public final TableField<ProjectRecord, Timestamp> CREATEDAT = createField("createdAt", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false).defaultValue(org.jooq.impl.DSL.inline("CURRENT_TIMESTAMP", org.jooq.impl.SQLDataType.TIMESTAMP)), this, "");
+    public final TableField<ProjectRecord, Timestamp> CREATED_AT = createField("CREATED_AT", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false).defaultValue(org.jooq.impl.DSL.inline("CURRENT_TIMESTAMP", org.jooq.impl.SQLDataType.TIMESTAMP)), this, "");
 
     /**
-     * The column <code>diluv.project.projectTypeId</code>.
+     * The column <code>diluv.PROJECT.PROJECT_TYPE_ID</code>.
      */
-    public final TableField<ProjectRecord, Long> PROJECTTYPEID = createField("projectTypeId", org.jooq.impl.SQLDataType.BIGINT.nullable(false), this, "");
+    public final TableField<ProjectRecord, Long> PROJECT_TYPE_ID = createField("PROJECT_TYPE_ID", org.jooq.impl.SQLDataType.BIGINT.nullable(false), this, "");
 
     /**
-     * The column <code>diluv.project.userId</code>.
+     * The column <code>diluv.PROJECT.USER_ID</code>.
      */
-    public final TableField<ProjectRecord, Long> USERID = createField("userId", org.jooq.impl.SQLDataType.BIGINT.nullable(false), this, "");
+    public final TableField<ProjectRecord, Long> USER_ID = createField("USER_ID", org.jooq.impl.SQLDataType.BIGINT.nullable(false), this, "");
 
     /**
-     * Create a <code>diluv.project</code> table reference
+     * Create a <code>diluv.PROJECT</code> table reference
      */
     public Project() {
-        this("project", null);
+        this("PROJECT", null);
     }
 
     /**
-     * Create an aliased <code>diluv.project</code> table reference
+     * Create an aliased <code>diluv.PROJECT</code> table reference
      */
     public Project(String alias) {
         this(alias, PROJECT);

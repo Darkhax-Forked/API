@@ -28,7 +28,7 @@ import java.util.List;
 @SuppressWarnings({"all", "unchecked", "rawtypes"})
 public class Diluv extends SchemaImpl {
 
-    private static final long serialVersionUID = -1356800644;
+    private static final long serialVersionUID = -920053722;
 
     /**
      * The reference instance of <code>diluv</code>
@@ -36,99 +36,99 @@ public class Diluv extends SchemaImpl {
     public static final Diluv DILUV = new Diluv();
 
     /**
-     * The table <code>diluv.analyticsAuthAccessToken</code>.
+     * The table <code>diluv.ANALYTICS_AUTH_ACCESS_TOKEN</code>.
      */
-    public final Analyticsauthaccesstoken ANALYTICSAUTHACCESSTOKEN = com.diluv.api.models.tables.Analyticsauthaccesstoken.ANALYTICSAUTHACCESSTOKEN;
+    public final AnalyticsAuthAccessToken ANALYTICS_AUTH_ACCESS_TOKEN = com.diluv.api.models.tables.AnalyticsAuthAccessToken.ANALYTICS_AUTH_ACCESS_TOKEN;
 
     /**
-     * The table <code>diluv.analyticsAuthMFAToken</code>.
+     * The table <code>diluv.ANALYTICS_AUTH_MFA_TOKEN</code>.
      */
-    public final Analyticsauthmfatoken ANALYTICSAUTHMFATOKEN = com.diluv.api.models.tables.Analyticsauthmfatoken.ANALYTICSAUTHMFATOKEN;
+    public final AnalyticsAuthMfaToken ANALYTICS_AUTH_MFA_TOKEN = com.diluv.api.models.tables.AnalyticsAuthMfaToken.ANALYTICS_AUTH_MFA_TOKEN;
 
     /**
-     * The table <code>diluv.analyticsBetaKey</code>.
+     * The table <code>diluv.ANALYTICS_BETA_KEY</code>.
      */
-    public final Analyticsbetakey ANALYTICSBETAKEY = com.diluv.api.models.tables.Analyticsbetakey.ANALYTICSBETAKEY;
+    public final AnalyticsBetaKey ANALYTICS_BETA_KEY = com.diluv.api.models.tables.AnalyticsBetaKey.ANALYTICS_BETA_KEY;
 
     /**
-     * The table <code>diluv.authAccessToken</code>.
+     * The table <code>diluv.AUTH_ACCESS_TOKEN</code>.
      */
-    public final Authaccesstoken AUTHACCESSTOKEN = com.diluv.api.models.tables.Authaccesstoken.AUTHACCESSTOKEN;
+    public final AuthAccessToken AUTH_ACCESS_TOKEN = com.diluv.api.models.tables.AuthAccessToken.AUTH_ACCESS_TOKEN;
 
     /**
-     * The table <code>diluv.authMFAToken</code>.
+     * The table <code>diluv.AUTH_MFA_TOKEN</code>.
      */
-    public final Authmfatoken AUTHMFATOKEN = com.diluv.api.models.tables.Authmfatoken.AUTHMFATOKEN;
+    public final AuthMfaToken AUTH_MFA_TOKEN = com.diluv.api.models.tables.AuthMfaToken.AUTH_MFA_TOKEN;
 
     /**
-     * The table <code>diluv.game</code>.
+     * The table <code>diluv.GAME</code>.
      */
     public final Game GAME = com.diluv.api.models.tables.Game.GAME;
 
     /**
-     * The table <code>diluv.gameVersion</code>.
+     * The table <code>diluv.GAME_VERSION</code>.
      */
-    public final Gameversion GAMEVERSION = com.diluv.api.models.tables.Gameversion.GAMEVERSION;
+    public final GameVersion GAME_VERSION = com.diluv.api.models.tables.GameVersion.GAME_VERSION;
 
     /**
-     * The table <code>diluv.project</code>.
+     * The table <code>diluv.PROJECT</code>.
      */
     public final Project PROJECT = com.diluv.api.models.tables.Project.PROJECT;
 
     /**
-     * The table <code>diluv.projectCategory</code>.
+     * The table <code>diluv.PROJECT_CATEGORY</code>.
      */
-    public final Projectcategory PROJECTCATEGORY = com.diluv.api.models.tables.Projectcategory.PROJECTCATEGORY;
+    public final ProjectCategory PROJECT_CATEGORY = com.diluv.api.models.tables.ProjectCategory.PROJECT_CATEGORY;
 
     /**
-     * The table <code>diluv.projectComment</code>.
+     * The table <code>diluv.PROJECT_COMMENT</code>.
      */
-    public final Projectcomment PROJECTCOMMENT = com.diluv.api.models.tables.Projectcomment.PROJECTCOMMENT;
+    public final ProjectComment PROJECT_COMMENT = com.diluv.api.models.tables.ProjectComment.PROJECT_COMMENT;
 
     /**
-     * The table <code>diluv.projectFile</code>.
+     * The table <code>diluv.PROJECT_FILE</code>.
      */
-    public final Projectfile PROJECTFILE = com.diluv.api.models.tables.Projectfile.PROJECTFILE;
+    public final ProjectFile PROJECT_FILE = com.diluv.api.models.tables.ProjectFile.PROJECT_FILE;
 
     /**
-     * The table <code>diluv.projectFileGameVersion</code>.
+     * The table <code>diluv.PROJECT_FILE_GAME_VERSION</code>.
      */
-    public final Projectfilegameversion PROJECTFILEGAMEVERSION = com.diluv.api.models.tables.Projectfilegameversion.PROJECTFILEGAMEVERSION;
+    public final ProjectFileGameVersion PROJECT_FILE_GAME_VERSION = com.diluv.api.models.tables.ProjectFileGameVersion.PROJECT_FILE_GAME_VERSION;
 
     /**
-     * The table <code>diluv.projectFileProcessing</code>.
+     * The table <code>diluv.PROJECT_FILE_PROCESSING</code>.
      */
-    public final Projectfileprocessing PROJECTFILEPROCESSING = com.diluv.api.models.tables.Projectfileprocessing.PROJECTFILEPROCESSING;
+    public final ProjectFileProcessing PROJECT_FILE_PROCESSING = com.diluv.api.models.tables.ProjectFileProcessing.PROJECT_FILE_PROCESSING;
 
     /**
-     * The table <code>diluv.projectMember</code>.
+     * The table <code>diluv.PROJECT_MEMBER</code>.
      */
-    public final Projectmember PROJECTMEMBER = com.diluv.api.models.tables.Projectmember.PROJECTMEMBER;
+    public final ProjectMember PROJECT_MEMBER = com.diluv.api.models.tables.ProjectMember.PROJECT_MEMBER;
 
     /**
-     * The table <code>diluv.projectType</code>.
+     * The table <code>diluv.PROJECT_TYPE</code>.
      */
-    public final Projecttype PROJECTTYPE = com.diluv.api.models.tables.Projecttype.PROJECTTYPE;
+    public final ProjectType PROJECT_TYPE = com.diluv.api.models.tables.ProjectType.PROJECT_TYPE;
 
     /**
-     * The table <code>diluv.projectTypeCategory</code>.
+     * The table <code>diluv.PROJECT_TYPE_CATEGORY</code>.
      */
-    public final Projecttypecategory PROJECTTYPECATEGORY = com.diluv.api.models.tables.Projecttypecategory.PROJECTTYPECATEGORY;
+    public final ProjectTypeCategory PROJECT_TYPE_CATEGORY = com.diluv.api.models.tables.ProjectTypeCategory.PROJECT_TYPE_CATEGORY;
 
     /**
-     * The table <code>diluv.projectTypePermission</code>.
+     * The table <code>diluv.PROJECT_TYPE_PERMISSION</code>.
      */
-    public final Projecttypepermission PROJECTTYPEPERMISSION = com.diluv.api.models.tables.Projecttypepermission.PROJECTTYPEPERMISSION;
+    public final ProjectTypePermission PROJECT_TYPE_PERMISSION = com.diluv.api.models.tables.ProjectTypePermission.PROJECT_TYPE_PERMISSION;
 
     /**
-     * The table <code>diluv.user</code>.
+     * The table <code>diluv.USER</code>.
      */
     public final User USER = com.diluv.api.models.tables.User.USER;
 
     /**
-     * The table <code>diluv.userBetaKey</code>.
+     * The table <code>diluv.USER_BETA_KEY</code>.
      */
-    public final Userbetakey USERBETAKEY = com.diluv.api.models.tables.Userbetakey.USERBETAKEY;
+    public final UserBetaKey USER_BETA_KEY = com.diluv.api.models.tables.UserBetaKey.USER_BETA_KEY;
 
     /**
      * No further instances allowed
@@ -155,24 +155,24 @@ public class Diluv extends SchemaImpl {
 
     private final List<Table<?>> getTables0() {
         return Arrays.<Table<?>>asList(
-                Analyticsauthaccesstoken.ANALYTICSAUTHACCESSTOKEN,
-                Analyticsauthmfatoken.ANALYTICSAUTHMFATOKEN,
-                Analyticsbetakey.ANALYTICSBETAKEY,
-                Authaccesstoken.AUTHACCESSTOKEN,
-                Authmfatoken.AUTHMFATOKEN,
+                AnalyticsAuthAccessToken.ANALYTICS_AUTH_ACCESS_TOKEN,
+                AnalyticsAuthMfaToken.ANALYTICS_AUTH_MFA_TOKEN,
+                AnalyticsBetaKey.ANALYTICS_BETA_KEY,
+                AuthAccessToken.AUTH_ACCESS_TOKEN,
+                AuthMfaToken.AUTH_MFA_TOKEN,
                 Game.GAME,
-                Gameversion.GAMEVERSION,
+                GameVersion.GAME_VERSION,
                 Project.PROJECT,
-                Projectcategory.PROJECTCATEGORY,
-                Projectcomment.PROJECTCOMMENT,
-                Projectfile.PROJECTFILE,
-                Projectfilegameversion.PROJECTFILEGAMEVERSION,
-                Projectfileprocessing.PROJECTFILEPROCESSING,
-                Projectmember.PROJECTMEMBER,
-                Projecttype.PROJECTTYPE,
-                Projecttypecategory.PROJECTTYPECATEGORY,
-                Projecttypepermission.PROJECTTYPEPERMISSION,
+                ProjectCategory.PROJECT_CATEGORY,
+                ProjectComment.PROJECT_COMMENT,
+                ProjectFile.PROJECT_FILE,
+                ProjectFileGameVersion.PROJECT_FILE_GAME_VERSION,
+                ProjectFileProcessing.PROJECT_FILE_PROCESSING,
+                ProjectMember.PROJECT_MEMBER,
+                ProjectType.PROJECT_TYPE,
+                ProjectTypeCategory.PROJECT_TYPE_CATEGORY,
+                ProjectTypePermission.PROJECT_TYPE_PERMISSION,
                 User.USER,
-                Userbetakey.USERBETAKEY);
+                UserBetaKey.USER_BETA_KEY);
     }
 }

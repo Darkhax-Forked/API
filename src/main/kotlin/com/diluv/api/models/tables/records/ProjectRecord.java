@@ -28,187 +28,187 @@ import java.sql.Timestamp;
 @SuppressWarnings({"all", "unchecked", "rawtypes"})
 public class ProjectRecord extends UpdatableRecordImpl<ProjectRecord> implements Record13<Long, String, String, String, String, String, String, Long, Boolean, Timestamp, Timestamp, Long, Long> {
 
-    private static final long serialVersionUID = 1938003481;
+    private static final long serialVersionUID = -1852162677;
 
     /**
-     * Setter for <code>diluv.project.id</code>.
+     * Setter for <code>diluv.PROJECT.ID</code>.
      */
     public void setId(Long value) {
         set(0, value);
     }
 
     /**
-     * Getter for <code>diluv.project.id</code>.
+     * Getter for <code>diluv.PROJECT.ID</code>.
      */
     public Long getId() {
         return (Long) get(0);
     }
 
     /**
-     * Setter for <code>diluv.project.name</code>.
+     * Setter for <code>diluv.PROJECT.NAME</code>.
      */
     public void setName(String value) {
         set(1, value);
     }
 
     /**
-     * Getter for <code>diluv.project.name</code>.
+     * Getter for <code>diluv.PROJECT.NAME</code>.
      */
     public String getName() {
         return (String) get(1);
     }
 
     /**
-     * Setter for <code>diluv.project.shortDescription</code>.
+     * Setter for <code>diluv.PROJECT.SHORT_DESCRIPTION</code>.
      */
-    public void setShortdescription(String value) {
+    public void setShortDescription(String value) {
         set(2, value);
     }
 
     /**
-     * Getter for <code>diluv.project.shortDescription</code>.
+     * Getter for <code>diluv.PROJECT.SHORT_DESCRIPTION</code>.
      */
-    public String getShortdescription() {
+    public String getShortDescription() {
         return (String) get(2);
     }
 
     /**
-     * Setter for <code>diluv.project.description</code>.
+     * Setter for <code>diluv.PROJECT.DESCRIPTION</code>.
      */
     public void setDescription(String value) {
         set(3, value);
     }
 
     /**
-     * Getter for <code>diluv.project.description</code>.
+     * Getter for <code>diluv.PROJECT.DESCRIPTION</code>.
      */
     public String getDescription() {
         return (String) get(3);
     }
 
     /**
-     * Setter for <code>diluv.project.descriptionType</code>.
+     * Setter for <code>diluv.PROJECT.DESCRIPTION_TYPE</code>.
      */
-    public void setDescriptiontype(String value) {
+    public void setDescriptionType(String value) {
         set(4, value);
     }
 
     /**
-     * Getter for <code>diluv.project.descriptionType</code>.
+     * Getter for <code>diluv.PROJECT.DESCRIPTION_TYPE</code>.
      */
-    public String getDescriptiontype() {
+    public String getDescriptionType() {
         return (String) get(4);
     }
 
     /**
-     * Setter for <code>diluv.project.slug</code>.
+     * Setter for <code>diluv.PROJECT.SLUG</code>.
      */
     public void setSlug(String value) {
         set(5, value);
     }
 
     /**
-     * Getter for <code>diluv.project.slug</code>.
+     * Getter for <code>diluv.PROJECT.SLUG</code>.
      */
     public String getSlug() {
         return (String) get(5);
     }
 
     /**
-     * Setter for <code>diluv.project.logo</code>.
+     * Setter for <code>diluv.PROJECT.LOGO</code>.
      */
     public void setLogo(String value) {
         set(6, value);
     }
 
     /**
-     * Getter for <code>diluv.project.logo</code>.
+     * Getter for <code>diluv.PROJECT.LOGO</code>.
      */
     public String getLogo() {
         return (String) get(6);
     }
 
     /**
-     * Setter for <code>diluv.project.totalDownloads</code>.
+     * Setter for <code>diluv.PROJECT.TOTAL_DOWNLOADS</code>.
      */
-    public void setTotaldownloads(Long value) {
+    public void setTotalDownloads(Long value) {
         set(7, value);
     }
 
     /**
-     * Getter for <code>diluv.project.totalDownloads</code>.
+     * Getter for <code>diluv.PROJECT.TOTAL_DOWNLOADS</code>.
      */
-    public Long getTotaldownloads() {
+    public Long getTotalDownloads() {
         return (Long) get(7);
     }
 
     /**
-     * Setter for <code>diluv.project.deleted</code>.
+     * Setter for <code>diluv.PROJECT.DELETED</code>.
      */
     public void setDeleted(Boolean value) {
         set(8, value);
     }
 
     /**
-     * Getter for <code>diluv.project.deleted</code>.
+     * Getter for <code>diluv.PROJECT.DELETED</code>.
      */
     public Boolean getDeleted() {
         return (Boolean) get(8);
     }
 
     /**
-     * Setter for <code>diluv.project.updatedAt</code>.
+     * Setter for <code>diluv.PROJECT.UPDATED_AT</code>.
      */
-    public void setUpdatedat(Timestamp value) {
+    public void setUpdatedAt(Timestamp value) {
         set(9, value);
     }
 
     /**
-     * Getter for <code>diluv.project.updatedAt</code>.
+     * Getter for <code>diluv.PROJECT.UPDATED_AT</code>.
      */
-    public Timestamp getUpdatedat() {
+    public Timestamp getUpdatedAt() {
         return (Timestamp) get(9);
     }
 
     /**
-     * Setter for <code>diluv.project.createdAt</code>.
+     * Setter for <code>diluv.PROJECT.CREATED_AT</code>.
      */
-    public void setCreatedat(Timestamp value) {
+    public void setCreatedAt(Timestamp value) {
         set(10, value);
     }
 
     /**
-     * Getter for <code>diluv.project.createdAt</code>.
+     * Getter for <code>diluv.PROJECT.CREATED_AT</code>.
      */
-    public Timestamp getCreatedat() {
+    public Timestamp getCreatedAt() {
         return (Timestamp) get(10);
     }
 
     /**
-     * Setter for <code>diluv.project.projectTypeId</code>.
+     * Setter for <code>diluv.PROJECT.PROJECT_TYPE_ID</code>.
      */
-    public void setProjecttypeid(Long value) {
+    public void setProjectTypeId(Long value) {
         set(11, value);
     }
 
     /**
-     * Getter for <code>diluv.project.projectTypeId</code>.
+     * Getter for <code>diluv.PROJECT.PROJECT_TYPE_ID</code>.
      */
-    public Long getProjecttypeid() {
+    public Long getProjectTypeId() {
         return (Long) get(11);
     }
 
     /**
-     * Setter for <code>diluv.project.userId</code>.
+     * Setter for <code>diluv.PROJECT.USER_ID</code>.
      */
-    public void setUserid(Long value) {
+    public void setUserId(Long value) {
         set(12, value);
     }
 
     /**
-     * Getter for <code>diluv.project.userId</code>.
+     * Getter for <code>diluv.PROJECT.USER_ID</code>.
      */
-    public Long getUserid() {
+    public Long getUserId() {
         return (Long) get(12);
     }
 
@@ -265,7 +265,7 @@ public class ProjectRecord extends UpdatableRecordImpl<ProjectRecord> implements
      */
     @Override
     public Field<String> field3() {
-        return Project.PROJECT.SHORTDESCRIPTION;
+        return Project.PROJECT.SHORT_DESCRIPTION;
     }
 
     /**
@@ -281,7 +281,7 @@ public class ProjectRecord extends UpdatableRecordImpl<ProjectRecord> implements
      */
     @Override
     public Field<String> field5() {
-        return Project.PROJECT.DESCRIPTIONTYPE;
+        return Project.PROJECT.DESCRIPTION_TYPE;
     }
 
     /**
@@ -305,7 +305,7 @@ public class ProjectRecord extends UpdatableRecordImpl<ProjectRecord> implements
      */
     @Override
     public Field<Long> field8() {
-        return Project.PROJECT.TOTALDOWNLOADS;
+        return Project.PROJECT.TOTAL_DOWNLOADS;
     }
 
     /**
@@ -321,7 +321,7 @@ public class ProjectRecord extends UpdatableRecordImpl<ProjectRecord> implements
      */
     @Override
     public Field<Timestamp> field10() {
-        return Project.PROJECT.UPDATEDAT;
+        return Project.PROJECT.UPDATED_AT;
     }
 
     /**
@@ -329,7 +329,7 @@ public class ProjectRecord extends UpdatableRecordImpl<ProjectRecord> implements
      */
     @Override
     public Field<Timestamp> field11() {
-        return Project.PROJECT.CREATEDAT;
+        return Project.PROJECT.CREATED_AT;
     }
 
     /**
@@ -337,7 +337,7 @@ public class ProjectRecord extends UpdatableRecordImpl<ProjectRecord> implements
      */
     @Override
     public Field<Long> field12() {
-        return Project.PROJECT.PROJECTTYPEID;
+        return Project.PROJECT.PROJECT_TYPE_ID;
     }
 
     /**
@@ -345,7 +345,7 @@ public class ProjectRecord extends UpdatableRecordImpl<ProjectRecord> implements
      */
     @Override
     public Field<Long> field13() {
-        return Project.PROJECT.USERID;
+        return Project.PROJECT.USER_ID;
     }
 
     /**
@@ -369,7 +369,7 @@ public class ProjectRecord extends UpdatableRecordImpl<ProjectRecord> implements
      */
     @Override
     public String value3() {
-        return getShortdescription();
+        return getShortDescription();
     }
 
     /**
@@ -385,7 +385,7 @@ public class ProjectRecord extends UpdatableRecordImpl<ProjectRecord> implements
      */
     @Override
     public String value5() {
-        return getDescriptiontype();
+        return getDescriptionType();
     }
 
     /**
@@ -409,7 +409,7 @@ public class ProjectRecord extends UpdatableRecordImpl<ProjectRecord> implements
      */
     @Override
     public Long value8() {
-        return getTotaldownloads();
+        return getTotalDownloads();
     }
 
     /**
@@ -425,7 +425,7 @@ public class ProjectRecord extends UpdatableRecordImpl<ProjectRecord> implements
      */
     @Override
     public Timestamp value10() {
-        return getUpdatedat();
+        return getUpdatedAt();
     }
 
     /**
@@ -433,7 +433,7 @@ public class ProjectRecord extends UpdatableRecordImpl<ProjectRecord> implements
      */
     @Override
     public Timestamp value11() {
-        return getCreatedat();
+        return getCreatedAt();
     }
 
     /**
@@ -441,7 +441,7 @@ public class ProjectRecord extends UpdatableRecordImpl<ProjectRecord> implements
      */
     @Override
     public Long value12() {
-        return getProjecttypeid();
+        return getProjectTypeId();
     }
 
     /**
@@ -449,7 +449,7 @@ public class ProjectRecord extends UpdatableRecordImpl<ProjectRecord> implements
      */
     @Override
     public Long value13() {
-        return getUserid();
+        return getUserId();
     }
 
     /**
@@ -475,7 +475,7 @@ public class ProjectRecord extends UpdatableRecordImpl<ProjectRecord> implements
      */
     @Override
     public ProjectRecord value3(String value) {
-        setShortdescription(value);
+        setShortDescription(value);
         return this;
     }
 
@@ -493,7 +493,7 @@ public class ProjectRecord extends UpdatableRecordImpl<ProjectRecord> implements
      */
     @Override
     public ProjectRecord value5(String value) {
-        setDescriptiontype(value);
+        setDescriptionType(value);
         return this;
     }
 
@@ -520,7 +520,7 @@ public class ProjectRecord extends UpdatableRecordImpl<ProjectRecord> implements
      */
     @Override
     public ProjectRecord value8(Long value) {
-        setTotaldownloads(value);
+        setTotalDownloads(value);
         return this;
     }
 
@@ -538,7 +538,7 @@ public class ProjectRecord extends UpdatableRecordImpl<ProjectRecord> implements
      */
     @Override
     public ProjectRecord value10(Timestamp value) {
-        setUpdatedat(value);
+        setUpdatedAt(value);
         return this;
     }
 
@@ -547,7 +547,7 @@ public class ProjectRecord extends UpdatableRecordImpl<ProjectRecord> implements
      */
     @Override
     public ProjectRecord value11(Timestamp value) {
-        setCreatedat(value);
+        setCreatedAt(value);
         return this;
     }
 
@@ -556,7 +556,7 @@ public class ProjectRecord extends UpdatableRecordImpl<ProjectRecord> implements
      */
     @Override
     public ProjectRecord value12(Long value) {
-        setProjecttypeid(value);
+        setProjectTypeId(value);
         return this;
     }
 
@@ -565,7 +565,7 @@ public class ProjectRecord extends UpdatableRecordImpl<ProjectRecord> implements
      */
     @Override
     public ProjectRecord value13(Long value) {
-        setUserid(value);
+        setUserId(value);
         return this;
     }
 
@@ -604,21 +604,21 @@ public class ProjectRecord extends UpdatableRecordImpl<ProjectRecord> implements
     /**
      * Create a detached, initialised ProjectRecord
      */
-    public ProjectRecord(Long id, String name, String shortdescription, String description, String descriptiontype, String slug, String logo, Long totaldownloads, Boolean deleted, Timestamp updatedat, Timestamp createdat, Long projecttypeid, Long userid) {
+    public ProjectRecord(Long id, String name, String shortDescription, String description, String descriptionType, String slug, String logo, Long totalDownloads, Boolean deleted, Timestamp updatedAt, Timestamp createdAt, Long projectTypeId, Long userId) {
         super(Project.PROJECT);
 
         set(0, id);
         set(1, name);
-        set(2, shortdescription);
+        set(2, shortDescription);
         set(3, description);
-        set(4, descriptiontype);
+        set(4, descriptionType);
         set(5, slug);
         set(6, logo);
-        set(7, totaldownloads);
+        set(7, totalDownloads);
         set(8, deleted);
-        set(9, updatedat);
-        set(10, createdat);
-        set(11, projecttypeid);
-        set(12, userid);
+        set(9, updatedAt);
+        set(10, createdAt);
+        set(11, projectTypeId);
+        set(12, userId);
     }
 }

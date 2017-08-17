@@ -29,10 +29,10 @@ import java.util.List;
 @SuppressWarnings({"all", "unchecked", "rawtypes"})
 public class User extends TableImpl<UserRecord> {
 
-    private static final long serialVersionUID = 1376332883;
+    private static final long serialVersionUID = 1215395193;
 
     /**
-     * The reference instance of <code>diluv.user</code>
+     * The reference instance of <code>diluv.USER</code>
      */
     public static final User USER = new User();
 
@@ -45,79 +45,79 @@ public class User extends TableImpl<UserRecord> {
     }
 
     /**
-     * The column <code>diluv.user.id</code>.
+     * The column <code>diluv.USER.ID</code>.
      */
-    public final TableField<UserRecord, Long> ID = createField("id", org.jooq.impl.SQLDataType.BIGINT.nullable(false), this, "");
+    public final TableField<UserRecord, Long> ID = createField("ID", org.jooq.impl.SQLDataType.BIGINT.nullable(false), this, "");
 
     /**
-     * The column <code>diluv.user.email</code>.
+     * The column <code>diluv.USER.EMAIL</code>.
      */
-    public final TableField<UserRecord, String> EMAIL = createField("email", org.jooq.impl.SQLDataType.VARCHAR.length(255).nullable(false), this, "");
+    public final TableField<UserRecord, String> EMAIL = createField("EMAIL", org.jooq.impl.SQLDataType.VARCHAR.length(255).nullable(false), this, "");
 
     /**
-     * The column <code>diluv.user.username</code>.
+     * The column <code>diluv.USER.USERNAME</code>.
      */
-    public final TableField<UserRecord, String> USERNAME = createField("username", org.jooq.impl.SQLDataType.VARCHAR.length(20).nullable(false), this, "");
+    public final TableField<UserRecord, String> USERNAME = createField("USERNAME", org.jooq.impl.SQLDataType.VARCHAR.length(20).nullable(false), this, "");
 
     /**
-     * The column <code>diluv.user.password</code>.
+     * The column <code>diluv.USER.PASSWORD</code>.
      */
-    public final TableField<UserRecord, String> PASSWORD = createField("password", org.jooq.impl.SQLDataType.VARCHAR.length(60).nullable(false), this, "");
+    public final TableField<UserRecord, String> PASSWORD = createField("PASSWORD", org.jooq.impl.SQLDataType.VARCHAR.length(60).nullable(false), this, "");
 
     /**
-     * The column <code>diluv.user.permission</code>.
+     * The column <code>diluv.USER.PERMISSION</code>.
      */
-    public final TableField<UserRecord, Integer> PERMISSION = createField("permission", org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "");
+    public final TableField<UserRecord, Integer> PERMISSION = createField("PERMISSION", org.jooq.impl.SQLDataType.INTEGER.nullable(false).defaultValue(org.jooq.impl.DSL.inline("0", org.jooq.impl.SQLDataType.INTEGER)), this, "");
 
     /**
-     * The column <code>diluv.user.avatar</code>.
+     * The column <code>diluv.USER.AVATAR</code>.
      */
-    public final TableField<UserRecord, String> AVATAR = createField("avatar", org.jooq.impl.SQLDataType.VARCHAR.length(500).nullable(false), this, "");
+    public final TableField<UserRecord, String> AVATAR = createField("AVATAR", org.jooq.impl.SQLDataType.VARCHAR.length(500).nullable(false), this, "");
 
     /**
-     * The column <code>diluv.user.verifiedEmail</code>.
+     * The column <code>diluv.USER.VERIFIED_EMAIL</code>.
      */
-    public final TableField<UserRecord, Boolean> VERIFIEDEMAIL = createField("verifiedEmail", org.jooq.impl.SQLDataType.BIT.nullable(false).defaultValue(org.jooq.impl.DSL.inline("b'0'", org.jooq.impl.SQLDataType.BIT)), this, "");
+    public final TableField<UserRecord, Boolean> VERIFIED_EMAIL = createField("VERIFIED_EMAIL", org.jooq.impl.SQLDataType.BIT.nullable(false).defaultValue(org.jooq.impl.DSL.inline("b'0'", org.jooq.impl.SQLDataType.BIT)), this, "");
 
     /**
-     * The column <code>diluv.user.mfaEnabled</code>.
+     * The column <code>diluv.USER.MFA_ENABLED</code>.
      */
-    public final TableField<UserRecord, Boolean> MFAENABLED = createField("mfaEnabled", org.jooq.impl.SQLDataType.BIT.nullable(false).defaultValue(org.jooq.impl.DSL.inline("b'0'", org.jooq.impl.SQLDataType.BIT)), this, "");
+    public final TableField<UserRecord, Boolean> MFA_ENABLED = createField("MFA_ENABLED", org.jooq.impl.SQLDataType.BIT.nullable(false).defaultValue(org.jooq.impl.DSL.inline("b'0'", org.jooq.impl.SQLDataType.BIT)), this, "");
 
     /**
-     * The column <code>diluv.user.location</code>.
+     * The column <code>diluv.USER.LOCATION</code>.
      */
-    public final TableField<UserRecord, String> LOCATION = createField("location", org.jooq.impl.SQLDataType.VARCHAR.length(50), this, "");
+    public final TableField<UserRecord, String> LOCATION = createField("LOCATION", org.jooq.impl.SQLDataType.VARCHAR.length(50), this, "");
 
     /**
-     * The column <code>diluv.user.firstName</code>.
+     * The column <code>diluv.USER.FIRST_NAME</code>.
      */
-    public final TableField<UserRecord, String> FIRSTNAME = createField("firstName", org.jooq.impl.SQLDataType.VARCHAR.length(50), this, "");
+    public final TableField<UserRecord, String> FIRST_NAME = createField("FIRST_NAME", org.jooq.impl.SQLDataType.VARCHAR.length(50), this, "");
 
     /**
-     * The column <code>diluv.user.lastName</code>.
+     * The column <code>diluv.USER.LAST_NAME</code>.
      */
-    public final TableField<UserRecord, String> LASTNAME = createField("lastName", org.jooq.impl.SQLDataType.VARCHAR.length(50), this, "");
+    public final TableField<UserRecord, String> LAST_NAME = createField("LAST_NAME", org.jooq.impl.SQLDataType.VARCHAR.length(50), this, "");
 
     /**
-     * The column <code>diluv.user.mfaSecret</code>.
+     * The column <code>diluv.USER.MFA_SECRET</code>.
      */
-    public final TableField<UserRecord, String> MFASECRET = createField("mfaSecret", org.jooq.impl.SQLDataType.VARCHAR.length(32), this, "");
+    public final TableField<UserRecord, String> MFA_SECRET = createField("MFA_SECRET", org.jooq.impl.SQLDataType.VARCHAR.length(32), this, "");
 
     /**
-     * The column <code>diluv.user.createdAt</code>.
+     * The column <code>diluv.USER.CREATED_AT</code>.
      */
-    public final TableField<UserRecord, Timestamp> CREATEDAT = createField("createdAt", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false).defaultValue(org.jooq.impl.DSL.inline("CURRENT_TIMESTAMP", org.jooq.impl.SQLDataType.TIMESTAMP)), this, "");
+    public final TableField<UserRecord, Timestamp> CREATED_AT = createField("CREATED_AT", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false).defaultValue(org.jooq.impl.DSL.inline("CURRENT_TIMESTAMP", org.jooq.impl.SQLDataType.TIMESTAMP)), this, "");
 
     /**
-     * Create a <code>diluv.user</code> table reference
+     * Create a <code>diluv.USER</code> table reference
      */
     public User() {
-        this("user", null);
+        this("USER", null);
     }
 
     /**
-     * Create an aliased <code>diluv.user</code> table reference
+     * Create an aliased <code>diluv.USER</code> table reference
      */
     public User(String alias) {
         this(alias, USER);

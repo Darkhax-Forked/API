@@ -28,187 +28,187 @@ import java.sql.Timestamp;
 @SuppressWarnings({"all", "unchecked", "rawtypes"})
 public class UserRecord extends UpdatableRecordImpl<UserRecord> implements Record13<Long, String, String, String, Integer, String, Boolean, Boolean, String, String, String, String, Timestamp> {
 
-    private static final long serialVersionUID = 1218723913;
+    private static final long serialVersionUID = -804329841;
 
     /**
-     * Setter for <code>diluv.user.id</code>.
+     * Setter for <code>diluv.USER.ID</code>.
      */
     public void setId(Long value) {
         set(0, value);
     }
 
     /**
-     * Getter for <code>diluv.user.id</code>.
+     * Getter for <code>diluv.USER.ID</code>.
      */
     public Long getId() {
         return (Long) get(0);
     }
 
     /**
-     * Setter for <code>diluv.user.email</code>.
+     * Setter for <code>diluv.USER.EMAIL</code>.
      */
     public void setEmail(String value) {
         set(1, value);
     }
 
     /**
-     * Getter for <code>diluv.user.email</code>.
+     * Getter for <code>diluv.USER.EMAIL</code>.
      */
     public String getEmail() {
         return (String) get(1);
     }
 
     /**
-     * Setter for <code>diluv.user.username</code>.
+     * Setter for <code>diluv.USER.USERNAME</code>.
      */
     public void setUsername(String value) {
         set(2, value);
     }
 
     /**
-     * Getter for <code>diluv.user.username</code>.
+     * Getter for <code>diluv.USER.USERNAME</code>.
      */
     public String getUsername() {
         return (String) get(2);
     }
 
     /**
-     * Setter for <code>diluv.user.password</code>.
+     * Setter for <code>diluv.USER.PASSWORD</code>.
      */
     public void setPassword(String value) {
         set(3, value);
     }
 
     /**
-     * Getter for <code>diluv.user.password</code>.
+     * Getter for <code>diluv.USER.PASSWORD</code>.
      */
     public String getPassword() {
         return (String) get(3);
     }
 
     /**
-     * Setter for <code>diluv.user.permission</code>.
+     * Setter for <code>diluv.USER.PERMISSION</code>.
      */
     public void setPermission(Integer value) {
         set(4, value);
     }
 
     /**
-     * Getter for <code>diluv.user.permission</code>.
+     * Getter for <code>diluv.USER.PERMISSION</code>.
      */
     public Integer getPermission() {
         return (Integer) get(4);
     }
 
     /**
-     * Setter for <code>diluv.user.avatar</code>.
+     * Setter for <code>diluv.USER.AVATAR</code>.
      */
     public void setAvatar(String value) {
         set(5, value);
     }
 
     /**
-     * Getter for <code>diluv.user.avatar</code>.
+     * Getter for <code>diluv.USER.AVATAR</code>.
      */
     public String getAvatar() {
         return (String) get(5);
     }
 
     /**
-     * Setter for <code>diluv.user.verifiedEmail</code>.
+     * Setter for <code>diluv.USER.VERIFIED_EMAIL</code>.
      */
-    public void setVerifiedemail(Boolean value) {
+    public void setVerifiedEmail(Boolean value) {
         set(6, value);
     }
 
     /**
-     * Getter for <code>diluv.user.verifiedEmail</code>.
+     * Getter for <code>diluv.USER.VERIFIED_EMAIL</code>.
      */
-    public Boolean getVerifiedemail() {
+    public Boolean getVerifiedEmail() {
         return (Boolean) get(6);
     }
 
     /**
-     * Setter for <code>diluv.user.mfaEnabled</code>.
+     * Setter for <code>diluv.USER.MFA_ENABLED</code>.
      */
-    public void setMfaenabled(Boolean value) {
+    public void setMfaEnabled(Boolean value) {
         set(7, value);
     }
 
     /**
-     * Getter for <code>diluv.user.mfaEnabled</code>.
+     * Getter for <code>diluv.USER.MFA_ENABLED</code>.
      */
-    public Boolean getMfaenabled() {
+    public Boolean getMfaEnabled() {
         return (Boolean) get(7);
     }
 
     /**
-     * Setter for <code>diluv.user.location</code>.
+     * Setter for <code>diluv.USER.LOCATION</code>.
      */
     public void setLocation(String value) {
         set(8, value);
     }
 
     /**
-     * Getter for <code>diluv.user.location</code>.
+     * Getter for <code>diluv.USER.LOCATION</code>.
      */
     public String getLocation() {
         return (String) get(8);
     }
 
     /**
-     * Setter for <code>diluv.user.firstName</code>.
+     * Setter for <code>diluv.USER.FIRST_NAME</code>.
      */
-    public void setFirstname(String value) {
+    public void setFirstName(String value) {
         set(9, value);
     }
 
     /**
-     * Getter for <code>diluv.user.firstName</code>.
+     * Getter for <code>diluv.USER.FIRST_NAME</code>.
      */
-    public String getFirstname() {
+    public String getFirstName() {
         return (String) get(9);
     }
 
     /**
-     * Setter for <code>diluv.user.lastName</code>.
+     * Setter for <code>diluv.USER.LAST_NAME</code>.
      */
-    public void setLastname(String value) {
+    public void setLastName(String value) {
         set(10, value);
     }
 
     /**
-     * Getter for <code>diluv.user.lastName</code>.
+     * Getter for <code>diluv.USER.LAST_NAME</code>.
      */
-    public String getLastname() {
+    public String getLastName() {
         return (String) get(10);
     }
 
     /**
-     * Setter for <code>diluv.user.mfaSecret</code>.
+     * Setter for <code>diluv.USER.MFA_SECRET</code>.
      */
-    public void setMfasecret(String value) {
+    public void setMfaSecret(String value) {
         set(11, value);
     }
 
     /**
-     * Getter for <code>diluv.user.mfaSecret</code>.
+     * Getter for <code>diluv.USER.MFA_SECRET</code>.
      */
-    public String getMfasecret() {
+    public String getMfaSecret() {
         return (String) get(11);
     }
 
     /**
-     * Setter for <code>diluv.user.createdAt</code>.
+     * Setter for <code>diluv.USER.CREATED_AT</code>.
      */
-    public void setCreatedat(Timestamp value) {
+    public void setCreatedAt(Timestamp value) {
         set(12, value);
     }
 
     /**
-     * Getter for <code>diluv.user.createdAt</code>.
+     * Getter for <code>diluv.USER.CREATED_AT</code>.
      */
-    public Timestamp getCreatedat() {
+    public Timestamp getCreatedAt() {
         return (Timestamp) get(12);
     }
 
@@ -297,7 +297,7 @@ public class UserRecord extends UpdatableRecordImpl<UserRecord> implements Recor
      */
     @Override
     public Field<Boolean> field7() {
-        return User.USER.VERIFIEDEMAIL;
+        return User.USER.VERIFIED_EMAIL;
     }
 
     /**
@@ -305,7 +305,7 @@ public class UserRecord extends UpdatableRecordImpl<UserRecord> implements Recor
      */
     @Override
     public Field<Boolean> field8() {
-        return User.USER.MFAENABLED;
+        return User.USER.MFA_ENABLED;
     }
 
     /**
@@ -321,7 +321,7 @@ public class UserRecord extends UpdatableRecordImpl<UserRecord> implements Recor
      */
     @Override
     public Field<String> field10() {
-        return User.USER.FIRSTNAME;
+        return User.USER.FIRST_NAME;
     }
 
     /**
@@ -329,7 +329,7 @@ public class UserRecord extends UpdatableRecordImpl<UserRecord> implements Recor
      */
     @Override
     public Field<String> field11() {
-        return User.USER.LASTNAME;
+        return User.USER.LAST_NAME;
     }
 
     /**
@@ -337,7 +337,7 @@ public class UserRecord extends UpdatableRecordImpl<UserRecord> implements Recor
      */
     @Override
     public Field<String> field12() {
-        return User.USER.MFASECRET;
+        return User.USER.MFA_SECRET;
     }
 
     /**
@@ -345,7 +345,7 @@ public class UserRecord extends UpdatableRecordImpl<UserRecord> implements Recor
      */
     @Override
     public Field<Timestamp> field13() {
-        return User.USER.CREATEDAT;
+        return User.USER.CREATED_AT;
     }
 
     /**
@@ -401,7 +401,7 @@ public class UserRecord extends UpdatableRecordImpl<UserRecord> implements Recor
      */
     @Override
     public Boolean value7() {
-        return getVerifiedemail();
+        return getVerifiedEmail();
     }
 
     /**
@@ -409,7 +409,7 @@ public class UserRecord extends UpdatableRecordImpl<UserRecord> implements Recor
      */
     @Override
     public Boolean value8() {
-        return getMfaenabled();
+        return getMfaEnabled();
     }
 
     /**
@@ -425,7 +425,7 @@ public class UserRecord extends UpdatableRecordImpl<UserRecord> implements Recor
      */
     @Override
     public String value10() {
-        return getFirstname();
+        return getFirstName();
     }
 
     /**
@@ -433,7 +433,7 @@ public class UserRecord extends UpdatableRecordImpl<UserRecord> implements Recor
      */
     @Override
     public String value11() {
-        return getLastname();
+        return getLastName();
     }
 
     /**
@@ -441,7 +441,7 @@ public class UserRecord extends UpdatableRecordImpl<UserRecord> implements Recor
      */
     @Override
     public String value12() {
-        return getMfasecret();
+        return getMfaSecret();
     }
 
     /**
@@ -449,7 +449,7 @@ public class UserRecord extends UpdatableRecordImpl<UserRecord> implements Recor
      */
     @Override
     public Timestamp value13() {
-        return getCreatedat();
+        return getCreatedAt();
     }
 
     /**
@@ -511,7 +511,7 @@ public class UserRecord extends UpdatableRecordImpl<UserRecord> implements Recor
      */
     @Override
     public UserRecord value7(Boolean value) {
-        setVerifiedemail(value);
+        setVerifiedEmail(value);
         return this;
     }
 
@@ -520,7 +520,7 @@ public class UserRecord extends UpdatableRecordImpl<UserRecord> implements Recor
      */
     @Override
     public UserRecord value8(Boolean value) {
-        setMfaenabled(value);
+        setMfaEnabled(value);
         return this;
     }
 
@@ -538,7 +538,7 @@ public class UserRecord extends UpdatableRecordImpl<UserRecord> implements Recor
      */
     @Override
     public UserRecord value10(String value) {
-        setFirstname(value);
+        setFirstName(value);
         return this;
     }
 
@@ -547,7 +547,7 @@ public class UserRecord extends UpdatableRecordImpl<UserRecord> implements Recor
      */
     @Override
     public UserRecord value11(String value) {
-        setLastname(value);
+        setLastName(value);
         return this;
     }
 
@@ -556,7 +556,7 @@ public class UserRecord extends UpdatableRecordImpl<UserRecord> implements Recor
      */
     @Override
     public UserRecord value12(String value) {
-        setMfasecret(value);
+        setMfaSecret(value);
         return this;
     }
 
@@ -565,7 +565,7 @@ public class UserRecord extends UpdatableRecordImpl<UserRecord> implements Recor
      */
     @Override
     public UserRecord value13(Timestamp value) {
-        setCreatedat(value);
+        setCreatedAt(value);
         return this;
     }
 
@@ -604,7 +604,7 @@ public class UserRecord extends UpdatableRecordImpl<UserRecord> implements Recor
     /**
      * Create a detached, initialised UserRecord
      */
-    public UserRecord(Long id, String email, String username, String password, Integer permission, String avatar, Boolean verifiedemail, Boolean mfaenabled, String location, String firstname, String lastname, String mfasecret, Timestamp createdat) {
+    public UserRecord(Long id, String email, String username, String password, Integer permission, String avatar, Boolean verifiedEmail, Boolean mfaEnabled, String location, String firstName, String lastName, String mfaSecret, Timestamp createdAt) {
         super(User.USER);
 
         set(0, id);
@@ -613,12 +613,12 @@ public class UserRecord extends UpdatableRecordImpl<UserRecord> implements Recor
         set(3, password);
         set(4, permission);
         set(5, avatar);
-        set(6, verifiedemail);
-        set(7, mfaenabled);
+        set(6, verifiedEmail);
+        set(7, mfaEnabled);
         set(8, location);
-        set(9, firstname);
-        set(10, lastname);
-        set(11, mfasecret);
-        set(12, createdat);
+        set(9, firstName);
+        set(10, lastName);
+        set(11, mfaSecret);
+        set(12, createdAt);
     }
 }

@@ -28,10 +28,10 @@ import java.util.List;
 @SuppressWarnings({"all", "unchecked", "rawtypes"})
 public class Game extends TableImpl<GameRecord> {
 
-    private static final long serialVersionUID = -502237312;
+    private static final long serialVersionUID = -684425344;
 
     /**
-     * The reference instance of <code>diluv.game</code>
+     * The reference instance of <code>diluv.GAME</code>
      */
     public static final Game GAME = new Game();
 
@@ -44,39 +44,39 @@ public class Game extends TableImpl<GameRecord> {
     }
 
     /**
-     * The column <code>diluv.game.id</code>.
+     * The column <code>diluv.GAME.ID</code>.
      */
-    public final TableField<GameRecord, Long> ID = createField("id", org.jooq.impl.SQLDataType.BIGINT.nullable(false), this, "");
+    public final TableField<GameRecord, Long> ID = createField("ID", org.jooq.impl.SQLDataType.BIGINT.nullable(false), this, "");
 
     /**
-     * The column <code>diluv.game.name</code>.
+     * The column <code>diluv.GAME.NAME</code>.
      */
-    public final TableField<GameRecord, String> NAME = createField("name", org.jooq.impl.SQLDataType.VARCHAR.length(200).nullable(false), this, "");
+    public final TableField<GameRecord, String> NAME = createField("NAME", org.jooq.impl.SQLDataType.VARCHAR.length(200).nullable(false), this, "");
 
     /**
-     * The column <code>diluv.game.website</code>.
+     * The column <code>diluv.GAME.WEBSITE</code>.
      */
-    public final TableField<GameRecord, String> WEBSITE = createField("website", org.jooq.impl.SQLDataType.VARCHAR.length(300).nullable(false), this, "");
+    public final TableField<GameRecord, String> WEBSITE = createField("WEBSITE", org.jooq.impl.SQLDataType.VARCHAR.length(300).nullable(false), this, "");
 
     /**
-     * The column <code>diluv.game.description</code>.
+     * The column <code>diluv.GAME.DESCRIPTION</code>.
      */
-    public final TableField<GameRecord, String> DESCRIPTION = createField("description", org.jooq.impl.SQLDataType.VARCHAR.length(2000).nullable(false), this, "");
+    public final TableField<GameRecord, String> DESCRIPTION = createField("DESCRIPTION", org.jooq.impl.SQLDataType.VARCHAR.length(2000).nullable(false), this, "");
 
     /**
-     * The column <code>diluv.game.slug</code>.
+     * The column <code>diluv.GAME.SLUG</code>.
      */
-    public final TableField<GameRecord, String> SLUG = createField("slug", org.jooq.impl.SQLDataType.VARCHAR.length(200).nullable(false), this, "");
+    public final TableField<GameRecord, String> SLUG = createField("SLUG", org.jooq.impl.SQLDataType.VARCHAR.length(200).nullable(false), this, "");
 
     /**
-     * Create a <code>diluv.game</code> table reference
+     * Create a <code>diluv.GAME</code> table reference
      */
     public Game() {
-        this("game", null);
+        this("GAME", null);
     }
 
     /**
-     * Create an aliased <code>diluv.game</code> table reference
+     * Create an aliased <code>diluv.GAME</code> table reference
      */
     public Game(String alias) {
         this(alias, GAME);
