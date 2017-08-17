@@ -23,21 +23,6 @@ import javax.annotation.Generated;
 public class Tables {
 
     /**
-     * The table <code>diluv.ANALYTICS_AUTH_ACCESS_TOKEN</code>.
-     */
-    public static final AnalyticsAuthAccessToken ANALYTICS_AUTH_ACCESS_TOKEN = com.diluv.api.models.tables.AnalyticsAuthAccessToken.ANALYTICS_AUTH_ACCESS_TOKEN;
-
-    /**
-     * The table <code>diluv.ANALYTICS_AUTH_MFA_TOKEN</code>.
-     */
-    public static final AnalyticsAuthMfaToken ANALYTICS_AUTH_MFA_TOKEN = com.diluv.api.models.tables.AnalyticsAuthMfaToken.ANALYTICS_AUTH_MFA_TOKEN;
-
-    /**
-     * The table <code>diluv.ANALYTICS_BETA_KEY</code>.
-     */
-    public static final AnalyticsBetaKey ANALYTICS_BETA_KEY = com.diluv.api.models.tables.AnalyticsBetaKey.ANALYTICS_BETA_KEY;
-
-    /**
      * The table <code>diluv.AUTH_ACCESS_TOKEN</code>.
      */
     public static final AuthAccessToken AUTH_ACCESS_TOKEN = com.diluv.api.models.tables.AuthAccessToken.AUTH_ACCESS_TOKEN;

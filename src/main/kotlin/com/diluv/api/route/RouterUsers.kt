@@ -3,8 +3,7 @@ package com.diluv.api.route
 import com.diluv.api.error.Errors
 import com.diluv.api.jwt.JWT
 import com.diluv.api.jwt.isTokenValid
-import com.diluv.api.models.Tables.USER
-import com.diluv.api.models.Tables.USERBETAKEY
+import com.diluv.api.models.Tables.*
 import com.diluv.api.permission.user.UserPermissionType
 import com.diluv.api.utils.asErrorResponse
 import com.diluv.api.utils.asSuccessResponse
@@ -43,7 +42,7 @@ class RouterUsers(val conn: Connection) {
         try {
             val transaction = DSL.using(conn, SQLDialect.MYSQL)
 
-            val users = transaction.select(USER.ID, USER.USERNAME, USER.AVATAR, USER.CREATEDAT)
+            val users = transaction.select(USER.ID, USER.USERNAME, USER.AVATAR, USER.CREATED_AT)
                     .from(USER)
                     .fetch()
 
@@ -51,7 +50,7 @@ class RouterUsers(val conn: Connection) {
                 mapOf(
                         "username" to it.get(USER.USERNAME),
                         "avatar" to it.get(USER.AVATAR),
-                        "createdAt" to it.get(USER.CREATEDAT)
+                        "createdAt" to it.get(USER.CREATED_AT)
                 )
             }
 
@@ -87,7 +86,7 @@ class RouterUsers(val conn: Connection) {
                         val userId = jwt.data.getLong("userId")
                         val transaction = DSL.using(conn, SQLDialect.MYSQL)
 
-                        val user = transaction.select(USER.USERNAME, USER.EMAIL, USER.AVATAR, USER.CREATEDAT)
+                        val user = transaction.select(USER.USERNAME, USER.EMAIL, USER.AVATAR, USER.CREATED_AT)
                                 .from(USER)
                                 .where(USER.ID.eq(userId))
                                 .fetchOne()
@@ -97,7 +96,7 @@ class RouterUsers(val conn: Connection) {
                                     "username" to user.get(USER.USERNAME),
                                     "email" to user.get(USER.EMAIL),
                                     "avatar" to user.get(USER.AVATAR),
-                                    "createdAt" to user.get(USER.CREATEDAT)
+                                    "createdAt" to user.get(USER.CREATED_AT)
                             )
                             event.asSuccessResponse(userOut)
                         } else {
@@ -109,7 +108,7 @@ class RouterUsers(val conn: Connection) {
         } else {
             val transaction = DSL.using(conn, SQLDialect.MYSQL)
 
-            val user = transaction.select(USER.USERNAME, USER.AVATAR, USER.CREATEDAT)
+            val user = transaction.select(USER.USERNAME, USER.AVATAR, USER.CREATED_AT)
                     .from(USER)
                     .where(USER.USERNAME.eq(username))
                     .fetchOne()
@@ -118,7 +117,7 @@ class RouterUsers(val conn: Connection) {
                 val userOut = mapOf<String, Any>(
                         "username" to user.get(USER.USERNAME),
                         "avatar" to user.get(USER.AVATAR),
-                        "createdAt" to user.get(USER.CREATEDAT)
+                        "createdAt" to user.get(USER.CREATED_AT)
                 )
                 event.asSuccessResponse(userOut)
             } else {
@@ -151,7 +150,7 @@ class RouterUsers(val conn: Connection) {
 
                             val transaction = DSL.using(conn, SQLDialect.MYSQL)
 
-                            val insertInto = transaction.insertInto(USERBETAKEY, USERBETAKEY.USERID, USERBETAKEY.BETAKEY, USERBETAKEY.CREATIONUSERID)
+                            val insertInto = transaction.insertInto(USER_BETA_KEY, USER_BETA_KEY.USER_ID, USER_BETA_KEY.BETA_KEY, USER_BETA_KEY.CREATION_USER_ID)
 
                             for (i in 0 until quantity) {
                                 val key = BigInteger(130, random).toString(32)

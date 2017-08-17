@@ -28,27 +28,12 @@ import java.util.List;
 @SuppressWarnings({"all", "unchecked", "rawtypes"})
 public class Diluv extends SchemaImpl {
 
-    private static final long serialVersionUID = -920053722;
+    private static final long serialVersionUID = 532739793;
 
     /**
      * The reference instance of <code>diluv</code>
      */
     public static final Diluv DILUV = new Diluv();
-
-    /**
-     * The table <code>diluv.ANALYTICS_AUTH_ACCESS_TOKEN</code>.
-     */
-    public final AnalyticsAuthAccessToken ANALYTICS_AUTH_ACCESS_TOKEN = com.diluv.api.models.tables.AnalyticsAuthAccessToken.ANALYTICS_AUTH_ACCESS_TOKEN;
-
-    /**
-     * The table <code>diluv.ANALYTICS_AUTH_MFA_TOKEN</code>.
-     */
-    public final AnalyticsAuthMfaToken ANALYTICS_AUTH_MFA_TOKEN = com.diluv.api.models.tables.AnalyticsAuthMfaToken.ANALYTICS_AUTH_MFA_TOKEN;
-
-    /**
-     * The table <code>diluv.ANALYTICS_BETA_KEY</code>.
-     */
-    public final AnalyticsBetaKey ANALYTICS_BETA_KEY = com.diluv.api.models.tables.AnalyticsBetaKey.ANALYTICS_BETA_KEY;
 
     /**
      * The table <code>diluv.AUTH_ACCESS_TOKEN</code>.
@@ -155,9 +140,6 @@ public class Diluv extends SchemaImpl {
 
     private final List<Table<?>> getTables0() {
         return Arrays.<Table<?>>asList(
-                AnalyticsAuthAccessToken.ANALYTICS_AUTH_ACCESS_TOKEN,
-                AnalyticsAuthMfaToken.ANALYTICS_AUTH_MFA_TOKEN,
-                AnalyticsBetaKey.ANALYTICS_BETA_KEY,
                 AuthAccessToken.AUTH_ACCESS_TOKEN,
                 AuthMfaToken.AUTH_MFA_TOKEN,
                 Game.GAME,

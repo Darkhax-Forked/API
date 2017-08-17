@@ -32,8 +32,6 @@ public class Keys {
     // IDENTITY definitions
     // -------------------------------------------------------------------------
 
-    public static final Identity<AnalyticsAuthAccessTokenRecord, Long> IDENTITY_ANALYTICS_AUTH_ACCESS_TOKEN = Identities0.IDENTITY_ANALYTICS_AUTH_ACCESS_TOKEN;
-    public static final Identity<AnalyticsAuthMfaTokenRecord, Long> IDENTITY_ANALYTICS_AUTH_MFA_TOKEN = Identities0.IDENTITY_ANALYTICS_AUTH_MFA_TOKEN;
     public static final Identity<GameRecord, Long> IDENTITY_GAME = Identities0.IDENTITY_GAME;
     public static final Identity<GameVersionRecord, Long> IDENTITY_GAME_VERSION = Identities0.IDENTITY_GAME_VERSION;
     public static final Identity<ProjectRecord, Long> IDENTITY_PROJECT = Identities0.IDENTITY_PROJECT;
@@ -49,13 +47,12 @@ public class Keys {
     // UNIQUE and PRIMARY KEY definitions
     // -------------------------------------------------------------------------
 
-    public static final UniqueKey<AnalyticsAuthAccessTokenRecord> KEY_ANALYTICS_AUTH_ACCESS_TOKEN_PRIMARY = UniqueKeys0.KEY_ANALYTICS_AUTH_ACCESS_TOKEN_PRIMARY;
-    public static final UniqueKey<AnalyticsAuthMfaTokenRecord> KEY_ANALYTICS_AUTH_MFA_TOKEN_PRIMARY = UniqueKeys0.KEY_ANALYTICS_AUTH_MFA_TOKEN_PRIMARY;
-    public static final UniqueKey<AnalyticsBetaKeyRecord> KEY_ANALYTICS_BETA_KEY_PRIMARY = UniqueKeys0.KEY_ANALYTICS_BETA_KEY_PRIMARY;
     public static final UniqueKey<AuthAccessTokenRecord> KEY_AUTH_ACCESS_TOKEN_PRIMARY = UniqueKeys0.KEY_AUTH_ACCESS_TOKEN_PRIMARY;
     public static final UniqueKey<AuthAccessTokenRecord> KEY_AUTH_ACCESS_TOKEN_REFRESH_TOKEN = UniqueKeys0.KEY_AUTH_ACCESS_TOKEN_REFRESH_TOKEN;
     public static final UniqueKey<AuthMfaTokenRecord> KEY_AUTH_MFA_TOKEN_PRIMARY = UniqueKeys0.KEY_AUTH_MFA_TOKEN_PRIMARY;
     public static final UniqueKey<GameRecord> KEY_GAME_PRIMARY = UniqueKeys0.KEY_GAME_PRIMARY;
+    public static final UniqueKey<GameRecord> KEY_GAME_NAME = UniqueKeys0.KEY_GAME_NAME;
+    public static final UniqueKey<GameRecord> KEY_GAME_SLUG = UniqueKeys0.KEY_GAME_SLUG;
     public static final UniqueKey<GameVersionRecord> KEY_GAME_VERSION_PRIMARY = UniqueKeys0.KEY_GAME_VERSION_PRIMARY;
     public static final UniqueKey<ProjectRecord> KEY_PROJECT_PRIMARY = UniqueKeys0.KEY_PROJECT_PRIMARY;
     public static final UniqueKey<ProjectCategoryRecord> KEY_PROJECT_CATEGORY_PRIMARY = UniqueKeys0.KEY_PROJECT_CATEGORY_PRIMARY;
@@ -76,9 +73,6 @@ public class Keys {
     // FOREIGN KEY definitions
     // -------------------------------------------------------------------------
 
-    public static final ForeignKey<AnalyticsAuthAccessTokenRecord, UserRecord> ANALYTICS_AUTH_ACCESS_TOKEN_IBFK_1 = ForeignKeys0.ANALYTICS_AUTH_ACCESS_TOKEN_IBFK_1;
-    public static final ForeignKey<AnalyticsAuthMfaTokenRecord, UserRecord> ANALYTICS_AUTH_MFA_TOKEN_IBFK_1 = ForeignKeys0.ANALYTICS_AUTH_MFA_TOKEN_IBFK_1;
-    public static final ForeignKey<AnalyticsBetaKeyRecord, UserRecord> ANALYTICS_BETA_KEY_IBFK_1 = ForeignKeys0.ANALYTICS_BETA_KEY_IBFK_1;
     public static final ForeignKey<AuthAccessTokenRecord, UserRecord> AUTH_ACCESS_TOKEN_IBFK_1 = ForeignKeys0.AUTH_ACCESS_TOKEN_IBFK_1;
     public static final ForeignKey<AuthMfaTokenRecord, UserRecord> AUTH_MFA_TOKEN_IBFK_1 = ForeignKeys0.AUTH_MFA_TOKEN_IBFK_1;
     public static final ForeignKey<GameVersionRecord, GameRecord> GAME_VERSION_IBFK_1 = ForeignKeys0.GAME_VERSION_IBFK_1;
@@ -108,8 +102,6 @@ public class Keys {
     // -------------------------------------------------------------------------
 
     private static class Identities0 extends AbstractKeys {
-        public static Identity<AnalyticsAuthAccessTokenRecord, Long> IDENTITY_ANALYTICS_AUTH_ACCESS_TOKEN = createIdentity(AnalyticsAuthAccessToken.ANALYTICS_AUTH_ACCESS_TOKEN, AnalyticsAuthAccessToken.ANALYTICS_AUTH_ACCESS_TOKEN.ID);
-        public static Identity<AnalyticsAuthMfaTokenRecord, Long> IDENTITY_ANALYTICS_AUTH_MFA_TOKEN = createIdentity(AnalyticsAuthMfaToken.ANALYTICS_AUTH_MFA_TOKEN, AnalyticsAuthMfaToken.ANALYTICS_AUTH_MFA_TOKEN.ID);
         public static Identity<GameRecord, Long> IDENTITY_GAME = createIdentity(Game.GAME, Game.GAME.ID);
         public static Identity<GameVersionRecord, Long> IDENTITY_GAME_VERSION = createIdentity(GameVersion.GAME_VERSION, GameVersion.GAME_VERSION.ID);
         public static Identity<ProjectRecord, Long> IDENTITY_PROJECT = createIdentity(Project.PROJECT, Project.PROJECT.ID);
@@ -123,13 +115,12 @@ public class Keys {
     }
 
     private static class UniqueKeys0 extends AbstractKeys {
-        public static final UniqueKey<AnalyticsAuthAccessTokenRecord> KEY_ANALYTICS_AUTH_ACCESS_TOKEN_PRIMARY = createUniqueKey(AnalyticsAuthAccessToken.ANALYTICS_AUTH_ACCESS_TOKEN, "KEY_ANALYTICS_AUTH_ACCESS_TOKEN_PRIMARY", AnalyticsAuthAccessToken.ANALYTICS_AUTH_ACCESS_TOKEN.ID);
-        public static final UniqueKey<AnalyticsAuthMfaTokenRecord> KEY_ANALYTICS_AUTH_MFA_TOKEN_PRIMARY = createUniqueKey(AnalyticsAuthMfaToken.ANALYTICS_AUTH_MFA_TOKEN, "KEY_ANALYTICS_AUTH_MFA_TOKEN_PRIMARY", AnalyticsAuthMfaToken.ANALYTICS_AUTH_MFA_TOKEN.ID);
-        public static final UniqueKey<AnalyticsBetaKeyRecord> KEY_ANALYTICS_BETA_KEY_PRIMARY = createUniqueKey(AnalyticsBetaKey.ANALYTICS_BETA_KEY, "KEY_ANALYTICS_BETA_KEY_PRIMARY", AnalyticsBetaKey.ANALYTICS_BETA_KEY.USER_ID);
         public static final UniqueKey<AuthAccessTokenRecord> KEY_AUTH_ACCESS_TOKEN_PRIMARY = createUniqueKey(AuthAccessToken.AUTH_ACCESS_TOKEN, "KEY_AUTH_ACCESS_TOKEN_PRIMARY", AuthAccessToken.AUTH_ACCESS_TOKEN.TOKEN);
         public static final UniqueKey<AuthAccessTokenRecord> KEY_AUTH_ACCESS_TOKEN_REFRESH_TOKEN = createUniqueKey(AuthAccessToken.AUTH_ACCESS_TOKEN, "KEY_AUTH_ACCESS_TOKEN_REFRESH_TOKEN", AuthAccessToken.AUTH_ACCESS_TOKEN.REFRESH_TOKEN);
         public static final UniqueKey<AuthMfaTokenRecord> KEY_AUTH_MFA_TOKEN_PRIMARY = createUniqueKey(AuthMfaToken.AUTH_MFA_TOKEN, "KEY_AUTH_MFA_TOKEN_PRIMARY", AuthMfaToken.AUTH_MFA_TOKEN.TOKEN);
         public static final UniqueKey<GameRecord> KEY_GAME_PRIMARY = createUniqueKey(Game.GAME, "KEY_GAME_PRIMARY", Game.GAME.ID);
+        public static final UniqueKey<GameRecord> KEY_GAME_NAME = createUniqueKey(Game.GAME, "KEY_GAME_NAME", Game.GAME.NAME);
+        public static final UniqueKey<GameRecord> KEY_GAME_SLUG = createUniqueKey(Game.GAME, "KEY_GAME_SLUG", Game.GAME.SLUG);
         public static final UniqueKey<GameVersionRecord> KEY_GAME_VERSION_PRIMARY = createUniqueKey(GameVersion.GAME_VERSION, "KEY_GAME_VERSION_PRIMARY", GameVersion.GAME_VERSION.ID);
         public static final UniqueKey<ProjectRecord> KEY_PROJECT_PRIMARY = createUniqueKey(Project.PROJECT, "KEY_PROJECT_PRIMARY", Project.PROJECT.ID);
         public static final UniqueKey<ProjectCategoryRecord> KEY_PROJECT_CATEGORY_PRIMARY = createUniqueKey(ProjectCategory.PROJECT_CATEGORY, "KEY_PROJECT_CATEGORY_PRIMARY", ProjectCategory.PROJECT_CATEGORY.PROJECT_ID, ProjectCategory.PROJECT_CATEGORY.PROJECT_TYPE_CATEGORY_ID);
@@ -148,9 +139,6 @@ public class Keys {
     }
 
     private static class ForeignKeys0 extends AbstractKeys {
-        public static final ForeignKey<AnalyticsAuthAccessTokenRecord, UserRecord> ANALYTICS_AUTH_ACCESS_TOKEN_IBFK_1 = createForeignKey(com.diluv.api.models.Keys.KEY_USER_PRIMARY, AnalyticsAuthAccessToken.ANALYTICS_AUTH_ACCESS_TOKEN, "ANALYTICS_AUTH_ACCESS_TOKEN_ibfk_1", AnalyticsAuthAccessToken.ANALYTICS_AUTH_ACCESS_TOKEN.USER_ID);
-        public static final ForeignKey<AnalyticsAuthMfaTokenRecord, UserRecord> ANALYTICS_AUTH_MFA_TOKEN_IBFK_1 = createForeignKey(com.diluv.api.models.Keys.KEY_USER_PRIMARY, AnalyticsAuthMfaToken.ANALYTICS_AUTH_MFA_TOKEN, "ANALYTICS_AUTH_MFA_TOKEN_ibfk_1", AnalyticsAuthMfaToken.ANALYTICS_AUTH_MFA_TOKEN.USER_ID);
-        public static final ForeignKey<AnalyticsBetaKeyRecord, UserRecord> ANALYTICS_BETA_KEY_IBFK_1 = createForeignKey(com.diluv.api.models.Keys.KEY_USER_PRIMARY, AnalyticsBetaKey.ANALYTICS_BETA_KEY, "ANALYTICS_BETA_KEY_ibfk_1", AnalyticsBetaKey.ANALYTICS_BETA_KEY.USER_ID);
         public static final ForeignKey<AuthAccessTokenRecord, UserRecord> AUTH_ACCESS_TOKEN_IBFK_1 = createForeignKey(com.diluv.api.models.Keys.KEY_USER_PRIMARY, AuthAccessToken.AUTH_ACCESS_TOKEN, "AUTH_ACCESS_TOKEN_ibfk_1", AuthAccessToken.AUTH_ACCESS_TOKEN.USER_ID);
         public static final ForeignKey<AuthMfaTokenRecord, UserRecord> AUTH_MFA_TOKEN_IBFK_1 = createForeignKey(com.diluv.api.models.Keys.KEY_USER_PRIMARY, AuthMfaToken.AUTH_MFA_TOKEN, "AUTH_MFA_TOKEN_ibfk_1", AuthMfaToken.AUTH_MFA_TOKEN.USER_ID);
         public static final ForeignKey<GameVersionRecord, GameRecord> GAME_VERSION_IBFK_1 = createForeignKey(com.diluv.api.models.Keys.KEY_GAME_PRIMARY, GameVersion.GAME_VERSION, "GAME_VERSION_ibfk_1", GameVersion.GAME_VERSION.GAME_ID);

@@ -1,6 +1,6 @@
 package com.diluv.api.jwt
 
-import com.diluv.api.models.Tables
+import com.diluv.api.models.Tables.*
 import io.vertx.core.json.JsonObject
 import org.apache.commons.codec.binary.Base64
 import org.jooq.SQLDialect
@@ -112,9 +112,9 @@ fun validToken(token: String): Boolean {
 fun Connection.isTokenValid(token:String): Boolean {
     val transaction = DSL.using(this, SQLDialect.MYSQL)
 
-    val tokenInfo = transaction.select(Tables.AUTHACCESSTOKEN.TOKEN)
-            .from(Tables.AUTHACCESSTOKEN)
-            .where(Tables.AUTHACCESSTOKEN.TOKEN.eq(token))
+    val tokenInfo = transaction.select(AUTH_ACCESS_TOKEN.TOKEN)
+            .from(AUTH_ACCESS_TOKEN)
+            .where(AUTH_ACCESS_TOKEN.TOKEN.eq(token))
             .fetchOne()
     return tokenInfo != null
 }
@@ -122,9 +122,9 @@ fun Connection.isTokenValid(token:String): Boolean {
 fun Connection.isRefreshTokenValid(token:String): Boolean {
     val transaction = DSL.using(this, SQLDialect.MYSQL)
 
-    val tokenInfo = transaction.select(Tables.AUTHACCESSTOKEN.REFRESHTOKEN)
-            .from(Tables.AUTHACCESSTOKEN)
-            .where(Tables.AUTHACCESSTOKEN.REFRESHTOKEN.eq(token))
+    val tokenInfo = transaction.select(AUTH_ACCESS_TOKEN.REFRESH_TOKEN)
+            .from(AUTH_ACCESS_TOKEN)
+            .where(AUTH_ACCESS_TOKEN.REFRESH_TOKEN.eq(token))
             .fetchOne()
     return tokenInfo != null
 }

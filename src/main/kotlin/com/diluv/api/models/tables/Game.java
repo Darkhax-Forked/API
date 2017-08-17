@@ -28,7 +28,7 @@ import java.util.List;
 @SuppressWarnings({"all", "unchecked", "rawtypes"})
 public class Game extends TableImpl<GameRecord> {
 
-    private static final long serialVersionUID = -684425344;
+    private static final long serialVersionUID = 1996002364;
 
     /**
      * The reference instance of <code>diluv.GAME</code>
@@ -119,7 +119,7 @@ public class Game extends TableImpl<GameRecord> {
      */
     @Override
     public List<UniqueKey<GameRecord>> getKeys() {
-        return Arrays.<UniqueKey<GameRecord>>asList(Keys.KEY_GAME_PRIMARY);
+        return Arrays.<UniqueKey<GameRecord>>asList(Keys.KEY_GAME_PRIMARY, Keys.KEY_GAME_NAME, Keys.KEY_GAME_SLUG);
     }
 
     /**

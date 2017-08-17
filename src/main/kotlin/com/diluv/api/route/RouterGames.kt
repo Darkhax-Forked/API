@@ -168,7 +168,7 @@ class RouterGames(val conn: Connection) {
 
                 val dbProjectCount = transaction.select(DSL.count())
                         .from(Tables.PROJECT)
-                        .where(Tables.PROJECT.PROJECTTYPEID.eq(projectTypeId))
+                        .where(Tables.PROJECT.PROJECT_TYPE_ID.eq(projectTypeId))
                         .fetchOne(0, Int::class.java)
 
                 val inputPage = req.getParam("page")
@@ -178,8 +178,8 @@ class RouterGames(val conn: Connection) {
                 getPageDetails(inputPage, inputPerPage, dbProjectCount, { page, offset, perPage, totalPageCount ->
                     val dbProject = transaction.select(Tables.PROJECT.ID)
                             .from(Tables.PROJECT)
-                            .where(Tables.PROJECT.PROJECTTYPEID.eq(projectTypeId))
-                            .orderBy(Tables.PROJECT.CREATEDAT.desc())
+                            .where(Tables.PROJECT.PROJECT_TYPE_ID.eq(projectTypeId))
+                            .orderBy(Tables.PROJECT.CREATED_AT.desc())
                             .limit(offset, perPage)
                             .fetch()
 

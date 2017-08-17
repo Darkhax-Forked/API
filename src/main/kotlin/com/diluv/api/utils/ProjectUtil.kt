@@ -8,7 +8,7 @@ import java.sql.Connection
 
 fun Connection.getProjectById(projectId: Long, token: String? = null): Map<String, Any> {
     val transaction = DSL.using(this, SQLDialect.MYSQL)
-    val dbUserProject = transaction.select(PROJECT.ID, PROJECT.NAME, PROJECT.DESCRIPTION, PROJECT.SHORTDESCRIPTION, PROJECT.USERID, PROJECT.SLUG, PROJECT.LOGO, PROJECT.TOTALDOWNLOADS, PROJECT.CREATEDAT, PROJECT.UPDATEDAT)
+    val dbUserProject = transaction.select(PROJECT.ID, PROJECT.NAME, PROJECT.DESCRIPTION, PROJECT.SHORT_DESCRIPTION, PROJECT.USER_ID, PROJECT.SLUG, PROJECT.LOGO, PROJECT.TOTAL_DOWNLOADS, PROJECT.CREATED_AT, PROJECT.UPDATED_AT)
             .from(PROJECT)
             .where(PROJECT.DELETED.eq(false).and(PROJECT.ID.eq(projectId)))
             .fetchOne()
@@ -19,20 +19,20 @@ fun Connection.getProjectById(projectId: Long, token: String? = null): Map<Strin
         var data = mapOf(
                 "name" to dbUserProject.get(PROJECT.NAME),
                 "description" to dbUserProject.get(PROJECT.DESCRIPTION),
-                "shortDescription" to dbUserProject.get(PROJECT.SHORTDESCRIPTION),
+                "shortDescription" to dbUserProject.get(PROJECT.SHORT_DESCRIPTION),
                 "slug" to dbUserProject.get(PROJECT.SLUG),
                 "logo" to dbUserProject.get(PROJECT.LOGO),
-                "totalDownloads" to dbUserProject.get(PROJECT.TOTALDOWNLOADS),
+                "totalDownloads" to dbUserProject.get(PROJECT.TOTAL_DOWNLOADS),
                 //                "projectTypeId" to dbUserProject[ModelProject.projectTypeId],
                 "authors" to getProjectMembersByProjectId(projectId),
                 //                "gameVersions" to gameVersions,
                 "categories" to getProjectCategoriesById(projectId),
-                "createdAt" to dbUserProject.get(PROJECT.CREATEDAT),
-                "updatedAt" to dbUserProject.get(PROJECT.UPDATEDAT)
+                "createdAt" to dbUserProject.get(PROJECT.CREATED_AT),
+                "updatedAt" to dbUserProject.get(PROJECT.UPDATED_AT)
         )
         if (token != null) {
             val userId = JWT(token.toString()).data.getLong("userId")
-            if (dbUserProject.get(PROJECT.USERID) == userId)
+            if (dbUserProject.get(PROJECT.USER_ID) == userId)
                 data += mapOf(
                         "permission" to 10000000000L
                 )
@@ -47,25 +47,25 @@ fun Connection.getProjectMembersByProjectId(projectId: Long): List<Map<String, A
     val transaction = DSL.using(this, SQLDialect.MYSQL)
 
     //TODO Catch TooManyRowsException
-    val dbUserProject = transaction.select(USER.ID, USER.USERNAME, USER.AVATAR, USER.CREATEDAT, PROJECT.ID)
-            .from(PROJECT.join(USER).on(PROJECT.USERID.eq(USER.ID)))
+    val dbUserProject = transaction.select(USER.ID, USER.USERNAME, USER.AVATAR, USER.CREATED_AT, PROJECT.ID)
+            .from(PROJECT.join(USER).on(PROJECT.USER_ID.eq(USER.ID)))
             .where(PROJECT.DELETED.eq(false).and(PROJECT.ID.eq(projectId))).fetchOne()
 
     if (dbUserProject != null) {
-        val dbUser = transaction.select(USER.ID, USER.USERNAME, USER.AVATAR, USER.CREATEDAT, PROJECTMEMBER.ROLE)
-                .from(USER.join(PROJECTMEMBER).on(USER.ID.eq(PROJECTMEMBER.USERID)))
-                .where(PROJECTMEMBER.PROJECTID.eq(projectId)).fetch()
+        val dbUser = transaction.select(USER.ID, USER.USERNAME, USER.AVATAR, USER.CREATED_AT, PROJECT_MEMBER.ROLE)
+                .from(USER.join(PROJECT_MEMBER).on(USER.ID.eq(PROJECT_MEMBER.USER_ID)))
+                .where(PROJECT_MEMBER.PROJECT_ID.eq(projectId)).fetch()
         return dbUser.map {
             mapOf(
                     "username" to it.get(USER.USERNAME),
                     "avatar" to it.get(USER.AVATAR),
-                    "createdAt" to it.get(USER.CREATEDAT),
-                    "role" to it.get(PROJECTMEMBER.ROLE)
+                    "createdAt" to it.get(USER.CREATED_AT),
+                    "role" to it.get(PROJECT_MEMBER.ROLE)
             )
         } + mapOf(
                 "username" to dbUserProject.get(USER.USERNAME),
                 "avatar" to dbUserProject.get(USER.AVATAR),
-                "createdAt" to dbUserProject.get(USER.CREATEDAT),
+                "createdAt" to dbUserProject.get(USER.CREATED_AT),
                 "role" to "Owner"
         )
     }
@@ -75,30 +75,30 @@ fun Connection.getProjectMembersByProjectId(projectId: Long): List<Map<String, A
 fun Connection.getProjectFileGameVersionsById(projectFileId: Long): List<Map<String, Any?>> {
     val transaction = DSL.using(this, SQLDialect.MYSQL)
 
-    val dbProjectGameVersion = transaction.select(GAMEVERSION.VERSION, GAMEVERSION.CREATEDAT)
-            .from(PROJECTFILEGAMEVERSION.join(GAMEVERSION).on(PROJECTFILEGAMEVERSION.PROJECTVERSIONID.eq(GAMEVERSION.ID)))
-            .where(PROJECTFILEGAMEVERSION.PROJECTFILEID.eq(projectFileId))
+    val dbProjectGameVersion = transaction.select(GAME_VERSION.VERSION, GAME_VERSION.CREATED_AT)
+            .from(PROJECT_FILE_GAME_VERSION.join(GAME_VERSION).on(PROJECT_FILE_GAME_VERSION.PROJECT_VERSION_ID.eq(GAME_VERSION.ID)))
+            .where(PROJECT_FILE_GAME_VERSION.PROJECT_FILE_ID.eq(projectFileId))
             .fetch()
 
     return dbProjectGameVersion.map {
         mapOf(
-                "version" to it.get(GAMEVERSION.VERSION),
-                "createdAt" to it.get(GAMEVERSION.CREATEDAT)
+                "version" to it.get(GAME_VERSION.VERSION),
+                "createdAt" to it.get(GAME_VERSION.CREATED_AT)
         )
     }
 }
 
 fun Connection.getProjectCategoriesById(projectId: Long): List<Map<String, Any?>> {
     val transaction = DSL.using(this, SQLDialect.MYSQL)
-    val dbProjectGameVersion = transaction.select(PROJECTTYPECATEGORY.NAME, PROJECTTYPECATEGORY.DESCRIPTION)
-            .from(PROJECTCATEGORY.join(PROJECTTYPECATEGORY).on(PROJECTCATEGORY.PROJECTTYPECATEGORYID.eq(PROJECTTYPECATEGORY.ID)))
-            .where(PROJECTCATEGORY.PROJECTID.eq(projectId))
+    val dbProjectGameVersion = transaction.select(PROJECT_TYPE_CATEGORY.NAME, PROJECT_TYPE_CATEGORY.DESCRIPTION)
+            .from(PROJECT_CATEGORY.join(PROJECT_TYPE_CATEGORY).on(PROJECT_CATEGORY.PROJECT_TYPE_CATEGORY_ID.eq(PROJECT_TYPE_CATEGORY.ID)))
+            .where(PROJECT_CATEGORY.PROJECT_ID.eq(projectId))
             .fetch()
 
     return dbProjectGameVersion.map {
         mapOf(
-                "name" to it.get(PROJECTTYPECATEGORY.NAME),
-                "description" to it.get(PROJECTTYPECATEGORY.DESCRIPTION)
+                "name" to it.get(PROJECT_TYPE_CATEGORY.NAME),
+                "description" to it.get(PROJECT_TYPE_CATEGORY.DESCRIPTION)
         )
     }
 }
@@ -108,24 +108,24 @@ fun Connection.getProjectFilesById(projectId: Long): List<Map<String, Any>> {
     val transaction = DSL.using(this, SQLDialect.MYSQL)
 
     val fileURL = System.getenv("fileURL")
-    val dbProjectFiles = transaction.select(PROJECTFILE.ID, PROJECTFILE.SHA256, PROJECTFILE.FILENAME, PROJECTFILE.SIZE, PROJECTFILE.RELEASETYPE, PROJECTFILE.DISPLAYNAME, PROJECTFILE.DOWNLOADS, PROJECTFILE.CREATEDAT, PROJECTFILE.PARENTID, PROJECTFILE.STATUS)
-            .from(PROJECTFILE)
-            .where(PROJECTFILE.ID.eq(projectId))
+    val dbProjectFiles = transaction.select(PROJECT_FILE.ID, PROJECT_FILE.SHA256, PROJECT_FILE.FILE_NAME, PROJECT_FILE.SIZE, PROJECT_FILE.RELEASE_TYPE, PROJECT_FILE.DISPLAY_NAME, PROJECT_FILE.DOWNLOADS, PROJECT_FILE.CREATED_AT, PROJECT_FILE.PARENT_ID, PROJECT_FILE.STATUS)
+            .from(PROJECT_FILE)
+            .where(PROJECT_FILE.ID.eq(projectId))
             .fetch()
 
     return dbProjectFiles.map {
         mapOf(
-                "sha256" to it.get(PROJECTFILE.SHA256),
-                "fileName" to it.get(PROJECTFILE.FILENAME),
-                "size" to it.get(PROJECTFILE.SIZE),
-                "releaseType" to it.get(PROJECTFILE.RELEASETYPE),
-                "displayName" to it.get(PROJECTFILE.DISPLAYNAME),
-                "downloads" to it.get(PROJECTFILE.DOWNLOADS),
-                "createdAt" to it.get(PROJECTFILE.CREATEDAT),
-                "parentId" to it.get(PROJECTFILE.PARENTID),
-                "status" to it.get(PROJECTFILE.STATUS),
-                "gameVersions" to this.getProjectFileGameVersionsById(it.get(PROJECTFILE.ID)),
-                "downloadUrl" to fileURL + "/" + it.get(PROJECTFILE.SHA256) + "/" + it.get(PROJECTFILE.DISPLAYNAME)
+                "sha256" to it.get(PROJECT_FILE.SHA256),
+                "fileName" to it.get(PROJECT_FILE.FILE_NAME),
+                "size" to it.get(PROJECT_FILE.SIZE),
+                "releaseType" to it.get(PROJECT_FILE.RELEASE_TYPE),
+                "displayName" to it.get(PROJECT_FILE.DISPLAY_NAME),
+                "downloads" to it.get(PROJECT_FILE.DOWNLOADS),
+                "createdAt" to it.get(PROJECT_FILE.CREATED_AT),
+                "parentId" to it.get(PROJECT_FILE.PARENT_ID),
+                "status" to it.get(PROJECT_FILE.STATUS),
+                "gameVersions" to this.getProjectFileGameVersionsById(it.get(PROJECT_FILE.ID)),
+                "downloadUrl" to fileURL + "/" + it.get(PROJECT_FILE.SHA256) + "/" + it.get(PROJECT_FILE.DISPLAY_NAME)
         )
     }
 }
@@ -150,12 +150,12 @@ fun Connection.insertProjectFiles(sha256: String, fileName: String, displayName:
             .where(PROJECT.SLUG.eq(projectSlug))
             .fetchOne()
     if (dbProject != null) {
-        val dbProjectFile = transaction.insertInto(PROJECTFILE, PROJECTFILE.SHA256, PROJECTFILE.FILENAME, PROJECTFILE.DISPLAYNAME, PROJECTFILE.SIZE, PROJECTFILE.RELEASETYPE, PROJECTFILE.STATUS, PROJECTFILE.PARENTID, PROJECTFILE.PROJECTID, PROJECTFILE.USERID)
+        val dbProjectFile = transaction.insertInto(PROJECT_FILE, PROJECT_FILE.SHA256, PROJECT_FILE.FILE_NAME, PROJECT_FILE.DISPLAY_NAME, PROJECT_FILE.SIZE, PROJECT_FILE.RELEASE_TYPE, PROJECT_FILE.STATUS, PROJECT_FILE.PARENT_ID, PROJECT_FILE.PROJECT_ID, PROJECT_FILE.USER_ID)
                 .values(sha256, fileName, displayName, size, releaseType, status, parentId, dbProject.get(PROJECT.ID), userId)
-                .returning(PROJECTFILE.ID)
+                .returning(PROJECT_FILE.ID)
                 .fetchOne()
         if (dbProjectFile != null)
-            return dbProjectFile.get(PROJECTFILE.ID)
+            return dbProjectFile.get(PROJECT_FILE.ID)
         else
             return null
     }
@@ -164,7 +164,7 @@ fun Connection.insertProjectFiles(sha256: String, fileName: String, displayName:
 
 fun Connection.insertProject(name: String, description: String, shortDescription: String, slug: String, logo: String, projectTypeId: Long, userId: Long) {
     val transaction = DSL.using(this, SQLDialect.MYSQL)
-    transaction.insertInto(PROJECT, PROJECT.NAME, PROJECT.DESCRIPTION, PROJECT.SHORTDESCRIPTION, PROJECT.SLUG, PROJECT.LOGO, PROJECT.PROJECTTYPEID, PROJECT.USERID)
+    transaction.insertInto(PROJECT, PROJECT.NAME, PROJECT.DESCRIPTION, PROJECT.SHORT_DESCRIPTION, PROJECT.SLUG, PROJECT.LOGO, PROJECT.PROJECT_TYPE_ID, PROJECT.USER_ID)
             .values(name, description, shortDescription, slug, logo, projectTypeId, userId)
             .execute()
 }

@@ -36,7 +36,7 @@ class RouterAuth(val conn: Connection) {
         val jwtData = JsonObject().apply {
             put("userId", userId)
             put("username", username)
-            put("randomData", UUID.randomUUID().toString())
+            put("time", System.nanoTime())
         }
 
         val jwtToken = encodeToken(data = jwtData, issuer = "token", expiresInMinutes = 60)
@@ -47,14 +47,14 @@ class RouterAuth(val conn: Connection) {
 
         val transaction = DSL.using(conn, SQLDialect.MYSQL)
         val count: Int = transaction.selectCount()
-                .from(AUTHACCESSTOKEN)
-                .where(AUTHACCESSTOKEN.TOKEN.eq(token).and(AUTHACCESSTOKEN.REFRESHTOKEN.eq(refreshToken)))
+                .from(AUTH_ACCESS_TOKEN)
+                .where(AUTH_ACCESS_TOKEN.TOKEN.eq(token).and(AUTH_ACCESS_TOKEN.REFRESH_TOKEN.eq(refreshToken)))
                 .fetchOne(0, Int::class.java)
 
         if (count > 0) {
             //TODO Generate new tokens and refresh
         } else {
-            transaction.insertInto(AUTHACCESSTOKEN, AUTHACCESSTOKEN.USERID, AUTHACCESSTOKEN.TOKEN, AUTHACCESSTOKEN.REFRESHTOKEN)
+            transaction.insertInto(AUTH_ACCESS_TOKEN, AUTH_ACCESS_TOKEN.USER_ID, AUTH_ACCESS_TOKEN.TOKEN, AUTH_ACCESS_TOKEN.REFRESH_TOKEN)
                     .values(userId, token, refreshToken)
                     .execute()
         }
@@ -101,16 +101,16 @@ class RouterAuth(val conn: Connection) {
                     if (OpenBSDBCrypt.checkPassword(user.password, inputPassword.toCharArray())) {
                         val userId = user.id
                         val username = user.username
-                        if (user.mfaenabled) {
+                        if (user.mfaEnabled) {
                             val jwtData = JsonObject().apply {
                                 put("userId", userId)
                                 put("username", username)
-                                put("randomData", UUID.randomUUID().toString())
+                                put("time", System.nanoTime())
                             }
                             val jwtToken = encodeToken(data = jwtData, issuer = "mfaToken", expiresInMinutes = 10)
                             val token = jwtToken.toString()
                             //TODO Check unique
-                            transaction.insertInto(AUTHMFATOKEN, AUTHMFATOKEN.USERID, AUTHMFATOKEN.TOKEN)
+                            transaction.insertInto(AUTH_MFA_TOKEN, AUTH_MFA_TOKEN.USER_ID, AUTH_MFA_TOKEN.TOKEN)
                                     .values(userId, token)
                                     .execute()
 
@@ -144,22 +144,22 @@ class RouterAuth(val conn: Connection) {
                 if (!jwt.isExpired()) {
                     val tokenText = token.toString()
                     val transaction = DSL.using(conn, SQLDialect.MYSQL)
-                    val mfaToken = transaction.select(AUTHMFATOKEN.TOKEN)
-                            .from(AUTHMFATOKEN)
-                            .where(AUTHMFATOKEN.TOKEN.eq(tokenText))
+                    val mfaToken = transaction.select(AUTH_MFA_TOKEN.TOKEN)
+                            .from(AUTH_MFA_TOKEN)
+                            .where(AUTH_MFA_TOKEN.TOKEN.eq(tokenText))
                             .fetchOne()
 
                     if (mfaToken != null) {
                         val username = jwt.data.getString("username")
                         val userId = jwt.data.getLong("userId")
 
-                        transaction.delete(AUTHMFATOKEN)
-                                .where(AUTHMFATOKEN.TOKEN.eq(tokenText))
+                        transaction.delete(AUTH_MFA_TOKEN)
+                                .where(AUTH_MFA_TOKEN.TOKEN.eq(tokenText))
                                 .execute()
 
-                        transaction.insertInto(ANALYTICSAUTHMFATOKEN, ANALYTICSAUTHMFATOKEN.USERID, ANALYTICSAUTHMFATOKEN.TOKEN)
-                                .values(userId, tokenText)
-                                .execute()
+//                        transaction.insertInto(ANALYTICSAUTH_MFA_TOKEN, ANALYTICSAUTH_MFA_TOKEN.USERID, ANALYTICSAUTH_MFA_TOKEN.TOKEN)
+//                                .values(userId, tokenText)
+//                                .execute()
 
                         event.asSuccessResponse(createAccessToken(userId, username))
                     } else
@@ -184,22 +184,20 @@ class RouterAuth(val conn: Connection) {
                     val transaction = DSL.using(conn, SQLDialect.MYSQL)
 
                     val refreshTokeText = refreshToken.toString()
-                    val tokenInfo = transaction.select(AUTHACCESSTOKEN.TOKEN)
-                            .from(AUTHACCESSTOKEN)
-                            .where(AUTHACCESSTOKEN.REFRESHTOKEN.eq(refreshTokeText))
+                    val tokenInfo = transaction.select(AUTH_ACCESS_TOKEN.TOKEN)
+                            .from(AUTH_ACCESS_TOKEN)
+                            .where(AUTH_ACCESS_TOKEN.REFRESH_TOKEN.eq(refreshTokeText))
                             .fetchOne()
 
                     if (tokenInfo != null) {
                         val userId = jwt.data.getLong("userId")
                         val username = jwt.data.getString("username")
 
-                        transaction.batch(
-                                transaction.delete(AUTHACCESSTOKEN)
-                                        .where(AUTHACCESSTOKEN.REFRESHTOKEN.eq(refreshTokeText)),
-
-                                transaction.insertInto(ANALYTICSAUTHACCESSTOKEN, ANALYTICSAUTHACCESSTOKEN.USERID, ANALYTICSAUTHACCESSTOKEN.TOKEN, ANALYTICSAUTHACCESSTOKEN.REFRESHTOKEN)
-                                        .values(userId, tokenInfo.get(AUTHACCESSTOKEN.TOKEN), refreshTokeText)
-                        ).execute()
+                        transaction.delete(AUTH_ACCESS_TOKEN)
+                                .where(AUTH_ACCESS_TOKEN.REFRESH_TOKEN.eq(refreshTokeText))
+                                .execute();
+//                                transaction.insertInto(ANALYTICSAUTH_ACCESS_TOKEN, ANALYTICSAUTH_ACCESS_TOKEN.USERID, ANALYTICSAUTH_ACCESS_TOKEN.TOKEN, ANALYTICSAUTH_ACCESS_TOKEN.REFRESHTOKEN)
+//                                        .values(userId, tokenInfo.get(AUTH_ACCESS_TOKEN.TOKEN), refreshTokeText)
 
                         event.asSuccessResponse(createAccessToken(userId, username))
                     }
@@ -265,8 +263,8 @@ class RouterAuth(val conn: Connection) {
                                 val salt = ByteArray(16)
                                 SecureRandom().nextBytes(salt)
                                 val passwordHash = OpenBSDBCrypt.generate(password.toCharArray(), salt, 10)
-                                val userResults = transaction.insertInto(USER, USER.EMAIL, USER.USERNAME, USER.PASSWORD, USER.PERMISSION, USER.AVATAR)
-                                        .values(email, username, passwordHash, 0, "")
+                                val userResults = transaction.insertInto(USER, USER.EMAIL, USER.USERNAME, USER.PASSWORD, USER.AVATAR)
+                                        .values(email, username, passwordHash,  "")
                                         .returning(USER.ID)
                                         .fetchOne()
 

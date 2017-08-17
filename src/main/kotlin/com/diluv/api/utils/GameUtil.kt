@@ -29,15 +29,15 @@ fun Connection.getGameById(gameId: Long): Map<String, Any> {
 fun Connection.getGameVersionsByGameId(gameId: Long): List<Map<String, Any>> {
     val transaction = DSL.using(this, SQLDialect.MYSQL)
 
-    val gameOut = transaction.select(GAMEVERSION.VERSION, GAMEVERSION.WEBSITE, GAMEVERSION.CREATEDAT)
-            .from(GAMEVERSION)
-            .where(GAMEVERSION.GAMEID.eq(gameId))
+    val gameOut = transaction.select(GAME_VERSION.VERSION, GAME_VERSION.WEBSITE, GAME_VERSION.CREATED_AT)
+            .from(GAME_VERSION)
+            .where(GAME_VERSION.GAME_ID.eq(gameId))
             .fetch()
     val gameVersionListOut = gameOut.map {
         mapOf(
-                "version" to it.get(GAMEVERSION.VERSION),
-                "website" to it.get(GAMEVERSION.WEBSITE),
-                "createdAt" to it.get(GAMEVERSION.CREATEDAT)
+                "version" to it.get(GAME_VERSION.VERSION),
+                "website" to it.get(GAME_VERSION.WEBSITE),
+                "createdAt" to it.get(GAME_VERSION.CREATED_AT)
         )
     }
 
@@ -51,13 +51,13 @@ fun Connection.getGameVersionsByGameId(gameId: Long): List<Map<String, Any>> {
 fun Connection.getProjectTypesByGameId(gameId: Long): List<Map<String, Any?>> {
     val transaction = DSL.using(this, SQLDialect.MYSQL)
 
-    val dbProjectType = transaction.select(PROJECTTYPE.ID)
-            .from(PROJECTTYPE)
-            .where(PROJECTTYPE.GAMEID.eq(gameId))
+    val dbProjectType = transaction.select(PROJECT_TYPE.ID)
+            .from(PROJECT_TYPE)
+            .where(PROJECT_TYPE.GAME_ID.eq(gameId))
             .fetch()
 
     val projectTypeListOut = dbProjectType.map {
-        this.getProjectTypeById(it.get(PROJECTTYPE.ID))
+        this.getProjectTypeById(it.get(PROJECT_TYPE.ID))
     }
 
     if (projectTypeListOut != null) {
