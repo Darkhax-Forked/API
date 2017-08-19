@@ -7,7 +7,7 @@ import java.sql.Connection
 
 fun Connection.getCategoriesByProjectTypeId(projectTypeId: Long): List<Map<String, Any>> {
     val transaction = DSL.using(this, SQLDialect.MYSQL)
-    val dbUserProject = transaction.select(PROJECT_TYPE_CATEGORY.ID, PROJECT_TYPE_CATEGORY.NAME, PROJECT_TYPE_CATEGORY.DESCRIPTION)
+    val dbUserProject = transaction.select(PROJECT_TYPE_CATEGORY.NAME, PROJECT_TYPE_CATEGORY.DESCRIPTION, PROJECT_TYPE_CATEGORY.SLUG)
             .from(PROJECT_TYPE_CATEGORY)
             .where(PROJECT_TYPE_CATEGORY.PROJECT_TYPE_ID.eq(projectTypeId))
             .fetch()
@@ -42,7 +42,7 @@ fun Connection.getProjectsByProjectTypeId(projectTypeId: Long): List<Map<String,
 fun Connection.getProjectTypeById(projectTypeId: Long): Map<String, Any> {
     val transaction = DSL.using(this, SQLDialect.MYSQL)
 
-    val dbUserProject = transaction.select(PROJECT_TYPE.ID, PROJECT_TYPE.NAME, PROJECT_TYPE.DESCRIPTION, PROJECT_TYPE.SLUG)
+    val dbUserProject = transaction.select(PROJECT_TYPE.NAME, PROJECT_TYPE.DESCRIPTION, PROJECT_TYPE.SLUG)
             .from(PROJECT_TYPE)
             .where(PROJECT_TYPE.ID.eq(projectTypeId))
             .fetchOne()
@@ -53,13 +53,17 @@ fun Connection.getProjectTypeById(projectTypeId: Long): Map<String, Any> {
                 .where(PROJECT_TYPE_PERMISSION.ID.eq(projectTypeId))
                 .fetchOne()
 
-        return mapOf(
+        var projectTypeOut = mapOf(
                 "name" to dbUserProject.get(PROJECT_TYPE.NAME),
                 "description" to dbUserProject.get(PROJECT_TYPE.DESCRIPTION),
                 "slug" to dbUserProject.get(PROJECT_TYPE.SLUG),
-                "categories" to this.getCategoriesByProjectTypeId(dbUserProject.get(PROJECT_TYPE.ID)),
-                "permission" to dbPermission.get(PROJECT_TYPE_PERMISSION.PERMISSION_CREATE)
+                "categories" to this.getCategoriesByProjectTypeId(projectTypeId)
         )
+
+        if (dbPermission != null)
+            projectTypeOut += mapOf("permission" to dbPermission.get(PROJECT_TYPE_PERMISSION.PERMISSION_CREATE))
+
+        return projectTypeOut
     }
     return mapOf()
 }

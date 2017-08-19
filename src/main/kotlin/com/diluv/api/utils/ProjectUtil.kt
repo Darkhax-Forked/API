@@ -125,7 +125,7 @@ fun Connection.getProjectFilesById(projectId: Long): List<Map<String, Any>> {
                 "parentId" to it.get(PROJECT_FILE.PARENT_ID),
                 "status" to it.get(PROJECT_FILE.STATUS),
                 "gameVersions" to this.getProjectFileGameVersionsById(it.get(PROJECT_FILE.ID)),
-                "downloadUrl" to fileURL + "/" + it.get(PROJECT_FILE.SHA256) + "/" + it.get(PROJECT_FILE.DISPLAY_NAME)
+                "downloadUrl" to fileURL + "/" + it.get(PROJECT_FILE.ID) + "/" + it.get(PROJECT_FILE.SHA256) + "/" + it.get(PROJECT_FILE.DISPLAY_NAME)
         )
     }
 }

@@ -76,13 +76,13 @@ class RouterProjects(val conn: Connection) {
             val projectId = conn.getProjectIdBySlug(projectSlug)
             if (projectId != null) {
                 var token = event.getAuthorizationToken()
-                if(token!=null) {
+                if (token != null) {
                     if (conn.isTokenValid(token)) {
                         val jwt = JWT(token)
                         if (jwt.isExpired()) {
                             token = null
                         }
-                    }else{
+                    } else {
                         token = null
                     }
                 }

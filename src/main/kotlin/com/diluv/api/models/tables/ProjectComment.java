@@ -29,7 +29,7 @@ import java.util.List;
 @SuppressWarnings({"all", "unchecked", "rawtypes"})
 public class ProjectComment extends TableImpl<ProjectCommentRecord> {
 
-    private static final long serialVersionUID = -562016712;
+    private static final long serialVersionUID = 492679479;
 
     /**
      * The reference instance of <code>diluv.PROJECT_COMMENT</code>
@@ -67,7 +67,7 @@ public class ProjectComment extends TableImpl<ProjectCommentRecord> {
     /**
      * The column <code>diluv.PROJECT_COMMENT.PARENT_ID</code>.
      */
-    public final TableField<ProjectCommentRecord, Long> PARENT_ID = createField("PARENT_ID", org.jooq.impl.SQLDataType.BIGINT.nullable(false), this, "");
+    public final TableField<ProjectCommentRecord, Long> PARENT_ID = createField("PARENT_ID", org.jooq.impl.SQLDataType.BIGINT, this, "");
 
     /**
      * The column <code>diluv.PROJECT_COMMENT.PROJECT_ID</code>.
