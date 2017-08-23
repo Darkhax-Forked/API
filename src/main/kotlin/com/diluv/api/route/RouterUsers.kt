@@ -3,11 +3,13 @@ package com.diluv.api.route
 import com.diluv.api.error.Errors
 import com.diluv.api.jwt.JWT
 import com.diluv.api.jwt.isTokenValid
-import com.diluv.api.models.Tables.*
+import com.diluv.api.models.Tables.USER
+import com.diluv.api.models.Tables.USER_BETA_KEY
 import com.diluv.api.permission.user.UserPermissionType
 import com.diluv.api.utils.asErrorResponse
 import com.diluv.api.utils.asSuccessResponse
 import com.diluv.api.utils.getAuthorizationToken
+import com.diluv.api.utils.getUserByUserId
 import io.vertx.core.Handler
 import io.vertx.ext.web.Router
 import io.vertx.ext.web.RoutingContext
@@ -61,7 +63,6 @@ class RouterUsers(val conn: Connection) {
         }
     }
 
-
     /**
      * @api {get} /users/:id
      * @apiName GetUser
@@ -77,52 +78,39 @@ class RouterUsers(val conn: Connection) {
      */
     val getUserByUsername = Handler<RoutingContext> { event ->
         val username = event.request().getParam("username")
-        if (username == "me") {
-            val token = event.getAuthorizationToken()
-            if (token != null) {
-                if (conn.isTokenValid(token)) {
-                    val jwt = JWT(token)
-                    if (!jwt.isExpired()) {
-                        val userId = jwt.data.getLong("userId")
-                        val transaction = DSL.using(conn, SQLDialect.MYSQL)
 
-                        val user = transaction.select(USER.USERNAME, USER.EMAIL, USER.AVATAR, USER.CREATED_AT)
-                                .from(USER)
-                                .where(USER.ID.eq(userId))
-                                .fetchOne()
-
-                        if (user != null) {
-                            val userOut = mapOf<String, Any>(
-                                    "username" to user.get(USER.USERNAME),
-                                    "email" to user.get(USER.EMAIL),
-                                    "avatar" to user.get(USER.AVATAR),
-                                    "createdAt" to user.get(USER.CREATED_AT)
-                            )
-                            event.asSuccessResponse(userOut)
-                        } else {
-                            event.asErrorResponse(Errors.NOT_FOUND, "User not found")
-                        }
+        var userId: Long? = null
+        var authorized = false
+        val token = event.getAuthorizationToken()
+        if (token != null) {
+            if (conn.isTokenValid(token)) {
+                val jwt = JWT(token)
+                if (!jwt.isExpired()) {
+                    val tokenUsername = jwt.data.getString("username")
+                    val tokenUserId = jwt.data.getLong("userId")
+                    if (tokenUserId != null && (username == "me" || username == tokenUsername)) {
+                        userId = tokenUserId
+                        authorized = true
                     }
                 }
             }
-        } else {
+        }
+
+        if (!authorized) {
             val transaction = DSL.using(conn, SQLDialect.MYSQL)
 
-            val user = transaction.select(USER.USERNAME, USER.AVATAR, USER.CREATED_AT)
+            val dbUserId = transaction.select(USER.ID)
                     .from(USER)
                     .where(USER.USERNAME.eq(username))
-                    .fetchOne()
+                    .fetchOne(0, Long::class.java)
 
-            if (user != null) {
-                val userOut = mapOf<String, Any>(
-                        "username" to user.get(USER.USERNAME),
-                        "avatar" to user.get(USER.AVATAR),
-                        "createdAt" to user.get(USER.CREATED_AT)
-                )
-                event.asSuccessResponse(userOut)
-            } else {
-                event.asErrorResponse(Errors.NOT_FOUND, "User not found")
-            }
+            userId = dbUserId
+        }
+
+        if (userId != null) {
+            event.asSuccessResponse(conn.getUserByUserId(userId, authorized))
+        } else {
+            event.asErrorResponse(Errors.NOT_FOUND, "User not found")
         }
     }
 

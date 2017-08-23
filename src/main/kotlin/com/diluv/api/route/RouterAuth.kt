@@ -195,9 +195,7 @@ class RouterAuth(val conn: Connection) {
 
                         transaction.delete(AUTH_ACCESS_TOKEN)
                                 .where(AUTH_ACCESS_TOKEN.REFRESH_TOKEN.eq(refreshTokeText))
-                                .execute();
-//                                transaction.insertInto(ANALYTICSAUTH_ACCESS_TOKEN, ANALYTICSAUTH_ACCESS_TOKEN.USERID, ANALYTICSAUTH_ACCESS_TOKEN.TOKEN, ANALYTICSAUTH_ACCESS_TOKEN.REFRESHTOKEN)
-//                                        .values(userId, tokenInfo.get(AUTH_ACCESS_TOKEN.TOKEN), refreshTokeText)
+                                .execute()
 
                         event.asSuccessResponse(createAccessToken(userId, username))
                     }
