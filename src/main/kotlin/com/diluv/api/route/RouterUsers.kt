@@ -6,10 +6,7 @@ import com.diluv.api.jwt.isTokenValid
 import com.diluv.api.models.Tables.USER
 import com.diluv.api.models.Tables.USER_BETA_KEY
 import com.diluv.api.permission.user.UserPermissionType
-import com.diluv.api.utils.asErrorResponse
-import com.diluv.api.utils.asSuccessResponse
-import com.diluv.api.utils.getAuthorizationToken
-import com.diluv.api.utils.getUserByUserId
+import com.diluv.api.utils.*
 import io.vertx.core.Handler
 import io.vertx.ext.web.Router
 import io.vertx.ext.web.RoutingContext
@@ -25,6 +22,7 @@ class RouterUsers(val conn: Connection) {
     fun createRouter(router: Router) {
         router.get("/users").handler(getUsers)
         router.get("/users/:username").handler(getUserByUsername)
+        router.get("/users/:username/settings").handler(getUserSettingsByUsername)
         router.post("/users/generateBetaKey").handler(postCreateBetaKeys)
     }
 
@@ -49,11 +47,7 @@ class RouterUsers(val conn: Connection) {
                     .fetch()
 
             val userListOut = users.map {
-                mapOf(
-                        "username" to it.get(USER.USERNAME),
-                        "avatar" to it.get(USER.AVATAR),
-                        "createdAt" to it.get(USER.CREATED_AT)
-                )
+                conn.getUserByUserId(it.get(USER.ID), false)
             }
 
             event.asSuccessResponse(userListOut)
@@ -113,6 +107,28 @@ class RouterUsers(val conn: Connection) {
             event.asErrorResponse(Errors.NOT_FOUND, "User not found")
         }
     }
+
+    val getUserSettingsByUsername = Handler<RoutingContext> { event ->
+        val username = event.request().getParam("username")
+
+        val token = event.getAuthorizationToken()
+        if (token != null) {
+            if (conn.isTokenValid(token)) {
+                val jwt = JWT(token)
+                if (!jwt.isExpired()) {
+                    val tokenUsername = jwt.data.getString("username")
+                    val tokenUserId = jwt.data.getLong("userId")
+                    if (tokenUserId != null && (username == "me" || username == tokenUsername)) {
+                        val userOut = conn.getUserSettingsByUserId(tokenUserId)
+                        event.asSuccessResponse(userOut)
+                    }
+                }
+            }
+        } else {
+            event.asErrorResponse(Errors.UNAUTHORIZED, "User token not authorized for this request")
+        }
+    }
+
 
     val postCreateBetaKeys = Handler<RoutingContext> { event ->
         val req = event.request()

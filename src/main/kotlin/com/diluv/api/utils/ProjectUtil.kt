@@ -1,12 +1,11 @@
 package com.diluv.api.utils
 
-import com.diluv.api.jwt.JWT
 import com.diluv.api.models.Tables.*
 import org.jooq.SQLDialect
 import org.jooq.impl.DSL
 import java.sql.Connection
 
-fun Connection.getProjectById(projectId: Long, token: String? = null): Map<String, Any> {
+fun Connection.getProjectById(projectId: Long, userId: Long? = null): Map<String, Any> {
     val transaction = DSL.using(this, SQLDialect.MYSQL)
     val dbUserProject = transaction.select(PROJECT.ID, PROJECT.NAME, PROJECT.DESCRIPTION, PROJECT.SHORT_DESCRIPTION, PROJECT.USER_ID, PROJECT.SLUG, PROJECT.LOGO, PROJECT.TOTAL_DOWNLOADS, PROJECT.CREATED_AT, PROJECT.UPDATED_AT)
             .from(PROJECT)
@@ -30,17 +29,31 @@ fun Connection.getProjectById(projectId: Long, token: String? = null): Map<Strin
                 "createdAt" to dbUserProject.get(PROJECT.CREATED_AT),
                 "updatedAt" to dbUserProject.get(PROJECT.UPDATED_AT)
         )
-        if (token != null) {
-            val userId = JWT(token.toString()).data.getLong("userId")
+        if (userId != null) {
             if (dbUserProject.get(PROJECT.USER_ID) == userId)
                 data += mapOf(
-                        "permission" to 10000000000L
+                        "permission" to 0x4
                 )
         }
 
         return data
     }
     return mapOf()
+}
+
+fun Connection.getProjectsByUserId(userId: Long): List<Map<String, Any>> {
+    val transaction = DSL.using(this, SQLDialect.MYSQL)
+    val dbUserProject = transaction.select(PROJECT.ID)
+            .from(PROJECT)
+            .where(PROJECT.USER_ID.eq(userId))
+            .fetch()
+
+    if (dbUserProject != null) {
+        return dbUserProject.map {
+            this.getProjectById(it.get(PROJECT.ID), userId)
+        }
+    }
+    return listOf()
 }
 
 fun Connection.getProjectMembersByProjectId(projectId: Long): List<Map<String, Any>> {

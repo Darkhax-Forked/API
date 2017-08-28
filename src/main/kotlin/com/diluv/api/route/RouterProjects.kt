@@ -75,18 +75,17 @@ class RouterProjects(val conn: Connection) {
         if (projectSlug != null) {
             val projectId = conn.getProjectIdBySlug(projectSlug)
             if (projectId != null) {
-                var token = event.getAuthorizationToken()
+                val token = event.getAuthorizationToken()
+                var userId: Long? = null
                 if (token != null) {
                     if (conn.isTokenValid(token)) {
                         val jwt = JWT(token)
                         if (jwt.isExpired()) {
-                            token = null
+                            userId = jwt.data.getLong("userId")
                         }
-                    } else {
-                        token = null
                     }
                 }
-                val projectObj = conn.getProjectById(projectId, token)
+                val projectObj = conn.getProjectById(projectId, userId)
                 if (!projectObj.isEmpty()) {
                     event.asSuccessResponse(projectObj)
                 } else {
