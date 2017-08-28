@@ -56,8 +56,6 @@ dependencies {
     compile "com.diluv.catalejo:Catalejo:0.0.9"
     compile "com.diluv.catalejo:Catalejo-Java:0.0.9"
     compile "com.diluv.catalejo:Catalejo-Minecraft:0.0.9"
-
-    compile 'org.reflections:reflections:0.9.10'
 }
 
 idea {
