@@ -5,6 +5,7 @@ import com.diluv.api.jwt.JWT
 import com.diluv.api.jwt.isTokenValid
 import com.diluv.api.utils.*
 import com.diluv.catalejo.Catalejo
+import com.github.slugify.Slugify
 import io.vertx.core.Handler
 import io.vertx.ext.web.Router
 import io.vertx.ext.web.RoutingContext
@@ -40,7 +41,7 @@ class RouterProjects(val conn: Connection) {
                     val description = req.getFormAttribute("description")
                     val shortDescription = req.getFormAttribute("shortDescription")
                     val logo = req.getFormAttribute("logo")
-//                    val projectTypeId = req.getFormAttribute("projectTypeId").toLongOrNull()
+                    val projectTypeSlug = req.getFormAttribute("projectType")
 
                     val errorMessage = arrayListOf<String>()
 
@@ -52,15 +53,22 @@ class RouterProjects(val conn: Connection) {
                         errorMessage.add("Project creation requires a short description")
                     if (logo == null)
                         errorMessage.add("Project creation requires a logo")
-                    //TODO
-//                    if (projectTypeId == null)
-//                        errorMessage.add("Project creation requires a project type id")
+                    if (projectTypeSlug == null)
+                        errorMessage.add("Project creation requires a project type slug")
 
                     //TODO look into logo
                     if (errorMessage.size == 0) {
-                        //todo generate slug
-                        val slug = ""
-//                        insertProject(conn, name, description, shortDescription, slug, logo, projectTypeId as Long, userId)
+                        val slug = Slugify().slugify(name)
+                        if (conn.getProjectIdBySlug(slug) == null) {
+                            val projectTypeId = conn.getProjectTypeIdBySlug(projectTypeSlug)
+                            if (projectTypeId != null) {
+                                conn.insertProject(name, description, shortDescription, slug, logo, projectTypeId, userId)
+                            } else {
+                                event.asErrorResponse(Errors.BAD_REQUEST, "Project type doesn't exist.")
+                            }
+                        } else {
+                            event.asErrorResponse(Errors.BAD_REQUEST, "Project name is already used, please pick another")
+                        }
                     } else {
                         event.asErrorResponse(Errors.NOT_FOUND, errorMessage)
                     }

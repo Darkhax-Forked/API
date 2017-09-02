@@ -19,7 +19,6 @@ class RouterGames(val conn: Connection) {
     fun createRouter(router: Router) {
         router.get("/games").handler(getGames)
         router.get("/games/:gameSlug").handler(getGameBySlug)
-        //TODO add endpoint to get projects for a certain game
         router.get("/games/:gameSlug/projectTypes").handler(getProjectTypesByGameSlug)
         router.get("/games/:gameSlug/projectTypes/:projectTypeSlug").handler(getProjectTypeByProjectTypeSlugByGameSlug)
         router.get("/games/:gameSlug/projectTypes/:projectTypeSlug/projects").handler(getProjectsByProjectTypeSlugByGameSlug)

@@ -10,6 +10,7 @@ import com.diluv.api.utils.*
 import io.vertx.core.Handler
 import io.vertx.ext.web.Router
 import io.vertx.ext.web.RoutingContext
+import org.bouncycastle.crypto.generators.OpenBSDBCrypt
 import org.jooq.SQLDialect
 import org.jooq.impl.DSL
 import java.math.BigInteger
@@ -23,6 +24,9 @@ class RouterUsers(val conn: Connection) {
         router.get("/users").handler(getUsers)
         router.get("/users/:username").handler(getUserByUsername)
         router.get("/users/:username/settings").handler(getUserSettingsByUsername)
+
+        router.post("/users/:username/security").handler(postUserSecurityByUsername)
+//        router.post("/users/:username/settings").handler(postUserSettingsByUsername)
         router.post("/users/generateBetaKey").handler(postCreateBetaKeys)
     }
 
@@ -129,6 +133,52 @@ class RouterUsers(val conn: Connection) {
         }
     }
 
+    val postUserSecurityByUsername = Handler<RoutingContext> { event ->
+        val req = event.request()
+        req.isExpectMultipart = true
+        val token = event.getAuthorizationToken()
+        if (token != null) {
+            val jwt = JWT(token)
+            if (conn.isTokenValid(token)) {
+                if (!jwt.isExpired()) {
+                    val payload = jwt.data
+                    val userId = payload.getLong("userId")
+
+                    req.endHandler({
+                        val oldPassword = req.getFormAttribute("oldPassword")
+                        val newPassword = req.getFormAttribute("newPassword")
+                        val newPasswordConfirm = req.getFormAttribute("newPasswordConfirm")
+
+                        if (newPassword != newPasswordConfirm) {
+                            val transaction = DSL.using(conn, SQLDialect.MYSQL)
+
+                            val user = transaction.selectFrom(USER)
+                                    .where(USER.ID.eq(userId))
+                                    .fetchAny()
+                            if (OpenBSDBCrypt.checkPassword(user.password, oldPassword.toCharArray())) {
+                                val transaction = DSL.using(conn, SQLDialect.MYSQL)
+
+                                val salt = ByteArray(16)
+                                SecureRandom().nextBytes(salt)
+                                val passwordHash = OpenBSDBCrypt.generate(newPassword.toCharArray(), salt, 10)
+
+                                transaction.update(USER)
+                                        .set(USER.PASSWORD, passwordHash)
+                                        .execute()
+
+                                //TODO Proper response
+                                event.asSuccessResponse(mapOf("valid" to true))
+                            } else {
+                                event.asErrorResponse(Errors.BAD_REQUEST, "The target userId is needed for this request")
+                            }
+                        } else {
+                            event.asErrorResponse(Errors.BAD_REQUEST, "The new password and new password confirm do not match")
+                        }
+                    })
+                }
+            }
+        }
+    }
 
     val postCreateBetaKeys = Handler<RoutingContext> { event ->
         val req = event.request()
@@ -139,9 +189,7 @@ class RouterUsers(val conn: Connection) {
             if (!jwt.isExpired()) {
                 val payload = jwt.data
                 val creationUserId = payload.getLong("userId")
-                val permission = payload.getInteger("permission", 1)
-
-                //TODO Move away from hardcoded
+                val permission = 0
 
                 if (UserPermissionType.CREATE_BETA_KEYS.hasPermission(permission)) {
                     req.endHandler({

@@ -169,8 +169,6 @@ fun Connection.insertProjectFiles(sha256: String, fileName: String, displayName:
                 .fetchOne()
         if (dbProjectFile != null)
             return dbProjectFile.get(PROJECT_FILE.ID)
-        else
-            return null
     }
     return null
 }

@@ -171,11 +171,9 @@ class RouterAuth(val conn: Connection) {
                 event.asErrorResponse(Errors.BAD_REQUEST, "Token is not valid")
             }
         }
-        //TODO Fix token valid call DB
     }
 
     val getRefreshToken = Handler<RoutingContext> { event ->
-        //TODO DB valid check fix
         val refreshToken = event.getAuthorizationToken()
         if (refreshToken != null) {
             if (conn.isRefreshTokenValid(refreshToken)) {
@@ -283,15 +281,12 @@ class RouterAuth(val conn: Connection) {
     }
 
     fun validUsername(username: String): Boolean {
-
         if (username.length < 6 || username.length > 20)
             return false
         return USERNAME.matcher(username).matches()
     }
 
     fun validPassword(password: String): Boolean {
-
-        //TODO Check to see if password is valid
         if (password.length < 6 || password.length > 50)
             return false
         return true
