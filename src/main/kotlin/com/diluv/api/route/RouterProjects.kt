@@ -180,7 +180,7 @@ class RouterProjects(val conn: Connection) {
                             val sha256 = map["SHA-256"]
                             println(map)
                             if (sha256 != null) {
-                                val id = conn.insertProjectFiles(sha256 as String, fileName, displayName, size, releaseType, "Review", parentId, projectSlug, userId)
+                                val id = conn.insertProjectFiles(sha256 as String, fileName, displayName, size, releaseType, parentId, projectSlug, userId)
                                 if (id != null) {
                                     //TODO Insert into project processing
                                 } else {

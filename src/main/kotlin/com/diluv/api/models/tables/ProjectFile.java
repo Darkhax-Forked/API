@@ -29,7 +29,7 @@ import java.util.List;
 @SuppressWarnings({"all", "unchecked", "rawtypes"})
 public class ProjectFile extends TableImpl<ProjectFileRecord> {
 
-    private static final long serialVersionUID = 942972790;
+    private static final long serialVersionUID = -390853356;
 
     /**
      * The reference instance of <code>diluv.PROJECT_FILE</code>
@@ -80,14 +80,14 @@ public class ProjectFile extends TableImpl<ProjectFileRecord> {
     public final TableField<ProjectFileRecord, String> RELEASE_TYPE = createField("RELEASE_TYPE", org.jooq.impl.SQLDataType.VARCHAR.length(255).nullable(false), this, "");
 
     /**
-     * The column <code>diluv.PROJECT_FILE.STATUS</code>.
-     */
-    public final TableField<ProjectFileRecord, String> STATUS = createField("STATUS", org.jooq.impl.SQLDataType.VARCHAR.length(255).nullable(false), this, "");
-
-    /**
      * The column <code>diluv.PROJECT_FILE.CREATED_AT</code>.
      */
     public final TableField<ProjectFileRecord, Timestamp> CREATED_AT = createField("CREATED_AT", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false).defaultValue(org.jooq.impl.DSL.inline("CURRENT_TIMESTAMP", org.jooq.impl.SQLDataType.TIMESTAMP)), this, "");
+
+    /**
+     * The column <code>diluv.PROJECT_FILE.PUBLIC</code>.
+     */
+    public final TableField<ProjectFileRecord, Boolean> PUBLIC = createField("PUBLIC", org.jooq.impl.SQLDataType.BIT.nullable(false).defaultValue(org.jooq.impl.DSL.inline("b'0'", org.jooq.impl.SQLDataType.BIT)), this, "");
 
     /**
      * The column <code>diluv.PROJECT_FILE.PARENT_ID</code>.

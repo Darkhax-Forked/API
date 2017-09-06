@@ -29,7 +29,7 @@ import java.util.List;
 @SuppressWarnings({"all", "unchecked", "rawtypes"})
 public class ProjectFileProcessing extends TableImpl<ProjectFileProcessingRecord> {
 
-    private static final long serialVersionUID = -363567576;
+    private static final long serialVersionUID = 1341773452;
 
     /**
      * The reference instance of <code>diluv.PROJECT_FILE_PROCESSING</code>
@@ -50,14 +50,14 @@ public class ProjectFileProcessing extends TableImpl<ProjectFileProcessingRecord
     public final TableField<ProjectFileProcessingRecord, Long> PROJECT_FILE_ID = createField("PROJECT_FILE_ID", org.jooq.impl.SQLDataType.BIGINT.nullable(false), this, "");
 
     /**
-     * The column <code>diluv.PROJECT_FILE_PROCESSING.STATUS</code>.
+     * The column <code>diluv.PROJECT_FILE_PROCESSING.STATUS_ID</code>.
      */
-    public final TableField<ProjectFileProcessingRecord, String> STATUS = createField("STATUS", org.jooq.impl.SQLDataType.VARCHAR.length(255).nullable(false), this, "");
+    public final TableField<ProjectFileProcessingRecord, Integer> STATUS_ID = createField("STATUS_ID", org.jooq.impl.SQLDataType.INTEGER.nullable(false).defaultValue(org.jooq.impl.DSL.inline("0", org.jooq.impl.SQLDataType.INTEGER)), this, "");
 
     /**
-     * The column <code>diluv.PROJECT_FILE_PROCESSING.STARTED_AT</code>.
+     * The column <code>diluv.PROJECT_FILE_PROCESSING.CREATED_AT</code>.
      */
-    public final TableField<ProjectFileProcessingRecord, Timestamp> STARTED_AT = createField("STARTED_AT", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false).defaultValue(org.jooq.impl.DSL.inline("CURRENT_TIMESTAMP", org.jooq.impl.SQLDataType.TIMESTAMP)), this, "");
+    public final TableField<ProjectFileProcessingRecord, Timestamp> CREATED_AT = createField("CREATED_AT", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false).defaultValue(org.jooq.impl.DSL.inline("CURRENT_TIMESTAMP", org.jooq.impl.SQLDataType.TIMESTAMP)), this, "");
 
     /**
      * Create a <code>diluv.PROJECT_FILE_PROCESSING</code> table reference

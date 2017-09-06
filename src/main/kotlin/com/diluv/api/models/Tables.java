@@ -63,6 +63,11 @@ public class Tables {
     public static final ProjectFile PROJECT_FILE = com.diluv.api.models.tables.ProjectFile.PROJECT_FILE;
 
     /**
+     * The table <code>diluv.PROJECT_FILE_DOWNLOAD</code>.
+     */
+    public static final ProjectFileDownload PROJECT_FILE_DOWNLOAD = com.diluv.api.models.tables.ProjectFileDownload.PROJECT_FILE_DOWNLOAD;
+
+    /**
      * The table <code>diluv.PROJECT_FILE_GAME_VERSION</code>.
      */
     public static final ProjectFileGameVersion PROJECT_FILE_GAME_VERSION = com.diluv.api.models.tables.ProjectFileGameVersion.PROJECT_FILE_GAME_VERSION;
@@ -71,6 +76,11 @@ public class Tables {
      * The table <code>diluv.PROJECT_FILE_PROCESSING</code>.
      */
     public static final ProjectFileProcessing PROJECT_FILE_PROCESSING = com.diluv.api.models.tables.ProjectFileProcessing.PROJECT_FILE_PROCESSING;
+
+    /**
+     * The table <code>diluv.PROJECT_FILE_PROCESSING_LOG</code>.
+     */
+    public static final ProjectFileProcessingLog PROJECT_FILE_PROCESSING_LOG = com.diluv.api.models.tables.ProjectFileProcessingLog.PROJECT_FILE_PROCESSING_LOG;
 
     /**
      * The table <code>diluv.PROJECT_MEMBER</code>.

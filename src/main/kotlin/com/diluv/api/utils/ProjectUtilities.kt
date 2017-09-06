@@ -121,7 +121,7 @@ fun Connection.getProjectFilesById(projectId: Long): List<Map<String, Any>> {
     val transaction = DSL.using(this, SQLDialect.MYSQL)
 
     val fileURL = System.getenv("fileURL")
-    val dbProjectFiles = transaction.select(PROJECT_FILE.ID, PROJECT_FILE.SHA256, PROJECT_FILE.FILE_NAME, PROJECT_FILE.SIZE, PROJECT_FILE.RELEASE_TYPE, PROJECT_FILE.DISPLAY_NAME, PROJECT_FILE.DOWNLOADS, PROJECT_FILE.CREATED_AT, PROJECT_FILE.PARENT_ID, PROJECT_FILE.STATUS)
+    val dbProjectFiles = transaction.select(PROJECT_FILE.ID, PROJECT_FILE.SHA256, PROJECT_FILE.FILE_NAME, PROJECT_FILE.SIZE, PROJECT_FILE.RELEASE_TYPE, PROJECT_FILE.DISPLAY_NAME, PROJECT_FILE.DOWNLOADS, PROJECT_FILE.CREATED_AT, PROJECT_FILE.PARENT_ID, PROJECT_FILE.PUBLIC)
             .from(PROJECT_FILE)
             .where(PROJECT_FILE.ID.eq(projectId))
             .fetch()
@@ -136,7 +136,7 @@ fun Connection.getProjectFilesById(projectId: Long): List<Map<String, Any>> {
                 "downloads" to it.get(PROJECT_FILE.DOWNLOADS),
                 "createdAt" to it.get(PROJECT_FILE.CREATED_AT),
                 "parentId" to it.get(PROJECT_FILE.PARENT_ID),
-                "status" to it.get(PROJECT_FILE.STATUS),
+                "public" to it.get(PROJECT_FILE.PUBLIC),
                 "gameVersions" to this.getProjectFileGameVersionsById(it.get(PROJECT_FILE.ID)),
                 "downloadUrl" to fileURL + "/" + it.get(PROJECT_FILE.ID) + "/" + it.get(PROJECT_FILE.SHA256) + "/" + it.get(PROJECT_FILE.DISPLAY_NAME)
         )
@@ -156,15 +156,15 @@ fun Connection.getProjectIdBySlug(projectSlug: String): Long? {
     return null
 }
 
-fun Connection.insertProjectFiles(sha256: String, fileName: String, displayName: String, size: Long, releaseType: String, status: String, parentId: Long?, projectSlug: String, userId: Long): Long? {
+fun Connection.insertProjectFiles(sha256: String, fileName: String, displayName: String, size: Long, releaseType: String, parentId: Long?, projectSlug: String, userId: Long): Long? {
     val transaction = DSL.using(this, SQLDialect.MYSQL)
     val dbProject = transaction.select(PROJECT.ID, PROJECT.SLUG)
             .from(PROJECT)
             .where(PROJECT.SLUG.eq(projectSlug))
             .fetchOne()
     if (dbProject != null) {
-        val dbProjectFile = transaction.insertInto(PROJECT_FILE, PROJECT_FILE.SHA256, PROJECT_FILE.FILE_NAME, PROJECT_FILE.DISPLAY_NAME, PROJECT_FILE.SIZE, PROJECT_FILE.RELEASE_TYPE, PROJECT_FILE.STATUS, PROJECT_FILE.PARENT_ID, PROJECT_FILE.PROJECT_ID, PROJECT_FILE.USER_ID)
-                .values(sha256, fileName, displayName, size, releaseType, status, parentId, dbProject.get(PROJECT.ID), userId)
+        val dbProjectFile = transaction.insertInto(PROJECT_FILE, PROJECT_FILE.SHA256, PROJECT_FILE.FILE_NAME, PROJECT_FILE.DISPLAY_NAME, PROJECT_FILE.SIZE, PROJECT_FILE.RELEASE_TYPE, PROJECT_FILE.PARENT_ID, PROJECT_FILE.PROJECT_ID, PROJECT_FILE.USER_ID)
+                .values(sha256, fileName, displayName, size, releaseType, parentId, dbProject.get(PROJECT.ID), userId)
                 .returning(PROJECT_FILE.ID)
                 .fetchOne()
         if (dbProjectFile != null)

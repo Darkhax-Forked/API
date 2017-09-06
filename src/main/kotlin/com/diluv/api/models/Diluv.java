@@ -28,7 +28,7 @@ import java.util.List;
 @SuppressWarnings({"all", "unchecked", "rawtypes"})
 public class Diluv extends SchemaImpl {
 
-    private static final long serialVersionUID = 532739793;
+    private static final long serialVersionUID = 2073260419;
 
     /**
      * The reference instance of <code>diluv</code>
@@ -76,6 +76,11 @@ public class Diluv extends SchemaImpl {
     public final ProjectFile PROJECT_FILE = com.diluv.api.models.tables.ProjectFile.PROJECT_FILE;
 
     /**
+     * The table <code>diluv.PROJECT_FILE_DOWNLOAD</code>.
+     */
+    public final ProjectFileDownload PROJECT_FILE_DOWNLOAD = com.diluv.api.models.tables.ProjectFileDownload.PROJECT_FILE_DOWNLOAD;
+
+    /**
      * The table <code>diluv.PROJECT_FILE_GAME_VERSION</code>.
      */
     public final ProjectFileGameVersion PROJECT_FILE_GAME_VERSION = com.diluv.api.models.tables.ProjectFileGameVersion.PROJECT_FILE_GAME_VERSION;
@@ -84,6 +89,11 @@ public class Diluv extends SchemaImpl {
      * The table <code>diluv.PROJECT_FILE_PROCESSING</code>.
      */
     public final ProjectFileProcessing PROJECT_FILE_PROCESSING = com.diluv.api.models.tables.ProjectFileProcessing.PROJECT_FILE_PROCESSING;
+
+    /**
+     * The table <code>diluv.PROJECT_FILE_PROCESSING_LOG</code>.
+     */
+    public final ProjectFileProcessingLog PROJECT_FILE_PROCESSING_LOG = com.diluv.api.models.tables.ProjectFileProcessingLog.PROJECT_FILE_PROCESSING_LOG;
 
     /**
      * The table <code>diluv.PROJECT_MEMBER</code>.
@@ -148,8 +158,10 @@ public class Diluv extends SchemaImpl {
                 ProjectCategory.PROJECT_CATEGORY,
                 ProjectComment.PROJECT_COMMENT,
                 ProjectFile.PROJECT_FILE,
+                ProjectFileDownload.PROJECT_FILE_DOWNLOAD,
                 ProjectFileGameVersion.PROJECT_FILE_GAME_VERSION,
                 ProjectFileProcessing.PROJECT_FILE_PROCESSING,
+                ProjectFileProcessingLog.PROJECT_FILE_PROCESSING_LOG,
                 ProjectMember.PROJECT_MEMBER,
                 ProjectType.PROJECT_TYPE,
                 ProjectTypeCategory.PROJECT_TYPE_CATEGORY,
