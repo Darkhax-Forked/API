@@ -4,13 +4,11 @@ import com.diluv.api.error.Errors
 import com.diluv.api.jwt.JWT
 import com.diluv.api.jwt.isTokenValid
 import com.diluv.api.utils.*
-import com.diluv.catalejo.Catalejo
 import com.github.slugify.Slugify
 import io.vertx.core.Handler
 import io.vertx.ext.web.Router
 import io.vertx.ext.web.RoutingContext
 import io.vertx.ext.web.handler.BodyHandler
-import java.io.File
 import java.sql.Connection
 
 class RouterProjects(val conn: Connection) {
@@ -158,11 +156,6 @@ class RouterProjects(val conn: Connection) {
                             val size = file.size()
                             val fileName = file.fileName()
 
-                            val map = HashMap<String, Any>()
-                            val catalejo = Catalejo()
-                            catalejo.add(Catalejo.SHA_256_READER)
-                            catalejo.readFileMeta(map, File(file.uploadedFileName()))
-
                             var displayName = req.getFormAttribute("displayName")
                             var releaseType = req.getFormAttribute("releaseType")
 
@@ -176,16 +169,11 @@ class RouterProjects(val conn: Connection) {
                             if (releaseType == null)
                                 releaseType = "alpha"
 
-
-                            val sha256 = map["SHA-256"]
-                            println(map)
-                            if (sha256 != null) {
-                                val id = conn.insertProjectFiles(sha256 as String, fileName, displayName, size, releaseType, parentId, projectSlug, userId)
-                                if (id != null) {
-                                    //TODO Insert into project processing
-                                } else {
-                                    //TODO Failed to insert
-                                }
+                            val id = conn.insertProjectFiles(fileName, displayName, size, releaseType, parentId, projectSlug, userId)
+                            if (id != null) {
+                                //TODO Insert into project processing
+                            } else {
+                                //TODO Failed to insert
                             }
                         }
                     }

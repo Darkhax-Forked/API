@@ -29,7 +29,7 @@ import java.util.List;
 @SuppressWarnings({"all", "unchecked", "rawtypes"})
 public class ProjectFile extends TableImpl<ProjectFileRecord> {
 
-    private static final long serialVersionUID = -390853356;
+    private static final long serialVersionUID = 1750682229;
 
     /**
      * The reference instance of <code>diluv.PROJECT_FILE</code>
@@ -52,7 +52,7 @@ public class ProjectFile extends TableImpl<ProjectFileRecord> {
     /**
      * The column <code>diluv.PROJECT_FILE.SHA256</code>.
      */
-    public final TableField<ProjectFileRecord, String> SHA256 = createField("SHA256", org.jooq.impl.SQLDataType.VARCHAR.length(64).nullable(false), this, "");
+    public final TableField<ProjectFileRecord, String> SHA256 = createField("SHA256", org.jooq.impl.SQLDataType.VARCHAR.length(64), this, "");
 
     /**
      * The column <code>diluv.PROJECT_FILE.FILE_NAME</code>.

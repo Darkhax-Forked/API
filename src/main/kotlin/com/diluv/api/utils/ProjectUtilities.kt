@@ -156,15 +156,15 @@ fun Connection.getProjectIdBySlug(projectSlug: String): Long? {
     return null
 }
 
-fun Connection.insertProjectFiles(sha256: String, fileName: String, displayName: String, size: Long, releaseType: String, parentId: Long?, projectSlug: String, userId: Long): Long? {
+fun Connection.insertProjectFiles(fileName: String, displayName: String, size: Long, releaseType: String, parentId: Long?, projectSlug: String, userId: Long): Long? {
     val transaction = DSL.using(this, SQLDialect.MYSQL)
     val dbProject = transaction.select(PROJECT.ID, PROJECT.SLUG)
             .from(PROJECT)
             .where(PROJECT.SLUG.eq(projectSlug))
             .fetchOne()
     if (dbProject != null) {
-        val dbProjectFile = transaction.insertInto(PROJECT_FILE, PROJECT_FILE.SHA256, PROJECT_FILE.FILE_NAME, PROJECT_FILE.DISPLAY_NAME, PROJECT_FILE.SIZE, PROJECT_FILE.RELEASE_TYPE, PROJECT_FILE.PARENT_ID, PROJECT_FILE.PROJECT_ID, PROJECT_FILE.USER_ID)
-                .values(sha256, fileName, displayName, size, releaseType, parentId, dbProject.get(PROJECT.ID), userId)
+        val dbProjectFile = transaction.insertInto(PROJECT_FILE, PROJECT_FILE.FILE_NAME, PROJECT_FILE.DISPLAY_NAME, PROJECT_FILE.SIZE, PROJECT_FILE.RELEASE_TYPE, PROJECT_FILE.PARENT_ID, PROJECT_FILE.PROJECT_ID, PROJECT_FILE.USER_ID)
+                .values(fileName, displayName, size, releaseType, parentId, dbProject.get(PROJECT.ID), userId)
                 .returning(PROJECT_FILE.ID)
                 .fetchOne()
         if (dbProjectFile != null)
