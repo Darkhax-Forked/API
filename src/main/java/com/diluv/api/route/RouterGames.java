@@ -35,7 +35,6 @@ public class RouterGames {
         router.get("/games").handler(this::getGames);
         router.get("/games/:gameSlug").handler(this::getGameBySlug);
         router.get("/games/:gameSlug/:projectTypeSlug").handler(this::getProjectTypesByGameSlug);
-        router.get("/games/:gameSlug/:projectTypeSlug").handler(this::getProjectTypeByProjectTypeSlugByGameSlug);
         router.get("/games/:gameSlug/:projectTypeSlug/projects").handler(this::getProjectsByProjectTypeSlugByGameSlug);
     }
 
