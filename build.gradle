@@ -1,6 +1,5 @@
 buildscript {
     ext {
-        kotlin_version = '1.1.4-3'
         vertx_version = '3.4.1'
     }
     repositories {
@@ -38,9 +37,6 @@ dependencies {
     compile "io.vertx:vertx-web-client:$vertx_version"
 
     compile "com.github.slugify:slugify:2.1.9"
-
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    compile "org.jetbrains.kotlin:kotlin-runtime:$kotlin_version"
 
     compile "org.slf4j:slf4j-api:1.7.25"
     compile "org.bouncycastle:bcprov-jdk15on:1.57"
