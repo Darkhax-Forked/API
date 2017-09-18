@@ -2,10 +2,8 @@ package com.diluv.api.route;
 
 import com.diluv.api.error.Errors;
 import com.diluv.api.jwt.JWT;
-import com.diluv.api.utils.AuthorizationUtilities;
-import com.diluv.api.utils.GameUtilities;
-import com.diluv.api.utils.ProjectTypeUtilities;
-import com.diluv.api.utils.ResponseUtilities;
+import com.diluv.api.models.tables.records.ProjectRecord;
+import com.diluv.api.utils.*;
 import com.diluv.api.utils.page.Page;
 import com.diluv.api.utils.page.PagesUtilities;
 import io.vertx.core.http.HttpServerRequest;
@@ -13,6 +11,7 @@ import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import org.jooq.DSLContext;
 import org.jooq.SQLDialect;
+import org.jooq.TableField;
 import org.jooq.impl.DSL;
 
 import java.sql.Connection;
@@ -34,7 +33,7 @@ public class RouterGames {
     public void createRouter(Router router) {
         router.get("/games").handler(this::getGames);
         router.get("/games/:gameSlug").handler(this::getGameBySlug);
-        router.get("/games/:gameSlug/:projectTypeSlug").handler(this::getProjectTypesByGameSlug);
+        router.get("/games/:gameSlug/projectTypes").handler(this::getProjectTypesByGameSlug);
         router.get("/games/:gameSlug/:projectTypeSlug/projects").handler(this::getProjectsByProjectTypeSlugByGameSlug);
     }
 
@@ -183,10 +182,16 @@ public class RouterGames {
                 String inputOrderBy = req.getParam("orderBy");
 
                 Page page = PagesUtilities.getPageDetails(inputPage, inputPerPage, dbProjectCount);
+
+                TableField<ProjectRecord, ?> tableField = PROJECT.CREATED_AT;
+
+                if (inputOrderBy.equals("name"))
+                    tableField = PROJECT.NAME;
+
                 List<Long> dbProject = transaction.select(PROJECT.ID)
                         .from(PROJECT)
                         .where(PROJECT.PROJECT_TYPE_ID.eq(projectTypeId))
-                        .orderBy(PROJECT.CREATED_AT.desc())
+                        .orderBy(inputOrder.equals("asc") ? tableField.asc() : tableField.desc())
                         .limit(page.getOffset(), page.getPerPage())
                         .fetch(0, long.class);
 

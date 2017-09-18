@@ -55,7 +55,6 @@ public class DiluvAPI extends AbstractVerticle {
     public void start(Future<Void> startFuture) throws Exception {
         // Create a router object.
         Router router = Router.router(vertx);
-
         Router v1 = Router.router(vertx);
 
         new RouterAuth(conn).createRouter(v1);
