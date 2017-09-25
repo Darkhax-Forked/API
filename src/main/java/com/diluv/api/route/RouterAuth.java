@@ -43,11 +43,12 @@ public class RouterAuth extends RouterImpl {
         this.conn = conn;
         this.vertx = vertx;
 
-        this.post("/login").handler(this::postLogin);
-        this.post("/mfa").handler(this::getMFA);
-        this.post("/refreshToken").handler(this::getRefreshToken);
-
         this.post("/register").handler(this::postRegister);
+        this.post("/login").handler(this::postLogin);
+        this.post("/mfa").handler(this::postMFA);
+
+        this.post("/refreshToken").handler(this::postRefreshToken);
+
     }
 
     public void postLogin(RoutingContext event) {
@@ -118,17 +119,16 @@ public class RouterAuth extends RouterImpl {
         });
     }
 
-    public void getMFA(RoutingContext event) {
+    public void postMFA(RoutingContext event) {
         String token = AuthorizationUtilities.getAuthorizationToken(event);
         if (token != null) {
             if (JWT.isTokenValid(conn, token)) {
                 JWT jwt = new JWT(token);
                 if (!jwt.isExpired()) {
-                    String tokenText = token.toString();
                     DSLContext transaction = DSL.using(conn, SQLDialect.MYSQL);
                     String mfaToken = transaction.select(AUTH_MFA_TOKEN.TOKEN)
                             .from(AUTH_MFA_TOKEN)
-                            .where(AUTH_MFA_TOKEN.TOKEN.eq(tokenText))
+                            .where(AUTH_MFA_TOKEN.TOKEN.eq(token))
                             .fetchOne(0, String.class);
 
                     if (mfaToken != null) {
@@ -136,7 +136,7 @@ public class RouterAuth extends RouterImpl {
                         Long userId = jwt.getData().getLong("userId");
 
                         transaction.delete(AUTH_MFA_TOKEN)
-                                .where(AUTH_MFA_TOKEN.TOKEN.eq(tokenText))
+                                .where(AUTH_MFA_TOKEN.TOKEN.eq(token))
                                 .execute();
 
                         ResponseUtilities.asSuccessResponse(event, AuthorizationUtilities.createAccessToken(this.conn, userId, username));
@@ -155,7 +155,7 @@ public class RouterAuth extends RouterImpl {
         }
     }
 
-    public void getRefreshToken(RoutingContext event) {
+    public void postRefreshToken(RoutingContext event) {
         String refreshToken = AuthorizationUtilities.getAuthorizationToken(event);
         if (refreshToken != null) {
             if (JWT.isRefreshTokenValid(conn, refreshToken)) {
@@ -163,10 +163,9 @@ public class RouterAuth extends RouterImpl {
                 if (!jwt.isExpired()) {
                     DSLContext transaction = DSL.using(conn, SQLDialect.MYSQL);
 
-                    String refreshTokeText = refreshToken.toString();
                     String tokenInfo = transaction.select(AUTH_ACCESS_TOKEN.TOKEN)
                             .from(AUTH_ACCESS_TOKEN)
-                            .where(AUTH_ACCESS_TOKEN.REFRESH_TOKEN.eq(refreshTokeText))
+                            .where(AUTH_ACCESS_TOKEN.REFRESH_TOKEN.eq(refreshToken))
                             .fetchOne(0, String.class);
 
                     if (tokenInfo != null) {
@@ -174,7 +173,7 @@ public class RouterAuth extends RouterImpl {
                         String username = jwt.getData().getString("username");
 
                         transaction.delete(AUTH_ACCESS_TOKEN)
-                                .where(AUTH_ACCESS_TOKEN.REFRESH_TOKEN.eq(refreshTokeText))
+                                .where(AUTH_ACCESS_TOKEN.REFRESH_TOKEN.eq(refreshToken))
                                 .execute();
 
                         ResponseUtilities.asSuccessResponse(event, AuthorizationUtilities.createAccessToken(this.conn, userId, username));
@@ -237,7 +236,6 @@ public class RouterAuth extends RouterImpl {
 
                     Recaptcha.verify(client, System.getenv("recaptchaSecretKey"), recaptchaResponse, ar -> {
                         if (ar.succeeded()) {
-                            // Obtain response
                             HttpResponse<Buffer> response = ar.result();
                             JsonObject body = response.bodyAsJsonObject();
                             if (body.getBoolean("success")) {
@@ -248,6 +246,7 @@ public class RouterAuth extends RouterImpl {
                                         .values(email, username, passwordHash, "")
                                         .returning(USER.ID)
                                         .fetchOne();
+
 
                                 ResponseUtilities.asSuccessResponse(event, AuthorizationUtilities.createAccessToken(this.conn, userResults.get(USER.ID), username));
                             } else {
