@@ -1,42 +1,111 @@
-package com.diluv.api.route;
+package com.diluv.api.route.minecraft.projects;
 
+import com.diluv.api.error.ErrorMessages;
 import com.diluv.api.error.Errors;
 import com.diluv.api.jwt.JWT;
-import com.diluv.api.utils.AuthorizationUtilities;
-import com.diluv.api.utils.ProjectTypeUtilities;
-import com.diluv.api.utils.ProjectUtilities;
-import com.diluv.api.utils.ResponseUtilities;
+import com.diluv.api.models.tables.records.ProjectRecord;
+import com.diluv.api.utils.*;
+import com.diluv.api.utils.page.Page;
+import com.diluv.api.utils.page.PagesUtilities;
 import com.github.slugify.Slugify;
+import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.FileUpload;
-import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
-import io.vertx.ext.web.handler.BodyHandler;
+import io.vertx.ext.web.impl.RouterImpl;
+import org.jooq.DSLContext;
+import org.jooq.SQLDialect;
+import org.jooq.TableField;
+import org.jooq.impl.DSL;
 
 import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class RouterProjects {
+import static com.diluv.api.models.Tables.PROJECT;
 
+public class RouterMods extends RouterImpl {
     private final Connection conn;
+    private final Vertx vertx;
+    private final Long projectTypeId;
 
-    public RouterProjects(Connection conn) {
+    public RouterMods(Connection conn, Vertx vertx) {
+        super(vertx);
         this.conn = conn;
+        this.vertx = vertx;
+
+        this.projectTypeId = ProjectTypeUtilities.getProjectTypeIdBySlug(this.conn, "mods");
+        this.get("/").handler(this::getMods);
+        this.get("/projects").handler(this::getProjectsByMods);
+        this.get("/projects/:projectSlug").handler(this::getProjectBySlug);
+        this.get("/projects/:projectSlug/members").handler(this::getProjectMembersByProjectSlug);
+        this.get("/projects/:projectSlug/files").handler(this::getProjectFiles);
+        this.get("/projects/:projectSlug/categories").handler(this::getProjectCategories);
+
+        this.post("/projects").handler(this::postProjects);
+        this.post("/projects/:projectSlug/files").handler(this::postProjectFiles);
     }
 
-    public void createRouter(Router router) {
-        router.route().handler(BodyHandler.create());
+    public void getMods(RoutingContext event) {
 
-        router.get("/projects/:projectSlug").handler(this::getProjectBySlug);
-        router.get("/projects/:projectSlug/members").handler(this::getProjectMembersByProjectSlug);
-        router.get("/projects/:projectSlug/files").handler(this::getProjectFiles);
-        router.get("/projects/:projectSlug/categories").handler(this::getProjectCategories);
+        if (this.projectTypeId != null) {
+            ResponseUtilities.asSuccessResponse(event, ProjectTypeUtilities.getProjectTypeById(this.conn, projectTypeId));
+        } else {
+            ResponseUtilities.asErrorResponse(event, ErrorMessages.INTERNAL_SERVER_ERROR);
+        }
+    }
 
-        router.post("/projects").handler(this::postProjects);
-        router.post("/projects/:projectSlug/files").handler(this::postProjectFiles);
+    public void getProjectsByMods(RoutingContext event) {
+        if (this.projectTypeId != null) {
+
+            HttpServerRequest req = event.request();
+            DSLContext transaction = DSL.using(conn, SQLDialect.MYSQL);
+
+            String inputPerPage = req.getParam("perPage");
+
+            Integer dbProjectCount = transaction.select(DSL.count())
+                    .from(PROJECT)
+                    .where(PROJECT.PROJECT_TYPE_ID.eq(this.projectTypeId))
+                    .fetchOne(0, int.class);
+
+            String inputPage = req.getParam("page");
+            String inputOrder = req.getParam("order");
+            String inputOrderBy = req.getParam("orderBy");
+
+            Page page = PagesUtilities.getPageDetails(inputPage, inputPerPage, dbProjectCount);
+
+            TableField<ProjectRecord, ?> tableField = PROJECT.CREATED_AT;
+
+            if (inputOrderBy.equals("name"))
+                tableField = PROJECT.NAME;
+
+            List<Long> dbProject = transaction.select(PROJECT.ID)
+                    .from(PROJECT)
+                    .where(PROJECT.PROJECT_TYPE_ID.eq(this.projectTypeId))
+                    .orderBy(inputOrder.equals("asc") ? tableField.asc() : tableField.desc())
+                    .limit(page.getOffset(), page.getPerPage())
+                    .fetch(0, long.class);
+
+            List<Map<String, Object>> gameListOut = new ArrayList<>();
+            for (long projectId : dbProject) {
+                gameListOut.add(GameUtilities.getGameById(this.conn, projectId));
+            }
+
+            Map<String, Object> outputData = new HashMap<>();
+            outputData.put("data", gameListOut);
+            outputData.put("page", page);
+            outputData.put("order", "desc");
+            outputData.put("orderBy", "newest");
+            outputData.put("perPage", page.getPerPage());
+            outputData.put("totalPageCount", page.getTotalPageCount());
+
+            ResponseUtilities.asSuccessResponse(event, outputData);
+        } else {
+            ResponseUtilities.asErrorResponse(event, ErrorMessages.INTERNAL_SERVER_ERROR);
+        }
     }
 
     public void postProjects(RoutingContext event) {
@@ -53,33 +122,27 @@ public class RouterProjects {
                     String description = req.getFormAttribute("description");
                     String shortDescription = req.getFormAttribute("shortDescription");
                     String logo = req.getFormAttribute("logo");
-                    String projectTypeSlug = req.getFormAttribute("projectType");
 
-                    List<String> errorMessage = new ArrayList<>();
+                    List<ErrorMessages> errorMessage = new ArrayList<>();
 
                     if (name == null)
-                        errorMessage.add("Project creation requires a project name");
+                        errorMessage.add(ErrorMessages.PROJECT_NAME_NULL);
                     if (description == null)
-                        errorMessage.add("Project creation requires a description");
+                        errorMessage.add(ErrorMessages.PROJECT_DESCRIPTION_NULL);
                     if (shortDescription == null)
-                        errorMessage.add("Project creation requires a short description");
-                    if (logo == null)
-                        errorMessage.add("Project creation requires a logo");
-                    if (projectTypeSlug == null)
-                        errorMessage.add("Project creation requires a project type slug");
+                        errorMessage.add(ErrorMessages.PROJECT_SHORT_DESCRIPTION_NULL);
 
                     //TODO look into logo
                     if (errorMessage.size() == 0) {
                         String slug = new Slugify().slugify(name);
-                        if (ProjectUtilities.getProjectIdBySlug(this.conn, slug) == null) {
-                            Long projectTypeId = ProjectTypeUtilities.getProjectTypeIdBySlug(this.conn, projectTypeSlug);
-                            if (projectTypeId != null) {
-                                ProjectUtilities.insertProject(conn, name, description, shortDescription, slug, logo, projectTypeId, userId);
+                        if (ProjectUtilities.getProjectIdBySlug(this.conn, slug, this.projectTypeId) == null) {
+                            if (this.projectTypeId != null) {
+                                ProjectUtilities.insertProject(conn, name, description, shortDescription, slug, logo, this.projectTypeId, userId);
                             } else {
-                                ResponseUtilities.asErrorResponse(event, Errors.BAD_REQUEST, "Project type doesn't exist.");
+                                ResponseUtilities.asErrorResponse(event, ErrorMessages.INTERNAL_SERVER_ERROR);
                             }
                         } else {
-                            ResponseUtilities.asErrorResponse(event, Errors.BAD_REQUEST, "Project name is already used, please pick another");
+                            ResponseUtilities.asErrorResponse(event, ErrorMessages.PROJECT_NAME_TAKEN);
                         }
                     } else {
                         ResponseUtilities.asErrorResponse(event, Errors.NOT_FOUND, errorMessage);
@@ -93,7 +156,7 @@ public class RouterProjects {
         String projectSlug = event.request().getParam("projectSlug");
 
         if (projectSlug != null) {
-            Long projectId = ProjectUtilities.getProjectIdBySlug(this.conn, projectSlug);
+            Long projectId = ProjectUtilities.getProjectIdBySlug(this.conn, projectSlug, this.projectTypeId);
             if (projectId != null) {
                 String token = AuthorizationUtilities.getAuthorizationToken(event);
                 Long userId = null;
@@ -109,10 +172,10 @@ public class RouterProjects {
                 if (!projectObj.isEmpty()) {
                     ResponseUtilities.asSuccessResponse(event, projectObj);
                 } else {
-                    ResponseUtilities.asErrorResponse(event, Errors.NOT_FOUND, "Project not found");
+                    ResponseUtilities.asErrorResponse(event, ErrorMessages.PROJECT_NOT_FOUND);
                 }
             } else {
-                ResponseUtilities.asErrorResponse(event, Errors.UNAUTHORIZED, "Project not found");
+                ResponseUtilities.asErrorResponse(event, ErrorMessages.PROJECT_NOT_FOUND);
             }
         }
     }
@@ -121,18 +184,18 @@ public class RouterProjects {
         String projectSlug = event.request().getParam("projectSlug");
 
         if (projectSlug != null) {
-            Long projectId = ProjectUtilities.getProjectIdBySlug(this.conn, projectSlug);
+            Long projectId = ProjectUtilities.getProjectIdBySlug(this.conn, projectSlug, this.projectTypeId);
             if (projectId != null) {
                 List<Map<String, Object>> userListOut = ProjectUtilities.getProjectMembersByProjectId(this.conn, projectId);
                 if (!userListOut.isEmpty())
                     ResponseUtilities.asSuccessResponse(event, userListOut);
                 else
-                    ResponseUtilities.asErrorResponse(event, Errors.NOT_FOUND, "Project not found");
+                    ResponseUtilities.asErrorResponse(event, ErrorMessages.INTERNAL_SERVER_ERROR);
             } else {
-                ResponseUtilities.asErrorResponse(event, Errors.UNAUTHORIZED, "Project not found");
+                ResponseUtilities.asErrorResponse(event, ErrorMessages.PROJECT_NOT_FOUND);
             }
         } else {
-            ResponseUtilities.asErrorResponse(event, Errors.UNAUTHORIZED, "An id is needed");
+            ResponseUtilities.asErrorResponse(event, ErrorMessages.PROJECT_SLUG_NULL);
         }
     }
 
@@ -140,14 +203,14 @@ public class RouterProjects {
         String projectSlug = event.request().getParam("projectSlug");
 
         if (projectSlug != null) {
-            Long projectId = ProjectUtilities.getProjectIdBySlug(this.conn, projectSlug);
+            Long projectId = ProjectUtilities.getProjectIdBySlug(this.conn, projectSlug, this.projectTypeId);
             if (projectId != null) {
                 ResponseUtilities.asSuccessResponse(event, ProjectUtilities.getProjectFilesById(this.conn, projectId));
             } else {
-                ResponseUtilities.asErrorResponse(event, Errors.UNAUTHORIZED, "Project not found");
+                ResponseUtilities.asErrorResponse(event, ErrorMessages.PROJECT_NOT_FOUND);
             }
         } else {
-            ResponseUtilities.asErrorResponse(event, Errors.UNAUTHORIZED, "An id is needed");
+            ResponseUtilities.asErrorResponse(event, ErrorMessages.PROJECT_SLUG_NULL);
         }
     }
 
@@ -200,14 +263,14 @@ public class RouterProjects {
         String projectSlug = event.request().getParam("projectSlug");
 
         if (projectSlug != null) {
-            Long projectId = ProjectUtilities.getProjectIdBySlug(this.conn, projectSlug);
+            Long projectId = ProjectUtilities.getProjectIdBySlug(this.conn, projectSlug, this.projectTypeId);
             if (projectId != null) {
                 ResponseUtilities.asSuccessResponse(event, ProjectUtilities.getProjectCategoriesById(this.conn, projectId));
             } else {
-                ResponseUtilities.asErrorResponse(event, Errors.UNAUTHORIZED, "Project categories not found");
+                ResponseUtilities.asErrorResponse(event, ErrorMessages.PROJECT_CATEGORY_NOT_FOUND);
             }
         } else {
-            ResponseUtilities.asErrorResponse(event, Errors.UNAUTHORIZED, "An id is needed");
+            ResponseUtilities.asErrorResponse(event, ErrorMessages.PROJECT_SLUG_NULL);
         }
     }
 }

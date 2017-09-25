@@ -1,5 +1,6 @@
 package com.diluv.api.route;
 
+import com.diluv.api.error.ErrorMessages;
 import com.diluv.api.error.Errors;
 import com.diluv.api.jwt.JWT;
 import com.diluv.api.models.tables.records.UserBetaKeyRecord;
@@ -8,9 +9,10 @@ import com.diluv.api.permission.user.UserPermissionType;
 import com.diluv.api.utils.AuthorizationUtilities;
 import com.diluv.api.utils.ResponseUtilities;
 import com.diluv.api.utils.UserUtilities;
+import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpServerRequest;
-import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
+import io.vertx.ext.web.impl.RouterImpl;
 import org.bouncycastle.crypto.generators.OpenBSDBCrypt;
 import org.jooq.DSLContext;
 import org.jooq.InsertValuesStep3;
@@ -29,22 +31,23 @@ import static com.diluv.api.models.Tables.USER;
 import static com.diluv.api.models.Tables.USER_BETA_KEY;
 
 
-public class RouterUsers {
+public class RouterUsers extends RouterImpl {
 
     private final Connection conn;
+    private final Vertx vertx;
 
-    public RouterUsers(Connection conn) {
+    public RouterUsers(Connection conn, Vertx vertx) {
+        super(vertx);
         this.conn = conn;
-    }
+        this.vertx = vertx;
 
-    public void createRouter(Router router) {
-        router.get("/users").handler(this::getUsers);
-        router.get("/users/:username").handler(this::getUserByUsername);
-        router.get("/users/:username/settings").handler(this::getUserSettingsByUsername);
+        this.get("/users").handler(this::getUsers);
+        this.get("/users/:username").handler(this::getUserByUsername);
+        this.get("/users/:username/settings").handler(this::getUserSettingsByUsername);
 
-        router.post("/users/:username/security").handler(this::postUserSecurityByUsername);
+        this.post("/users/:username/security").handler(this::postUserSecurityByUsername);
 //        router.post("/users/:username/settings").handler(postUserSettingsByUsername);
-        router.post("/users/generateBetaKey").handler(this::postCreateBetaKeys);
+        this.post("/users/generateBetaKey").handler(this::postCreateBetaKeys);
     }
 
     /**
@@ -75,7 +78,7 @@ public class RouterUsers {
             ResponseUtilities.asSuccessResponse(event, userListOut);
         } catch (Exception e) {
             e.printStackTrace();
-            ResponseUtilities.asErrorResponse(event, Errors.INTERNAL_SERVER_ERROR, "Internal Error");
+            ResponseUtilities.asErrorResponse(event, ErrorMessages.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -123,7 +126,7 @@ public class RouterUsers {
         if (userId != null) {
             ResponseUtilities.asSuccessResponse(event, UserUtilities.getUserByUserId(this.conn, userId, authorized));
         } else {
-            ResponseUtilities.asErrorResponse(event, Errors.NOT_FOUND, "User not found");
+            ResponseUtilities.asErrorResponse(event, ErrorMessages.USER_NOT_FOUND);
         }
     }
 
@@ -144,7 +147,7 @@ public class RouterUsers {
                 }
             }
         } else {
-            ResponseUtilities.asErrorResponse(event, Errors.UNAUTHORIZED, "User token not authorized for this request");
+            ResponseUtilities.asErrorResponse(event, ErrorMessages.UNAUTHORIZED_REQUEST);
         }
     }
 
@@ -161,37 +164,37 @@ public class RouterUsers {
                     req.endHandler(ctx -> {
                         String oldPassword = req.getFormAttribute("oldPassword");
                         String newPassword = req.getFormAttribute("newPassword");
-                        String newPasswordConfirm = req.getFormAttribute("newPasswordConfirm");
 
-                        if (!newPassword.equals(newPasswordConfirm)) {
-                            DSLContext transaction = DSL.using(conn, SQLDialect.MYSQL);
+                        DSLContext transaction = DSL.using(conn, SQLDialect.MYSQL);
 
-                            UserRecord user = transaction.selectFrom(USER)
-                                    .where(USER.ID.eq(userId))
-                                    .fetchAny();
-                            if (OpenBSDBCrypt.checkPassword(user.getPassword(), oldPassword.toCharArray())) {
+                        UserRecord user = transaction.selectFrom(USER)
+                                .where(USER.ID.eq(userId))
+                                .fetchAny();
+                        if (OpenBSDBCrypt.checkPassword(user.getPassword(), oldPassword.toCharArray())) {
+                            byte[] salt = new byte[16];
+                            new SecureRandom().nextBytes(salt);
+                            String passwordHash = OpenBSDBCrypt.generate(newPassword.toCharArray(), salt, 10);
 
-                                byte[] salt = new byte[16];
-                                new SecureRandom().nextBytes(salt);
-                                String passwordHash = OpenBSDBCrypt.generate(newPassword.toCharArray(), salt, 10);
+                            transaction.update(USER)
+                                    .set(USER.PASSWORD, passwordHash)
+                                    .execute();
 
-                                transaction.update(USER)
-                                        .set(USER.PASSWORD, passwordHash)
-                                        .execute();
-
-                                //TODO Proper response
-                                Map<String, Object> valid = new HashMap<>();
-                                valid.put("valid", true);
-                                ResponseUtilities.asSuccessResponse(event, valid);
-                            } else {
-                                ResponseUtilities.asErrorResponse(event, Errors.BAD_REQUEST, "The target userId is needed for this request");
-                            }
+                            //TODO Proper response
+                            Map<String, Object> valid = new HashMap<>();
+                            valid.put("valid", true);
+                            ResponseUtilities.asSuccessResponse(event, valid);
                         } else {
-                            ResponseUtilities.asErrorResponse(event, Errors.BAD_REQUEST, "The new password and new password confirm do not match");
+                            ResponseUtilities.asErrorResponse(event, ErrorMessages.AUTH_PASSWORD_INCORRECT);
                         }
                     });
+                }else{
+                    ResponseUtilities.asErrorResponse(event, ErrorMessages.AUTH_TOKEN_EXPIRED);
                 }
+            }else{
+                ResponseUtilities.asErrorResponse(event, ErrorMessages.AUTH_TOKEN_INVALID);
             }
+        } else {
+            ResponseUtilities.asErrorResponse(event, ErrorMessages.AUTH_TOKEN_NULL);
         }
     }
 
@@ -231,7 +234,7 @@ public class RouterUsers {
                         }
                     });
                 } else {
-                    ResponseUtilities.asErrorResponse(event, Errors.FORBIDDEN, "User not authorized to make request");
+                    ResponseUtilities.asErrorResponse(event, ErrorMessages.UNAUTHORIZED_REQUEST);
                 }
             }
         }

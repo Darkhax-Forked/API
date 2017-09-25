@@ -1,9 +1,9 @@
 package com.diluv.api;
 
+import com.diluv.api.error.ErrorMessages;
 import com.diluv.api.error.Errors;
 import com.diluv.api.route.RouterAuth;
 import com.diluv.api.route.RouterGames;
-import com.diluv.api.route.RouterProjects;
 import com.diluv.api.route.RouterUsers;
 import com.diluv.api.utils.ResponseUtilities;
 import io.vertx.core.AbstractVerticle;
@@ -54,15 +54,14 @@ public class DiluvAPI extends AbstractVerticle {
     @Override
     public void start(Future<Void> startFuture) throws Exception {
         // Create a router object.
-        Router router = Router.router(vertx);
-        Router v1 = Router.router(vertx);
+        Router router = Router.router(this.vertx);
+        Router apiV1 = Router.router(this.vertx);
 
-        new RouterAuth(conn).createRouter(v1);
-        new RouterGames(conn).createRouter(v1);
-        new RouterProjects(conn).createRouter(v1);
-        new RouterUsers(conn).createRouter(v1);
+        apiV1.mountSubRouter("/auth", new RouterAuth(this.conn, this.vertx));
+        apiV1.mountSubRouter("/games", new RouterGames(this.conn, this.vertx));
+        apiV1.mountSubRouter("/users", new RouterUsers(this.conn, this.vertx));
 
-        router.mountSubRouter("/v1", v1);
+        router.mountSubRouter("/v1", apiV1);
 
         router.get("/teapot").handler(event -> {
             HttpServerResponse res = event.response();
@@ -80,8 +79,6 @@ public class DiluvAPI extends AbstractVerticle {
         }).failureHandler(event -> {
             if (event.statusCode() == 404) {
                 ResponseUtilities.asErrorResponse(event, Errors.NOT_FOUND, null);
-            } else if (event.statusCode() == 500) {
-                ResponseUtilities.asErrorResponse(event, Errors.INTERNAL_SERVER_ERROR, null);
             } else {
                 event.next();
             }

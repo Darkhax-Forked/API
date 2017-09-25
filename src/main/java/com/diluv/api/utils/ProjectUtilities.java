@@ -167,12 +167,12 @@ public class ProjectUtilities {
         return dataOut;
     }
 
-    public static Long getProjectIdBySlug(Connection conn, String projectSlug) {
+    public static Long getProjectIdBySlug(Connection conn, String projectSlug, Long projectTypeId) {
         DSLContext transaction = DSL.using(conn, SQLDialect.MYSQL);
 
         Long projectId = transaction.select(PROJECT.ID)
                 .from(PROJECT)
-                .where(PROJECT.SLUG.eq(projectSlug))
+                .where(PROJECT.SLUG.eq(projectSlug).and(PROJECT.PROJECT_TYPE_ID.eq(projectTypeId)))
                 .fetchOne(0, long.class);
 
         return projectId;

@@ -1,10 +1,12 @@
 package com.diluv.api.utils;
 
+import com.diluv.api.error.ErrorMessages;
 import com.diluv.api.error.Errors;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.core.json.Json;
 import io.vertx.ext.web.RoutingContext;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +39,18 @@ public class ResponseUtilities {
         if (additionalData != null)
             map.put("message", additionalData);
         return ResponseUtilities.asJSONResponse(route, error.statusCode, map, null);
+    }
+
+    public static HttpServerResponse asErrorResponse(RoutingContext route, ErrorMessages errorMessages) {
+        return ResponseUtilities.asErrorResponse(route, errorMessages.errors, errorMessages.errorMessage);
+    }
+
+    public static HttpServerResponse asErrorResponse(RoutingContext route, Errors error, List<ErrorMessages> errorMessagesList) {
+        List<String> errorMessages = new ArrayList<>();
+        for(ErrorMessages errorMessage:errorMessagesList){
+            errorMessages.add(errorMessage.errorMessage);
+        }
+        return ResponseUtilities.asErrorResponse(route, error, errorMessages);
     }
 
     public static HttpServerResponse asSuccessResponse(RoutingContext route, Map<String, Object> data) {

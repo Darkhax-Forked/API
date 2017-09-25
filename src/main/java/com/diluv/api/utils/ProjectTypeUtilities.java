@@ -86,4 +86,15 @@ public class ProjectTypeUtilities {
                 .fetchOne(0, long.class);
         return dbGame;
     }
+
+    public static Long getProjectIdBySlugAndProjectTypeId(Connection conn, String projectSlug) {
+        DSLContext transaction = DSL.using(conn, SQLDialect.MYSQL);
+
+        Long projectId = transaction.select(PROJECT.ID)
+                .from(PROJECT)
+                .where(PROJECT.SLUG.eq(projectSlug))
+                .fetchOne(0, long.class);
+
+        return projectId;
+    }
 }

@@ -1,18 +1,20 @@
 package com.diluv.api.route;
 
+import com.diluv.api.error.ErrorMessages;
 import com.diluv.api.error.Errors;
 import com.diluv.api.jwt.JWT;
 import com.diluv.api.models.tables.records.UserRecord;
 import com.diluv.api.utils.AuthorizationUtilities;
 import com.diluv.api.utils.Recaptcha;
 import com.diluv.api.utils.ResponseUtilities;
+import io.vertx.core.Vertx;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.json.JsonObject;
-import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.client.HttpResponse;
 import io.vertx.ext.web.client.WebClient;
+import io.vertx.ext.web.impl.RouterImpl;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.bouncycastle.crypto.generators.OpenBSDBCrypt;
 import org.jooq.DSLContext;
@@ -30,57 +32,22 @@ import java.util.regex.Pattern;
 
 import static com.diluv.api.models.Tables.*;
 
-public class RouterAuth {
+public class RouterAuth extends RouterImpl {
     private final Pattern USERNAME = Pattern.compile("([A-Za-z0-9_]+)");
 
-    private Connection conn;
+    private final Connection conn;
+    private final Vertx vertx;
 
-    public RouterAuth(Connection conn) {
+    public RouterAuth(Connection conn, Vertx vertx) {
+        super(vertx);
         this.conn = conn;
-    }
+        this.vertx = vertx;
 
-    public void createRouter(Router router) {
-        router.post("/auth/login").handler(this::postLogin);
-        router.post("/auth/mfa").handler(this::getMFA);
-        router.post("/auth/refreshToken").handler(this::getRefreshToken);
+        this.post("/login").handler(this::postLogin);
+        this.post("/mfa").handler(this::getMFA);
+        this.post("/refreshToken").handler(this::getRefreshToken);
 
-        router.post("/auth/register").handler(this::postRegister);
-    }
-
-    public Map<String, Object> createAccessToken(long userId, String username) {
-        JsonObject jwtData = new JsonObject();
-        jwtData.put("userId", userId);
-        jwtData.put("username", username);
-        jwtData.put("time", System.nanoTime());
-
-
-        JWT jwtToken = AuthorizationUtilities.encodeToken(jwtData, "token").setExpiresInMinutes(60);
-        String token = jwtToken.toString();
-
-        JWT jwtRefreshToken = AuthorizationUtilities.encodeToken(jwtData, "refreshToken").setExpiresInDays(60);
-        String refreshToken = jwtRefreshToken.toString();
-
-        DSLContext transaction = DSL.using(conn, SQLDialect.MYSQL);
-        int count = transaction.selectCount()
-                .from(AUTH_ACCESS_TOKEN)
-                .where(AUTH_ACCESS_TOKEN.TOKEN.eq(token).and(AUTH_ACCESS_TOKEN.REFRESH_TOKEN.eq(refreshToken)))
-                .fetchOne(0, int.class);
-
-        if (count > 0) {
-            //TODO Generate new tokens and refresh
-        } else {
-            transaction.insertInto(AUTH_ACCESS_TOKEN, AUTH_ACCESS_TOKEN.USER_ID, AUTH_ACCESS_TOKEN.TOKEN, AUTH_ACCESS_TOKEN.REFRESH_TOKEN)
-                    .values(userId, token, refreshToken)
-                    .execute();
-        }
-
-        Map<String, Object> out = new HashMap<>();
-        out.put("token", token);
-        out.put("tokenExpires", jwtToken.getExpires());
-        out.put("refreshToken", refreshToken);
-        out.put("refreshTokenExpires", jwtRefreshToken.getExpires());
-
-        return out;
+        this.post("/register").handler(this::postRegister);
     }
 
     public void postLogin(RoutingContext event) {
@@ -90,12 +57,12 @@ public class RouterAuth {
         req.endHandler(ctx -> {
             String inputUsernameEmail = req.getFormAttribute("usernameEmail");
             String inputPassword = req.getFormAttribute("password");
-            List<String> errorMessage = new ArrayList<>();
+            List<ErrorMessages> errorMessage = new ArrayList<>();
 
             if (inputUsernameEmail == null)
-                errorMessage.add("Username or email is needed to login");
+                errorMessage.add(ErrorMessages.AUTH_LOGIN_USER_EMAIL_NULL);
             if (inputPassword == null)
-                errorMessage.add("Password is needed to login");
+                errorMessage.add(ErrorMessages.AUTH_LOGIN_PASSWORD_NULL);
 
             boolean isUsername = true;
             if (EmailValidator.getInstance(false).isValid(inputUsernameEmail))
@@ -137,13 +104,13 @@ public class RouterAuth {
                             tokenData.put("tokenExpires", jwtToken.getExpires());
                             ResponseUtilities.asSuccessResponse(event, tokenData);
                         } else {
-                            ResponseUtilities.asSuccessResponse(event, createAccessToken(userId, username));
+                            ResponseUtilities.asSuccessResponse(event, AuthorizationUtilities.createAccessToken(this.conn, userId, username));
                         }
                     } else {
-                        ResponseUtilities.asErrorResponse(event, Errors.UNAUTHORIZED, "The password is incorrect");
+                        ResponseUtilities.asErrorResponse(event, ErrorMessages.AUTH_PASSWORD_INCORRECT);
                     }
                 } else {
-                    ResponseUtilities.asErrorResponse(event, Errors.UNAUTHORIZED, "The user doesn't exist");
+                    ResponseUtilities.asErrorResponse(event, ErrorMessages.USER_NOT_FOUND);
                 }
             } else {
                 ResponseUtilities.asErrorResponse(event, Errors.BAD_REQUEST, errorMessage);
@@ -172,19 +139,19 @@ public class RouterAuth {
                                 .where(AUTH_MFA_TOKEN.TOKEN.eq(tokenText))
                                 .execute();
 
-                        //                        transaction.insertInto(ANALYTICSAUTH_MFA_TOKEN, ANALYTICSAUTH_MFA_TOKEN.USERID, ANALYTICSAUTH_MFA_TOKEN.TOKEN)
-                        //                                .values(userId, tokenText)
-                        //                                .execute()
-
-                        ResponseUtilities.asSuccessResponse(event, createAccessToken(userId, username));
-                    } else
-                        ResponseUtilities.asErrorResponse(event, Errors.UNAUTHORIZED, "MFA Token not found");
+                        ResponseUtilities.asSuccessResponse(event, AuthorizationUtilities.createAccessToken(this.conn, userId, username));
+                    } else {
+                        ResponseUtilities.asErrorResponse(event, ErrorMessages.AUTH_MFA_NULL);
+                    }
                 } else {
-                    ResponseUtilities.asErrorResponse(event, Errors.BAD_REQUEST, "Token is expired");
+                    //TODO Remove from database
+                    ResponseUtilities.asErrorResponse(event, ErrorMessages.AUTH_MFA_EXPIRED);
                 }
             } else {
-                ResponseUtilities.asErrorResponse(event, Errors.BAD_REQUEST, "Token is not valid");
+                ResponseUtilities.asErrorResponse(event, ErrorMessages.AUTH_MFA_INVALID);
             }
+        } else {
+            ResponseUtilities.asErrorResponse(event, ErrorMessages.AUTH_MFA_NULL);
         }
     }
 
@@ -210,12 +177,16 @@ public class RouterAuth {
                                 .where(AUTH_ACCESS_TOKEN.REFRESH_TOKEN.eq(refreshTokeText))
                                 .execute();
 
-                        ResponseUtilities.asSuccessResponse(event, createAccessToken(userId, username));
+                        ResponseUtilities.asSuccessResponse(event, AuthorizationUtilities.createAccessToken(this.conn, userId, username));
                     }
+                } else {
+                    ResponseUtilities.asErrorResponse(event, ErrorMessages.AUTH_REFRESH_TOKEN_EXPIRED);
                 }
             } else {
-                ResponseUtilities.asErrorResponse(event, Errors.BAD_REQUEST, "Refresh Token is not valid");
+                ResponseUtilities.asErrorResponse(event, ErrorMessages.AUTH_REFRESH_TOKEN_INVALID);
             }
+        } else {
+            ResponseUtilities.asErrorResponse(event, ErrorMessages.AUTH_REFRESH_TOKEN_NULL);
         }
     }
 
@@ -228,34 +199,27 @@ public class RouterAuth {
             String email = req.getFormAttribute("email");
             String username = req.getFormAttribute("username");
             String password = req.getFormAttribute("password");
-            String passwordConfirm = req.getFormAttribute("passwordConfirm");
             String recaptchaResponse = req.getFormAttribute("g-recaptcha-response");
 
-            List<String> errorMessage = new ArrayList<>();
+            List<ErrorMessages> errorMessage = new ArrayList<>();
 
             if (email == null)
-                errorMessage.add("Registering requires an email");
+                errorMessage.add(ErrorMessages.AUTH_REGISTER_EMAIL_NULL);
             else if (!EmailValidator.getInstance(false).isValid(email))
-                errorMessage.add("Invalid email address");
+                errorMessage.add(ErrorMessages.AUTH_REGISTER_EMAIL_INVALID);
             if (username == null)
-                errorMessage.add("Registering requires a username");
+                errorMessage.add(ErrorMessages.AUTH_REGISTER_USERNAME_NULL);
             else if (!validUsername(username))
-                errorMessage.add("Username is not valid");
+                errorMessage.add(ErrorMessages.AUTH_REGISTER_USERNAME_INVALID);
 
             if (password == null) {
-                errorMessage.add("Registering requires a password");
+                errorMessage.add(ErrorMessages.AUTH_REGISTER_PASSWORD_NULL);
             } else {
-                if (passwordConfirm == null) {
-                    errorMessage.add("Registering requires password confirmation");
-                } else {
-                    if (!password.equals(passwordConfirm))
-                        errorMessage.add("Password and Password confirm must match");
-                    else if (!validPassword(password))
-                        errorMessage.add("Password is not valid");
-                }
+                if (!validPassword(password))
+                    errorMessage.add(ErrorMessages.AUTH_REGISTER_PASSWORD_INVALID);
             }
             if (recaptchaResponse == null)
-                errorMessage.add("Registering requires a recaptcha response");
+                errorMessage.add(ErrorMessages.AUTH_RECAPTCHA_NULL);
 
             if (errorMessage.size() == 0) {
                 DSLContext transaction = DSL.using(conn, SQLDialect.MYSQL);
@@ -265,9 +229,9 @@ public class RouterAuth {
                         .fetchOne();
                 if (user != null) {
                     if (user.get(USER.EMAIL).equals(email))
-                        ResponseUtilities.asErrorResponse(event, Errors.BAD_REQUEST, "Email is already used, please use a different email");
+                        ResponseUtilities.asErrorResponse(event, ErrorMessages.AUTH_REGISTER_EMAIL_TAKEN);
                     else if (user.get(USER.USERNAME).equals(username))
-                        ResponseUtilities.asErrorResponse(event, Errors.BAD_REQUEST, "Username is already used, please use a different username");
+                        ResponseUtilities.asErrorResponse(event, ErrorMessages.AUTH_REGISTER_USERNAME_TAKEN);
                 } else {
                     WebClient client = WebClient.create(event.vertx());
 
@@ -285,9 +249,9 @@ public class RouterAuth {
                                         .returning(USER.ID)
                                         .fetchOne();
 
-                                ResponseUtilities.asSuccessResponse(event, createAccessToken(userResults.get(USER.ID), username));
+                                ResponseUtilities.asSuccessResponse(event, AuthorizationUtilities.createAccessToken(this.conn, userResults.get(USER.ID), username));
                             } else {
-                                ResponseUtilities.asErrorResponse(event, Errors.UNAUTHORIZED, "Recaptcha is not valid");
+                                ResponseUtilities.asErrorResponse(event, ErrorMessages.AUTH_RECAPTCHA_INVALID);
                             }
                         } else {
                             //TODO
