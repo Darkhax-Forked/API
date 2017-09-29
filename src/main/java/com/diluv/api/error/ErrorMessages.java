@@ -13,6 +13,9 @@ public enum ErrorMessages {
     AUTH_REFRESH_TOKEN_INVALID(Errors.BAD_REQUEST, "The refresh token is invalid"),
     AUTH_REFRESH_TOKEN_EXPIRED(Errors.BAD_REQUEST, "The refresh token is expired"),
 
+    AUTH_EMAIL_TOKEN_NULL(Errors.UNAUTHORIZED, "Email Token not found"),
+    AUTH_EMAIL_TOKEN_INVALID(Errors.BAD_REQUEST, "The Email token is invalid"),
+
     AUTH_LOGIN_USER_EMAIL_NULL(Errors.BAD_REQUEST, "Username or email is needed to login"),
     AUTH_LOGIN_PASSWORD_NULL(Errors.BAD_REQUEST, "Password is needed to login"),
 
@@ -39,6 +42,7 @@ public enum ErrorMessages {
     PROJECT_SLUG_NULL(Errors.BAD_REQUEST, "An slug is needed"),
 
     USER_NOT_FOUND(Errors.NOT_FOUND, "The user doesn't exist"),
+    USER_NOT_VERIFIED(Errors.FORBIDDEN, "The user is not verified"),
 
     UNAUTHORIZED_REQUEST(Errors.FORBIDDEN, "User not authorized for request"),
 

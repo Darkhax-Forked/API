@@ -3,6 +3,7 @@ package com.diluv.api.route;
 import com.diluv.api.error.ErrorMessages;
 import com.diluv.api.error.Errors;
 import com.diluv.api.jwt.JWT;
+import com.diluv.api.models.tables.records.AuthVerifyTokenRecord;
 import com.diluv.api.models.tables.records.UserRecord;
 import com.diluv.api.utils.AuthorizationUtilities;
 import com.diluv.api.utils.Recaptcha;
@@ -47,8 +48,32 @@ public class RouterAuth extends RouterImpl {
         this.post("/login").handler(this::postLogin);
         this.post("/mfa").handler(this::postMFA);
 
+        this.post("/verify/:emailToken").handler(this::postVerify);
         this.post("/refreshToken").handler(this::postRefreshToken);
+    }
 
+    public void postVerify(RoutingContext event) {
+        String emailToken = event.request().getParam("emailToken");
+
+        if (emailToken != null) {
+            DSLContext transaction = DSL.using(conn, SQLDialect.MYSQL);
+            AuthVerifyTokenRecord token = transaction.selectFrom(AUTH_VERIFY_TOKEN)
+                    .where(AUTH_VERIFY_TOKEN.TOKEN.eq(emailToken))
+                    .fetchAny();
+            if (token != null) {
+                transaction.update(USER)
+                        .set(USER.VERIFIED_EMAIL, true)
+                        .where(USER.ID.eq(token.getUserId()))
+                        .execute();
+
+                //TODO Proper response
+                ResponseUtilities.asSuccessResponse(event, (List) null);
+            } else {
+                ResponseUtilities.asErrorResponse(event, ErrorMessages.AUTH_EMAIL_TOKEN_INVALID);
+            }
+        } else {
+            ResponseUtilities.asErrorResponse(event, ErrorMessages.AUTH_EMAIL_TOKEN_NULL);
+        }
     }
 
     public void postLogin(RoutingContext event) {
@@ -83,32 +108,36 @@ public class RouterAuth extends RouterImpl {
                 }
 
                 if (user != null) {
-                    if (OpenBSDBCrypt.checkPassword(user.getPassword(), inputPassword.toCharArray())) {
-                        long userId = user.getId();
-                        String username = user.getUsername();
-                        if (user.getMfaEnabled()) {
-                            JsonObject jwtData = new JsonObject();
-                            jwtData.put("userId", userId);
-                            jwtData.put("username", username);
-                            jwtData.put("time", System.nanoTime());
+                    if (user.getVerifiedEmail()) {
+                        if (OpenBSDBCrypt.checkPassword(user.getPassword(), inputPassword.toCharArray())) {
+                            long userId = user.getId();
+                            String username = user.getUsername();
+                            if (user.getMfaEnabled()) {
+                                JsonObject jwtData = new JsonObject();
+                                jwtData.put("userId", userId);
+                                jwtData.put("username", username);
+                                jwtData.put("time", System.nanoTime());
 
-                            JWT jwtToken = AuthorizationUtilities.encodeToken(jwtData, "mfaToken").setExpiresInMinutes(10);
-                            String token = jwtToken.toString();
-                            //TODO Check unique
-                            transaction.insertInto(AUTH_MFA_TOKEN, AUTH_MFA_TOKEN.USER_ID, AUTH_MFA_TOKEN.TOKEN)
-                                    .values(userId, token)
-                                    .execute();
+                                JWT jwtToken = AuthorizationUtilities.encodeToken(jwtData, "mfaToken").setExpiresInMinutes(10);
+                                String token = jwtToken.toString();
+                                //TODO Check unique
+                                transaction.insertInto(AUTH_MFA_TOKEN, AUTH_MFA_TOKEN.USER_ID, AUTH_MFA_TOKEN.TOKEN)
+                                        .values(userId, token)
+                                        .execute();
 
-                            Map<String, Object> tokenData = new HashMap<>();
-                            tokenData.put("mfa", true);
-                            tokenData.put("token", token);
-                            tokenData.put("tokenExpires", jwtToken.getExpires());
-                            ResponseUtilities.asSuccessResponse(event, tokenData);
+                                Map<String, Object> tokenData = new HashMap<>();
+                                tokenData.put("mfa", true);
+                                tokenData.put("token", token);
+                                tokenData.put("tokenExpires", jwtToken.getExpires());
+                                ResponseUtilities.asSuccessResponse(event, tokenData);
+                            } else {
+                                ResponseUtilities.asSuccessResponse(event, AuthorizationUtilities.createAccessToken(this.conn, userId, username));
+                            }
                         } else {
-                            ResponseUtilities.asSuccessResponse(event, AuthorizationUtilities.createAccessToken(this.conn, userId, username));
+                            ResponseUtilities.asErrorResponse(event, ErrorMessages.AUTH_PASSWORD_INCORRECT);
                         }
                     } else {
-                        ResponseUtilities.asErrorResponse(event, ErrorMessages.AUTH_PASSWORD_INCORRECT);
+                        ResponseUtilities.asErrorResponse(event, ErrorMessages.USER_NOT_VERIFIED);
                     }
                 } else {
                     ResponseUtilities.asErrorResponse(event, ErrorMessages.USER_NOT_FOUND);
@@ -190,7 +219,6 @@ public class RouterAuth extends RouterImpl {
     }
 
     public void postRegister(RoutingContext event) {
-        System.out.println(event.request().remoteAddress().host());
         HttpServerRequest req = event.request();
         req.setExpectMultipart(true);
 
@@ -247,14 +275,22 @@ public class RouterAuth extends RouterImpl {
                                         .returning(USER.ID)
                                         .fetchOne();
 
+                                JsonObject jwtData = new JsonObject();
+                                jwtData.put("email", email);
+                                jwtData.put("time", System.nanoTime());
+                                JWT jwtToken = AuthorizationUtilities.encodeToken(jwtData, "token").setExpiresInMinutes(60);
 
-                                ResponseUtilities.asSuccessResponse(event, AuthorizationUtilities.createAccessToken(this.conn, userResults.get(USER.ID), username));
+                                transaction.insertInto(AUTH_VERIFY_TOKEN, AUTH_VERIFY_TOKEN.USER_ID, AUTH_VERIFY_TOKEN.TOKEN)
+                                        .values(userResults.getId(), jwtToken.toString());
+
+                                //TODO Send email
+                                //TODO Proper response
+                                ResponseUtilities.asSuccessResponse(event, (List) null);
                             } else {
                                 ResponseUtilities.asErrorResponse(event, ErrorMessages.AUTH_RECAPTCHA_INVALID);
                             }
                         } else {
-                            //TODO
-                            System.out.println("Something went wrong " + ar.cause().getLocalizedMessage());
+                            ResponseUtilities.asErrorResponse(event, ErrorMessages.INTERNAL_SERVER_ERROR);
                         }
                     });
                 }

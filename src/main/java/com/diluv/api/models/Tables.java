@@ -33,6 +33,11 @@ public class Tables {
     public static final AuthMfaToken AUTH_MFA_TOKEN = com.diluv.api.models.tables.AuthMfaToken.AUTH_MFA_TOKEN;
 
     /**
+     * The table <code>diluv.AUTH_VERIFY_TOKEN</code>.
+     */
+    public static final AuthVerifyToken AUTH_VERIFY_TOKEN = com.diluv.api.models.tables.AuthVerifyToken.AUTH_VERIFY_TOKEN;
+
+    /**
      * The table <code>diluv.GAME</code>.
      */
     public static final Game GAME = com.diluv.api.models.tables.Game.GAME;

@@ -28,7 +28,7 @@ import java.util.List;
 @SuppressWarnings({"all", "unchecked", "rawtypes"})
 public class Diluv extends SchemaImpl {
 
-    private static final long serialVersionUID = 2073260419;
+    private static final long serialVersionUID = -1643454068;
 
     /**
      * The reference instance of <code>diluv</code>
@@ -44,6 +44,11 @@ public class Diluv extends SchemaImpl {
      * The table <code>diluv.AUTH_MFA_TOKEN</code>.
      */
     public final AuthMfaToken AUTH_MFA_TOKEN = com.diluv.api.models.tables.AuthMfaToken.AUTH_MFA_TOKEN;
+
+    /**
+     * The table <code>diluv.AUTH_VERIFY_TOKEN</code>.
+     */
+    public final AuthVerifyToken AUTH_VERIFY_TOKEN = com.diluv.api.models.tables.AuthVerifyToken.AUTH_VERIFY_TOKEN;
 
     /**
      * The table <code>diluv.GAME</code>.
@@ -152,6 +157,7 @@ public class Diluv extends SchemaImpl {
         return Arrays.<Table<?>>asList(
                 AuthAccessToken.AUTH_ACCESS_TOKEN,
                 AuthMfaToken.AUTH_MFA_TOKEN,
+                AuthVerifyToken.AUTH_VERIFY_TOKEN,
                 Game.GAME,
                 GameVersion.GAME_VERSION,
                 Project.PROJECT,

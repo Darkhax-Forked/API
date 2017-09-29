@@ -41,7 +41,7 @@
             <packageName>com.diluv.api.models</packageName>
 
             <!-- The destination directory of your generated classes. Using Maven directory layout here -->
-            <directory>src/main/kotlin/</directory>
+            <directory>src/main/java/</directory>
         </target>
     </generator>
 </configuration>

@@ -50,6 +50,7 @@ public class Keys {
     public static final UniqueKey<AuthAccessTokenRecord> KEY_AUTH_ACCESS_TOKEN_PRIMARY = UniqueKeys0.KEY_AUTH_ACCESS_TOKEN_PRIMARY;
     public static final UniqueKey<AuthAccessTokenRecord> KEY_AUTH_ACCESS_TOKEN_REFRESH_TOKEN = UniqueKeys0.KEY_AUTH_ACCESS_TOKEN_REFRESH_TOKEN;
     public static final UniqueKey<AuthMfaTokenRecord> KEY_AUTH_MFA_TOKEN_PRIMARY = UniqueKeys0.KEY_AUTH_MFA_TOKEN_PRIMARY;
+    public static final UniqueKey<AuthVerifyTokenRecord> KEY_AUTH_VERIFY_TOKEN_PRIMARY = UniqueKeys0.KEY_AUTH_VERIFY_TOKEN_PRIMARY;
     public static final UniqueKey<GameRecord> KEY_GAME_PRIMARY = UniqueKeys0.KEY_GAME_PRIMARY;
     public static final UniqueKey<GameRecord> KEY_GAME_NAME = UniqueKeys0.KEY_GAME_NAME;
     public static final UniqueKey<GameRecord> KEY_GAME_SLUG = UniqueKeys0.KEY_GAME_SLUG;
@@ -77,6 +78,7 @@ public class Keys {
 
     public static final ForeignKey<AuthAccessTokenRecord, UserRecord> AUTH_ACCESS_TOKEN_IBFK_1 = ForeignKeys0.AUTH_ACCESS_TOKEN_IBFK_1;
     public static final ForeignKey<AuthMfaTokenRecord, UserRecord> AUTH_MFA_TOKEN_IBFK_1 = ForeignKeys0.AUTH_MFA_TOKEN_IBFK_1;
+    public static final ForeignKey<AuthVerifyTokenRecord, UserRecord> AUTH_VERIFY_TOKEN_IBFK_1 = ForeignKeys0.AUTH_VERIFY_TOKEN_IBFK_1;
     public static final ForeignKey<GameVersionRecord, GameRecord> GAME_VERSION_IBFK_1 = ForeignKeys0.GAME_VERSION_IBFK_1;
     public static final ForeignKey<ProjectRecord, ProjectTypeRecord> PROJECT_IBFK_1 = ForeignKeys0.PROJECT_IBFK_1;
     public static final ForeignKey<ProjectRecord, UserRecord> PROJECT_IBFK_2 = ForeignKeys0.PROJECT_IBFK_2;
@@ -122,6 +124,7 @@ public class Keys {
         public static final UniqueKey<AuthAccessTokenRecord> KEY_AUTH_ACCESS_TOKEN_PRIMARY = createUniqueKey(AuthAccessToken.AUTH_ACCESS_TOKEN, "KEY_AUTH_ACCESS_TOKEN_PRIMARY", AuthAccessToken.AUTH_ACCESS_TOKEN.TOKEN);
         public static final UniqueKey<AuthAccessTokenRecord> KEY_AUTH_ACCESS_TOKEN_REFRESH_TOKEN = createUniqueKey(AuthAccessToken.AUTH_ACCESS_TOKEN, "KEY_AUTH_ACCESS_TOKEN_REFRESH_TOKEN", AuthAccessToken.AUTH_ACCESS_TOKEN.REFRESH_TOKEN);
         public static final UniqueKey<AuthMfaTokenRecord> KEY_AUTH_MFA_TOKEN_PRIMARY = createUniqueKey(AuthMfaToken.AUTH_MFA_TOKEN, "KEY_AUTH_MFA_TOKEN_PRIMARY", AuthMfaToken.AUTH_MFA_TOKEN.TOKEN);
+        public static final UniqueKey<AuthVerifyTokenRecord> KEY_AUTH_VERIFY_TOKEN_PRIMARY = createUniqueKey(AuthVerifyToken.AUTH_VERIFY_TOKEN, "KEY_AUTH_VERIFY_TOKEN_PRIMARY", AuthVerifyToken.AUTH_VERIFY_TOKEN.USER_ID);
         public static final UniqueKey<GameRecord> KEY_GAME_PRIMARY = createUniqueKey(Game.GAME, "KEY_GAME_PRIMARY", Game.GAME.ID);
         public static final UniqueKey<GameRecord> KEY_GAME_NAME = createUniqueKey(Game.GAME, "KEY_GAME_NAME", Game.GAME.NAME);
         public static final UniqueKey<GameRecord> KEY_GAME_SLUG = createUniqueKey(Game.GAME, "KEY_GAME_SLUG", Game.GAME.SLUG);
@@ -147,6 +150,7 @@ public class Keys {
     private static class ForeignKeys0 extends AbstractKeys {
         public static final ForeignKey<AuthAccessTokenRecord, UserRecord> AUTH_ACCESS_TOKEN_IBFK_1 = createForeignKey(com.diluv.api.models.Keys.KEY_USER_PRIMARY, AuthAccessToken.AUTH_ACCESS_TOKEN, "AUTH_ACCESS_TOKEN_ibfk_1", AuthAccessToken.AUTH_ACCESS_TOKEN.USER_ID);
         public static final ForeignKey<AuthMfaTokenRecord, UserRecord> AUTH_MFA_TOKEN_IBFK_1 = createForeignKey(com.diluv.api.models.Keys.KEY_USER_PRIMARY, AuthMfaToken.AUTH_MFA_TOKEN, "AUTH_MFA_TOKEN_ibfk_1", AuthMfaToken.AUTH_MFA_TOKEN.USER_ID);
+        public static final ForeignKey<AuthVerifyTokenRecord, UserRecord> AUTH_VERIFY_TOKEN_IBFK_1 = createForeignKey(com.diluv.api.models.Keys.KEY_USER_PRIMARY, AuthVerifyToken.AUTH_VERIFY_TOKEN, "AUTH_VERIFY_TOKEN_ibfk_1", AuthVerifyToken.AUTH_VERIFY_TOKEN.USER_ID);
         public static final ForeignKey<GameVersionRecord, GameRecord> GAME_VERSION_IBFK_1 = createForeignKey(com.diluv.api.models.Keys.KEY_GAME_PRIMARY, GameVersion.GAME_VERSION, "GAME_VERSION_ibfk_1", GameVersion.GAME_VERSION.GAME_ID);
         public static final ForeignKey<ProjectRecord, ProjectTypeRecord> PROJECT_IBFK_1 = createForeignKey(com.diluv.api.models.Keys.KEY_PROJECT_TYPE_PRIMARY, Project.PROJECT, "PROJECT_ibfk_1", Project.PROJECT.PROJECT_TYPE_ID);
         public static final ForeignKey<ProjectRecord, UserRecord> PROJECT_IBFK_2 = createForeignKey(com.diluv.api.models.Keys.KEY_USER_PRIMARY, Project.PROJECT, "PROJECT_ibfk_2", Project.PROJECT.USER_ID);
