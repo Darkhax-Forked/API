@@ -83,11 +83,6 @@ public class Tables {
     public static final ProjectFileProcessing PROJECT_FILE_PROCESSING = com.diluv.api.models.tables.ProjectFileProcessing.PROJECT_FILE_PROCESSING;
 
     /**
-     * The table <code>diluv.PROJECT_FILE_PROCESSING_LOG</code>.
-     */
-    public static final ProjectFileProcessingLog PROJECT_FILE_PROCESSING_LOG = com.diluv.api.models.tables.ProjectFileProcessingLog.PROJECT_FILE_PROCESSING_LOG;
-
-    /**
      * The table <code>diluv.PROJECT_MEMBER</code>.
      */
     public static final ProjectMember PROJECT_MEMBER = com.diluv.api.models.tables.ProjectMember.PROJECT_MEMBER;

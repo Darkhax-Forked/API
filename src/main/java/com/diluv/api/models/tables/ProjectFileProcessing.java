@@ -29,7 +29,7 @@ import java.util.List;
 @SuppressWarnings({"all", "unchecked", "rawtypes"})
 public class ProjectFileProcessing extends TableImpl<ProjectFileProcessingRecord> {
 
-    private static final long serialVersionUID = 1341773452;
+    private static final long serialVersionUID = -18050822;
 
     /**
      * The reference instance of <code>diluv.PROJECT_FILE_PROCESSING</code>
@@ -50,9 +50,19 @@ public class ProjectFileProcessing extends TableImpl<ProjectFileProcessingRecord
     public final TableField<ProjectFileProcessingRecord, Long> PROJECT_FILE_ID = createField("PROJECT_FILE_ID", org.jooq.impl.SQLDataType.BIGINT.nullable(false), this, "");
 
     /**
-     * The column <code>diluv.PROJECT_FILE_PROCESSING.STATUS_ID</code>.
+     * The column <code>diluv.PROJECT_FILE_PROCESSING.STATUS</code>.
      */
-    public final TableField<ProjectFileProcessingRecord, Integer> STATUS_ID = createField("STATUS_ID", org.jooq.impl.SQLDataType.INTEGER.nullable(false).defaultValue(org.jooq.impl.DSL.inline("0", org.jooq.impl.SQLDataType.INTEGER)), this, "");
+    public final TableField<ProjectFileProcessingRecord, String> STATUS = createField("STATUS", org.jooq.impl.SQLDataType.VARCHAR.length(200).nullable(false), this, "");
+
+    /**
+     * The column <code>diluv.PROJECT_FILE_PROCESSING.SUCCESSFUL</code>.
+     */
+    public final TableField<ProjectFileProcessingRecord, Boolean> SUCCESSFUL = createField("SUCCESSFUL", org.jooq.impl.SQLDataType.BIT.nullable(false), this, "");
+
+    /**
+     * The column <code>diluv.PROJECT_FILE_PROCESSING.LOGS</code>.
+     */
+    public final TableField<ProjectFileProcessingRecord, String> LOGS = createField("LOGS", org.jooq.impl.SQLDataType.CLOB.nullable(false), this, "");
 
     /**
      * The column <code>diluv.PROJECT_FILE_PROCESSING.CREATED_AT</code>.

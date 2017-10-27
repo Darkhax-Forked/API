@@ -62,7 +62,6 @@ public class Keys {
     public static final UniqueKey<ProjectFileDownloadRecord> KEY_PROJECT_FILE_DOWNLOAD_PRIMARY = UniqueKeys0.KEY_PROJECT_FILE_DOWNLOAD_PRIMARY;
     public static final UniqueKey<ProjectFileGameVersionRecord> KEY_PROJECT_FILE_GAME_VERSION_PRIMARY = UniqueKeys0.KEY_PROJECT_FILE_GAME_VERSION_PRIMARY;
     public static final UniqueKey<ProjectFileProcessingRecord> KEY_PROJECT_FILE_PROCESSING_PRIMARY = UniqueKeys0.KEY_PROJECT_FILE_PROCESSING_PRIMARY;
-    public static final UniqueKey<ProjectFileProcessingLogRecord> KEY_PROJECT_FILE_PROCESSING_LOG_PRIMARY = UniqueKeys0.KEY_PROJECT_FILE_PROCESSING_LOG_PRIMARY;
     public static final UniqueKey<ProjectMemberRecord> KEY_PROJECT_MEMBER_PRIMARY = UniqueKeys0.KEY_PROJECT_MEMBER_PRIMARY;
     public static final UniqueKey<ProjectTypeRecord> KEY_PROJECT_TYPE_PRIMARY = UniqueKeys0.KEY_PROJECT_TYPE_PRIMARY;
     public static final UniqueKey<ProjectTypeCategoryRecord> KEY_PROJECT_TYPE_CATEGORY_PRIMARY = UniqueKeys0.KEY_PROJECT_TYPE_CATEGORY_PRIMARY;
@@ -94,7 +93,6 @@ public class Keys {
     public static final ForeignKey<ProjectFileGameVersionRecord, ProjectFileRecord> PROJECT_FILE_GAME_VERSION_IBFK_1 = ForeignKeys0.PROJECT_FILE_GAME_VERSION_IBFK_1;
     public static final ForeignKey<ProjectFileGameVersionRecord, GameVersionRecord> PROJECT_FILE_GAME_VERSION_IBFK_2 = ForeignKeys0.PROJECT_FILE_GAME_VERSION_IBFK_2;
     public static final ForeignKey<ProjectFileProcessingRecord, ProjectFileRecord> PROJECT_FILE_PROCESSING_IBFK_1 = ForeignKeys0.PROJECT_FILE_PROCESSING_IBFK_1;
-    public static final ForeignKey<ProjectFileProcessingLogRecord, ProjectFileRecord> PROJECT_FILE_PROCESSING_LOG_IBFK_1 = ForeignKeys0.PROJECT_FILE_PROCESSING_LOG_IBFK_1;
     public static final ForeignKey<ProjectMemberRecord, ProjectRecord> PROJECT_MEMBER_IBFK_2 = ForeignKeys0.PROJECT_MEMBER_IBFK_2;
     public static final ForeignKey<ProjectMemberRecord, UserRecord> PROJECT_MEMBER_IBFK_1 = ForeignKeys0.PROJECT_MEMBER_IBFK_1;
     public static final ForeignKey<ProjectTypeRecord, GameRecord> PROJECT_TYPE_IBFK_1 = ForeignKeys0.PROJECT_TYPE_IBFK_1;
@@ -135,8 +133,7 @@ public class Keys {
         public static final UniqueKey<ProjectFileRecord> KEY_PROJECT_FILE_PRIMARY = createUniqueKey(ProjectFile.PROJECT_FILE, "KEY_PROJECT_FILE_PRIMARY", ProjectFile.PROJECT_FILE.ID);
         public static final UniqueKey<ProjectFileDownloadRecord> KEY_PROJECT_FILE_DOWNLOAD_PRIMARY = createUniqueKey(ProjectFileDownload.PROJECT_FILE_DOWNLOAD, "KEY_PROJECT_FILE_DOWNLOAD_PRIMARY", ProjectFileDownload.PROJECT_FILE_DOWNLOAD.PROJECT_FILE_ID);
         public static final UniqueKey<ProjectFileGameVersionRecord> KEY_PROJECT_FILE_GAME_VERSION_PRIMARY = createUniqueKey(ProjectFileGameVersion.PROJECT_FILE_GAME_VERSION, "KEY_PROJECT_FILE_GAME_VERSION_PRIMARY", ProjectFileGameVersion.PROJECT_FILE_GAME_VERSION.PROJECT_FILE_ID, ProjectFileGameVersion.PROJECT_FILE_GAME_VERSION.PROJECT_VERSION_ID);
-        public static final UniqueKey<ProjectFileProcessingRecord> KEY_PROJECT_FILE_PROCESSING_PRIMARY = createUniqueKey(ProjectFileProcessing.PROJECT_FILE_PROCESSING, "KEY_PROJECT_FILE_PROCESSING_PRIMARY", ProjectFileProcessing.PROJECT_FILE_PROCESSING.PROJECT_FILE_ID, ProjectFileProcessing.PROJECT_FILE_PROCESSING.STATUS_ID);
-        public static final UniqueKey<ProjectFileProcessingLogRecord> KEY_PROJECT_FILE_PROCESSING_LOG_PRIMARY = createUniqueKey(ProjectFileProcessingLog.PROJECT_FILE_PROCESSING_LOG, "KEY_PROJECT_FILE_PROCESSING_LOG_PRIMARY", ProjectFileProcessingLog.PROJECT_FILE_PROCESSING_LOG.PROJECT_FILE_ID);
+        public static final UniqueKey<ProjectFileProcessingRecord> KEY_PROJECT_FILE_PROCESSING_PRIMARY = createUniqueKey(ProjectFileProcessing.PROJECT_FILE_PROCESSING, "KEY_PROJECT_FILE_PROCESSING_PRIMARY", ProjectFileProcessing.PROJECT_FILE_PROCESSING.PROJECT_FILE_ID, ProjectFileProcessing.PROJECT_FILE_PROCESSING.STATUS);
         public static final UniqueKey<ProjectMemberRecord> KEY_PROJECT_MEMBER_PRIMARY = createUniqueKey(ProjectMember.PROJECT_MEMBER, "KEY_PROJECT_MEMBER_PRIMARY", ProjectMember.PROJECT_MEMBER.ID);
         public static final UniqueKey<ProjectTypeRecord> KEY_PROJECT_TYPE_PRIMARY = createUniqueKey(ProjectType.PROJECT_TYPE, "KEY_PROJECT_TYPE_PRIMARY", ProjectType.PROJECT_TYPE.ID);
         public static final UniqueKey<ProjectTypeCategoryRecord> KEY_PROJECT_TYPE_CATEGORY_PRIMARY = createUniqueKey(ProjectTypeCategory.PROJECT_TYPE_CATEGORY, "KEY_PROJECT_TYPE_CATEGORY_PRIMARY", ProjectTypeCategory.PROJECT_TYPE_CATEGORY.ID);
@@ -166,7 +163,6 @@ public class Keys {
         public static final ForeignKey<ProjectFileGameVersionRecord, ProjectFileRecord> PROJECT_FILE_GAME_VERSION_IBFK_1 = createForeignKey(com.diluv.api.models.Keys.KEY_PROJECT_FILE_PRIMARY, ProjectFileGameVersion.PROJECT_FILE_GAME_VERSION, "PROJECT_FILE_GAME_VERSION_ibfk_1", ProjectFileGameVersion.PROJECT_FILE_GAME_VERSION.PROJECT_FILE_ID);
         public static final ForeignKey<ProjectFileGameVersionRecord, GameVersionRecord> PROJECT_FILE_GAME_VERSION_IBFK_2 = createForeignKey(com.diluv.api.models.Keys.KEY_GAME_VERSION_PRIMARY, ProjectFileGameVersion.PROJECT_FILE_GAME_VERSION, "PROJECT_FILE_GAME_VERSION_ibfk_2", ProjectFileGameVersion.PROJECT_FILE_GAME_VERSION.PROJECT_VERSION_ID);
         public static final ForeignKey<ProjectFileProcessingRecord, ProjectFileRecord> PROJECT_FILE_PROCESSING_IBFK_1 = createForeignKey(com.diluv.api.models.Keys.KEY_PROJECT_FILE_PRIMARY, ProjectFileProcessing.PROJECT_FILE_PROCESSING, "PROJECT_FILE_PROCESSING_ibfk_1", ProjectFileProcessing.PROJECT_FILE_PROCESSING.PROJECT_FILE_ID);
-        public static final ForeignKey<ProjectFileProcessingLogRecord, ProjectFileRecord> PROJECT_FILE_PROCESSING_LOG_IBFK_1 = createForeignKey(com.diluv.api.models.Keys.KEY_PROJECT_FILE_PRIMARY, ProjectFileProcessingLog.PROJECT_FILE_PROCESSING_LOG, "PROJECT_FILE_PROCESSING_LOG_ibfk_1", ProjectFileProcessingLog.PROJECT_FILE_PROCESSING_LOG.PROJECT_FILE_ID);
         public static final ForeignKey<ProjectMemberRecord, ProjectRecord> PROJECT_MEMBER_IBFK_2 = createForeignKey(com.diluv.api.models.Keys.KEY_PROJECT_PRIMARY, ProjectMember.PROJECT_MEMBER, "PROJECT_MEMBER_ibfk_2", ProjectMember.PROJECT_MEMBER.PROJECT_ID);
         public static final ForeignKey<ProjectMemberRecord, UserRecord> PROJECT_MEMBER_IBFK_1 = createForeignKey(com.diluv.api.models.Keys.KEY_USER_PRIMARY, ProjectMember.PROJECT_MEMBER, "PROJECT_MEMBER_ibfk_1", ProjectMember.PROJECT_MEMBER.USER_ID);
         public static final ForeignKey<ProjectTypeRecord, GameRecord> PROJECT_TYPE_IBFK_1 = createForeignKey(com.diluv.api.models.Keys.KEY_GAME_PRIMARY, ProjectType.PROJECT_TYPE, "PROJECT_TYPE_ibfk_1", ProjectType.PROJECT_TYPE.GAME_ID);

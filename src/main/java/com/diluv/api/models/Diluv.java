@@ -28,7 +28,7 @@ import java.util.List;
 @SuppressWarnings({"all", "unchecked", "rawtypes"})
 public class Diluv extends SchemaImpl {
 
-    private static final long serialVersionUID = -1643454068;
+    private static final long serialVersionUID = 955721901;
 
     /**
      * The reference instance of <code>diluv</code>
@@ -94,11 +94,6 @@ public class Diluv extends SchemaImpl {
      * The table <code>diluv.PROJECT_FILE_PROCESSING</code>.
      */
     public final ProjectFileProcessing PROJECT_FILE_PROCESSING = com.diluv.api.models.tables.ProjectFileProcessing.PROJECT_FILE_PROCESSING;
-
-    /**
-     * The table <code>diluv.PROJECT_FILE_PROCESSING_LOG</code>.
-     */
-    public final ProjectFileProcessingLog PROJECT_FILE_PROCESSING_LOG = com.diluv.api.models.tables.ProjectFileProcessingLog.PROJECT_FILE_PROCESSING_LOG;
 
     /**
      * The table <code>diluv.PROJECT_MEMBER</code>.
@@ -167,7 +162,6 @@ public class Diluv extends SchemaImpl {
                 ProjectFileDownload.PROJECT_FILE_DOWNLOAD,
                 ProjectFileGameVersion.PROJECT_FILE_GAME_VERSION,
                 ProjectFileProcessing.PROJECT_FILE_PROCESSING,
-                ProjectFileProcessingLog.PROJECT_FILE_PROCESSING_LOG,
                 ProjectMember.PROJECT_MEMBER,
                 ProjectType.PROJECT_TYPE,
                 ProjectTypeCategory.PROJECT_TYPE_CATEGORY,
