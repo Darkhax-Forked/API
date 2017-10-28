@@ -29,7 +29,7 @@ import java.util.List;
 @SuppressWarnings({"all", "unchecked", "rawtypes"})
 public class ProjectFile extends TableImpl<ProjectFileRecord> {
 
-    private static final long serialVersionUID = 2001931044;
+    private static final long serialVersionUID = 266658215;
 
     /**
      * The reference instance of <code>diluv.PROJECT_FILE</code>
@@ -90,9 +90,9 @@ public class ProjectFile extends TableImpl<ProjectFileRecord> {
     public final TableField<ProjectFileRecord, Boolean> PUBLIC = createField("PUBLIC", org.jooq.impl.SQLDataType.BIT.nullable(false).defaultValue(org.jooq.impl.DSL.inline("b'0'", org.jooq.impl.SQLDataType.BIT)), this, "");
 
     /**
-     * The column <code>diluv.PROJECT_FILE.PROCESSING</code>.
+     * The column <code>diluv.PROJECT_FILE.PROCESSED</code>.
      */
-    public final TableField<ProjectFileRecord, Boolean> PROCESSING = createField("PROCESSING", org.jooq.impl.SQLDataType.BIT.nullable(false).defaultValue(org.jooq.impl.DSL.inline("b'0'", org.jooq.impl.SQLDataType.BIT)), this, "");
+    public final TableField<ProjectFileRecord, Boolean> PROCESSED = createField("PROCESSED", org.jooq.impl.SQLDataType.BIT.nullable(false).defaultValue(org.jooq.impl.DSL.inline("b'0'", org.jooq.impl.SQLDataType.BIT)), this, "");
 
     /**
      * The column <code>diluv.PROJECT_FILE.REVIEW_NEEDED</code>.

@@ -28,7 +28,7 @@ import java.sql.Timestamp;
 @SuppressWarnings({"all", "unchecked", "rawtypes"})
 public class ProjectFileRecord extends UpdatableRecordImpl<ProjectFileRecord> implements Record14<Long, String, String, String, Long, Long, String, Timestamp, Boolean, Boolean, Boolean, Long, Long, Long> {
 
-    private static final long serialVersionUID = -1039177541;
+    private static final long serialVersionUID = 871386638;
 
     /**
      * Setter for <code>diluv.PROJECT_FILE.ID</code>.
@@ -157,16 +157,16 @@ public class ProjectFileRecord extends UpdatableRecordImpl<ProjectFileRecord> im
     }
 
     /**
-     * Setter for <code>diluv.PROJECT_FILE.PROCESSING</code>.
+     * Setter for <code>diluv.PROJECT_FILE.PROCESSED</code>.
      */
-    public void setProcessing(Boolean value) {
+    public void setProcessed(Boolean value) {
         set(9, value);
     }
 
     /**
-     * Getter for <code>diluv.PROJECT_FILE.PROCESSING</code>.
+     * Getter for <code>diluv.PROJECT_FILE.PROCESSED</code>.
      */
-    public Boolean getProcessing() {
+    public Boolean getProcessed() {
         return (Boolean) get(9);
     }
 
@@ -335,7 +335,7 @@ public class ProjectFileRecord extends UpdatableRecordImpl<ProjectFileRecord> im
      */
     @Override
     public Field<Boolean> field10() {
-        return ProjectFile.PROJECT_FILE.PROCESSING;
+        return ProjectFile.PROJECT_FILE.PROCESSED;
     }
 
     /**
@@ -447,7 +447,7 @@ public class ProjectFileRecord extends UpdatableRecordImpl<ProjectFileRecord> im
      */
     @Override
     public Boolean value10() {
-        return getProcessing();
+        return getProcessed();
     }
 
     /**
@@ -568,7 +568,7 @@ public class ProjectFileRecord extends UpdatableRecordImpl<ProjectFileRecord> im
      */
     @Override
     public ProjectFileRecord value10(Boolean value) {
-        setProcessing(value);
+        setProcessed(value);
         return this;
     }
 
@@ -644,7 +644,7 @@ public class ProjectFileRecord extends UpdatableRecordImpl<ProjectFileRecord> im
     /**
      * Create a detached, initialised ProjectFileRecord
      */
-    public ProjectFileRecord(Long id, String sha256, String fileName, String displayName, Long size, Long downloads, String releaseType, Timestamp createdAt, Boolean public_, Boolean processing, Boolean reviewNeeded, Long parentId, Long projectId, Long userId) {
+    public ProjectFileRecord(Long id, String sha256, String fileName, String displayName, Long size, Long downloads, String releaseType, Timestamp createdAt, Boolean public_, Boolean processed, Boolean reviewNeeded, Long parentId, Long projectId, Long userId) {
         super(ProjectFile.PROJECT_FILE);
 
         set(0, id);
@@ -656,7 +656,7 @@ public class ProjectFileRecord extends UpdatableRecordImpl<ProjectFileRecord> im
         set(6, releaseType);
         set(7, createdAt);
         set(8, public_);
-        set(9, processing);
+        set(9, processed);
         set(10, reviewNeeded);
         set(11, parentId);
         set(12, projectId);
