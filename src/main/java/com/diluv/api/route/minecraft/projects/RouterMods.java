@@ -13,6 +13,7 @@ import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.FileUpload;
 import io.vertx.ext.web.RoutingContext;
+import io.vertx.ext.web.handler.BodyHandler;
 import io.vertx.ext.web.impl.RouterImpl;
 import org.jooq.DSLContext;
 import org.jooq.SQLDialect;
@@ -46,7 +47,7 @@ public class RouterMods extends RouterImpl {
         this.get("/projects/:projectSlug/categories").handler(this::getProjectCategories);
 
         this.post("/projects").handler(this::postProjects);
-        this.post("/projects/:projectSlug/files").handler(this::postProjectFiles);
+        this.post("/projects/:projectSlug/files").handler(BodyHandler.create(System.getenv("fileUploadDir"))).handler(this::postProjectFiles);
     }
 
     public void getMods(RoutingContext event) {

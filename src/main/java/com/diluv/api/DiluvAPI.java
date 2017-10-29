@@ -78,7 +78,7 @@ public class DiluvAPI extends AbstractVerticle {
             event.fail(404);
         }).failureHandler(event -> {
             if (event.statusCode() == 404) {
-                ResponseUtilities.asErrorResponse(event, Errors.NOT_FOUND, null);
+                ResponseUtilities.asErrorResponse(event, ErrorMessages.NOT_FOUND);
             } else {
                 event.next();
             }

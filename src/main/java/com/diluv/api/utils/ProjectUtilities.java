@@ -12,7 +12,6 @@ import java.util.Map;
 
 import static com.diluv.api.models.Tables.*;
 
-
 public class ProjectUtilities {
     public static Map<String, Object> getProjectById(Connection conn, long projectId, Long userId) {
         DSLContext transaction = DSL.using(conn, SQLDialect.MYSQL);

@@ -1,6 +1,8 @@
 package com.diluv.api.error;
 
 public enum ErrorMessages {
+    NOT_FOUND(Errors.NOT_FOUND, ""),
+
     AUTH_TOKEN_NULL(Errors.UNAUTHORIZED, "Token not found"),
     AUTH_TOKEN_INVALID(Errors.BAD_REQUEST, "The token is invalid"),
     AUTH_TOKEN_EXPIRED(Errors.BAD_REQUEST, "The token is expired"),
@@ -36,7 +38,7 @@ public enum ErrorMessages {
     PROJECT_NAME_NULL(Errors.BAD_REQUEST, "Project creation requires a project name"),
     PROJECT_NAME_TAKEN(Errors.BAD_REQUEST, "Project name is already taken"),
     PROJECT_DESCRIPTION_NULL(Errors.BAD_REQUEST, "Project creation requires a description"),
-    PROJECT_SHORT_DESCRIPTION_NULL(Errors.BAD_REQUEST,"Project creation requires a short description"),
+    PROJECT_SHORT_DESCRIPTION_NULL(Errors.BAD_REQUEST, "Project creation requires a short description"),
 
     PROJECT_NOT_FOUND(Errors.NOT_FOUND, "Project not found"),
     PROJECT_SLUG_NULL(Errors.BAD_REQUEST, "An slug is needed"),
@@ -48,8 +50,7 @@ public enum ErrorMessages {
 
     PROJECT_CATEGORY_NOT_FOUND(Errors.NOT_FOUND, "Project category not found"),
 
-    INTERNAL_SERVER_ERROR(Errors.INTERNAL_SERVER_ERROR, "Internal error, devs have been notified"),
-    ;
+    INTERNAL_SERVER_ERROR(Errors.INTERNAL_SERVER_ERROR, "Internal error, devs have been notified"),;
 
     public final Errors errors;
     public final String errorMessage;
