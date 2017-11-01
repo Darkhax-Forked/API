@@ -39,10 +39,11 @@ public class DiluvAPI extends AbstractVerticle {
         String user = System.getenv("dbUsername");
         String password = System.getenv("dbPassword");
 
+
         String url = String.format("jdbc:mysql://%s:%s/%s", host, port, database);
+
         try {
             Connection conn = DriverManager.getConnection(url, user, password);
-
             vertx.deployVerticle(new DiluvAPI(conn));
         } catch (SQLException e) {
             e.printStackTrace();
@@ -83,12 +84,13 @@ public class DiluvAPI extends AbstractVerticle {
                 event.next();
             }
         });
+        System.out.println("Starting");
 
         vertx.createHttpServer()
                 .requestHandler(router::accept)
-                .listen(config().getInteger("http.port", Integer.parseInt(System.getenv("port"))), event -> {
+                .listen(config().getInteger("http.port", Integer.parseInt(System.getenv("apiPort"))), event -> {
                     if (event.succeeded()) {
-                        System.out.println("API started on port " + System.getenv("port"));
+                        System.out.println("API started on port " + System.getenv("apiPort"));
                         startFuture.complete();
                     } else {
                         startFuture.fail(event.cause());

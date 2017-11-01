@@ -13,7 +13,7 @@ plugins {
     id 'maven'
     id 'com.github.johnrengelman.shadow' version '2.0.1'
     id "nebula.project" version "3.4.0"
-    id 'nebula.release' version '6.0.0'
+    id 'nebula.release' version '6.1.0'
 }
 
 group = 'com.diluv.api'
@@ -40,7 +40,6 @@ shadowJar {
 }
 
 dependencies {
-    compile "io.vertx:vertx-core:$vertx_version"
     compile "io.vertx:vertx-web:$vertx_version"
     compile "io.vertx:vertx-web-client:$vertx_version"
     compile "io.vertx:vertx-mail-client:$vertx_version"
@@ -49,14 +48,13 @@ dependencies {
 
     compile "org.slf4j:slf4j-api:1.7.25"
     compile "org.bouncycastle:bcprov-jdk15on:1.57"
-    compile "commons-codec:commons-codec:1.10"
 
     compile "commons-validator:commons-validator:1.6"
 
     compile "org.jooq:jooq:3.9.3"
-    compile "org.jooq:jooq-meta:3.9.3"
-    compile "org.jooq:jooq-codegen:3.9.3"
-    compile "mysql:mysql-connector-java:5.1.41"
+    runtime "org.jooq:jooq-meta:3.9.3"
+    runtime "org.jooq:jooq-codegen:3.9.3"
+    runtime "mysql:mysql-connector-java:5.1.41"
 }
 
 idea {

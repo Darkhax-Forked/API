@@ -1,0 +1,19 @@
+- hosts: apiservers
+  tasks:
+    - name: copies the jar file over
+      copy: src={{item}} dest=/usr/local/Diluv/API/API.jar
+      with_fileglob:
+        - build/libs/*.jar
+
+    - name: copies the docker file over
+      copy: src=Dockerfile dest=/usr/local/Diluv/API/Dockerfile
+
+    - name: stop docker
+      command: docker-compose down
+      args:
+          chdir: /usr/local/Diluv/API/
+
+    - name: run docker
+      command: docker-compose up --build -d
+      args:
+          chdir: /usr/local/Diluv/API/

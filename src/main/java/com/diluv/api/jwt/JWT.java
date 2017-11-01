@@ -1,13 +1,13 @@
 package com.diluv.api.jwt;
 
 import io.vertx.core.json.JsonObject;
-import org.apache.commons.codec.binary.Base64;
 import org.jooq.DSLContext;
 import org.jooq.SQLDialect;
 import org.jooq.impl.DSL;
 
 import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
+import java.util.Base64;
 import java.util.regex.Pattern;
 
 import static com.diluv.api.models.Tables.AUTH_ACCESS_TOKEN;
@@ -25,8 +25,8 @@ public class JWT {
 
     public JWT(String token) {
         String[] segment = token.split(PATTERN);
-        JsonObject header = new JsonObject(new String(Base64.decodeBase64(segment[0])));
-        JsonObject payload = new JsonObject(new String(Base64.decodeBase64(segment[1])));
+        JsonObject header = new JsonObject(base64urlEncode(segment[0].getBytes()));
+        JsonObject payload = new JsonObject(base64urlEncode(segment[1].getBytes()));
 
         this.token = token;
         if (payload.containsKey("exp"))
@@ -109,14 +109,18 @@ public class JWT {
     }
 
     private String base64urlEncode(byte[] bytes) {
-        return Base64.encodeBase64String(bytes);
+        return Base64.getEncoder().encodeToString(bytes);
     }
 
     public static boolean validToken(String token) {
         String[] segment = token.split(PATTERN);
-        if (segment.length == 3)
-            if (Base64.isBase64(segment[0]) && Base64.isBase64(segment[1]))
-                return true;
+        try {
+            if (segment.length == 3)
+                if (Base64.getDecoder().decode(segment[0]).length > 0 && Base64.getDecoder().decode(segment[1]).length > 0)
+                    return true;
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
         return false;
     }
 
