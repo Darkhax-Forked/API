@@ -27,7 +27,7 @@ public class ResponseUtilities {
             out.put("data", data);
         if (additionalData != null)
             out.putAll(additionalData);
-        response.end(Json.encodePrettily(out));
+        response.end(Json.encode(out));
         return response;
     }
 
