@@ -41,13 +41,13 @@ public class RouterUsers extends RouterImpl {
         this.conn = conn;
         this.vertx = vertx;
 
-        this.get("/users").handler(this::getUsers);
-        this.get("/users/:username").handler(this::getUserByUsername);
-        this.get("/users/:username/settings").handler(this::getUserSettingsByUsername);
+        this.get("/").handler(this::getUsers);
+        this.get("/:username").handler(this::getUserByUsername);
+        this.get("/:username/settings").handler(this::getUserSettingsByUsername);
 
-        this.post("/users/:username/security").handler(this::postUserSecurityByUsername);
+        this.post("/:username/security").handler(this::postUserSecurityByUsername);
 //        router.post("/users/:username/settings").handler(postUserSettingsByUsername);
-        this.post("/users/generateBetaKey").handler(this::postCreateBetaKeys);
+        this.post("/generateBetaKey").handler(this::postCreateBetaKeys);
     }
 
     /**
