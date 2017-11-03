@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 import static com.diluv.api.models.Tables.AUTH_ACCESS_TOKEN;
 
 public class JWT {
-    private static final String PATTERN = Pattern.quote("\\.");
+    private static final String PATTERN = Pattern.quote(".");
     private String token;
     private Long exp = null;
     private String iss;
@@ -25,8 +25,8 @@ public class JWT {
 
     public JWT(String token) {
         String[] segment = token.split(PATTERN);
-        JsonObject header = new JsonObject(base64urlEncode(segment[0].getBytes()));
-        JsonObject payload = new JsonObject(base64urlEncode(segment[1].getBytes()));
+        JsonObject header = new JsonObject(new String(Base64.getDecoder().decode(segment[0].getBytes())));
+        JsonObject payload = new JsonObject(new String(Base64.getDecoder().decode(segment[1].getBytes())));
 
         this.token = token;
         if (payload.containsKey("exp"))
@@ -115,7 +115,7 @@ public class JWT {
     public static boolean validToken(String token) {
         String[] segment = token.split(PATTERN);
         try {
-            if (segment.length == 3)
+            if (segment.length == 2)
                 if (Base64.getDecoder().decode(segment[0]).length > 0 && Base64.getDecoder().decode(segment[1]).length > 0)
                     return true;
         } catch (IllegalArgumentException e) {

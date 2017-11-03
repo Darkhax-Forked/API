@@ -8,6 +8,7 @@ import org.jooq.DSLContext;
 import org.jooq.SQLDialect;
 import org.jooq.impl.DSL;
 
+import java.security.MessageDigest;
 import java.sql.Connection;
 import java.util.HashMap;
 import java.util.Map;
@@ -84,5 +85,25 @@ public class AuthorizationUtilities {
         out.put("refreshTokenExpires", jwtRefreshToken.getExpires());
 
         return out;
+    }
+
+    public static String getMD5Hex(final String inputString) {
+
+        try {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            md.update(inputString.getBytes());
+
+            byte[] digest = md.digest();
+
+            StringBuilder sb = new StringBuilder();
+            for (byte aByteData : digest) {
+                sb.append(Integer.toString((aByteData & 0xff) + 0x100, 16).substring(1));
+            }
+
+            return sb.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
     }
 }

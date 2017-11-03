@@ -271,7 +271,7 @@ public class RouterAuth extends RouterImpl {
                                 new SecureRandom().nextBytes(salt);
                                 String passwordHash = OpenBSDBCrypt.generate(password.toCharArray(), salt, 10);
                                 UserRecord userResults = transaction.insertInto(USER, USER.EMAIL, USER.USERNAME, USER.PASSWORD, USER.AVATAR)
-                                        .values(email, username, passwordHash, "")
+                                        .values(email, username, passwordHash, "https://www.gravatar.com/avatar/" + AuthorizationUtilities.getMD5Hex(email.trim().toLowerCase()) + "?d=retro")
                                         .returning(USER.ID)
                                         .fetchOne();
 
