@@ -301,7 +301,7 @@ public class RouterAuth extends RouterImpl {
     }
 
     public boolean validUsername(String username) {
-        if (username.length() < 6 || username.length() > 20)
+        if (username.length() < 3 || username.length() > 20)
             return false;
         return USERNAME.matcher(username).matches();
     }
