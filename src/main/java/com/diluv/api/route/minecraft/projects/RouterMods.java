@@ -80,6 +80,12 @@ public class RouterMods extends RouterImpl {
 
             TableField<ProjectRecord, ?> tableField = PROJECT.CREATED_AT;
 
+            if (inputOrder == null)
+                inputOrder = "asc";
+
+            if (inputOrderBy == null)
+                inputOrderBy = "name";
+
             if (inputOrderBy.equals("name"))
                 tableField = PROJECT.NAME;
 
