@@ -50,17 +50,7 @@ public class RouterUsers extends RouterImpl {
         this.post("/generateBetaKey").handler(this::postCreateBetaKeys);
     }
 
-    /**
-     * @api {get} /users
-     * @apiName GetUserList
-     * @apiVersion 0.1.0
-     * @apiGroup User
-     * @apiUse DefaultReturns
-     * @apiSuccess {String} data.id The unique snowflake of the user.
-     * @apiSuccess {String} data.username The username of the user.
-     * @apiSuccess {String} data.avatar The link to the avatar of the user.
-     * @apiSuccess {String} data.createdAt The epoch the user was created at.
-     */
+
     public void getUsers(RoutingContext event) {
         try {
             DSLContext transaction = DSL.using(conn, SQLDialect.MYSQL);
@@ -82,18 +72,6 @@ public class RouterUsers extends RouterImpl {
         }
     }
 
-    /**
-     * @api {get} /users/:id
-     * @apiName GetUser
-     * @apiVersion 0.1.0
-     * @apiGroup User
-     * @apiUse DefaultReturns
-     * @apiParam {String} id The unique snowflake of a user.
-     * @apiSuccess {String} data.id The unique snowflake of the user.
-     * @apiSuccess {String} data.username The username of the user.
-     * @apiSuccess {String} data.avatar The link to the avatar of the user.
-     * @apiSuccess {String} data.createdAt The epoch the user was created at.
-     */
     public void getUserByUsername(RoutingContext event) {
         String username = event.request().getParam("username");
 
@@ -191,7 +169,7 @@ public class RouterUsers extends RouterImpl {
                     ResponseUtilities.asErrorResponse(event, ErrorMessages.AUTH_TOKEN_EXPIRED);
                 }
             }else{
-                ResponseUtilities.asErrorResponse(event, ErrorMessages.AUTH_TOKEN_INVALID);
+                ResponseUtilities.asErrorResponse(event, ErrorMessages.AUTH_TOKEN_NON_EXIST);
             }
         } else {
             ResponseUtilities.asErrorResponse(event, ErrorMessages.AUTH_TOKEN_NULL);

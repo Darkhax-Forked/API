@@ -37,6 +37,10 @@ public class JWT {
             this.data = payload.getJsonObject("data");
     }
 
+    public JWT(JsonObject data, String issuer) {
+        this.setData(data);
+        this.setIssuer(issuer);
+    }
 
     public JWT setExpiresInSeconds(long seconds) {
         this.exp = seconds;

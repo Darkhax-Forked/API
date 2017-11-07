@@ -1,10 +1,10 @@
 package com.diluv.api.error;
 
 public enum ErrorMessages {
-    NOT_FOUND(Errors.NOT_FOUND, ""),
+    NOT_FOUND(Errors.NOT_FOUND, "Page not found"),
 
-    AUTH_TOKEN_NULL(Errors.UNAUTHORIZED, "Token not found"),
-    AUTH_TOKEN_INVALID(Errors.BAD_REQUEST, "The token is invalid"),
+    AUTH_TOKEN_NULL(Errors.UNAUTHORIZED, "The token is not present in the request"),
+    AUTH_TOKEN_NON_EXIST(Errors.BAD_REQUEST, "The token does not exist."),
     AUTH_TOKEN_EXPIRED(Errors.BAD_REQUEST, "The token is expired"),
 
     AUTH_MFA_NULL(Errors.UNAUTHORIZED, "MFA Token not found"),
@@ -50,7 +50,7 @@ public enum ErrorMessages {
 
     PROJECT_CATEGORY_NOT_FOUND(Errors.NOT_FOUND, "Project category not found"),
 
-    INTERNAL_SERVER_ERROR(Errors.INTERNAL_SERVER_ERROR, "Internal error, devs have been notified"),;
+    INTERNAL_SERVER_ERROR(Errors.INTERNAL_SERVER_ERROR, "Internal error"),;
 
     public final Errors errors;
     public final String errorMessage;

@@ -29,13 +29,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 import static com.diluv.api.models.Tables.*;
 
 public class RouterAuth extends RouterImpl {
-    private final Pattern USERNAME = Pattern.compile("([A-Za-z0-9_]+)");
-
     private final Connection conn;
     private final Vertx vertx;
 
@@ -118,7 +115,7 @@ public class RouterAuth extends RouterImpl {
                                 jwtData.put("username", username);
                                 jwtData.put("time", System.nanoTime());
 
-                                JWT jwtToken = AuthorizationUtilities.encodeToken(jwtData, "mfaToken").setExpiresInMinutes(10);
+                                JWT jwtToken = new JWT(jwtData, "mfaToken").setExpiresInMinutes(10);
                                 String token = jwtToken.toString();
                                 //TODO Check unique
                                 transaction.insertInto(AUTH_MFA_TOKEN, AUTH_MFA_TOKEN.USER_ID, AUTH_MFA_TOKEN.TOKEN)
@@ -236,13 +233,13 @@ public class RouterAuth extends RouterImpl {
                 errorMessage.add(ErrorMessages.AUTH_REGISTER_EMAIL_INVALID);
             if (username == null)
                 errorMessage.add(ErrorMessages.AUTH_REGISTER_USERNAME_NULL);
-            else if (!validUsername(username))
+            else if (!AuthorizationUtilities.validUsername(username))
                 errorMessage.add(ErrorMessages.AUTH_REGISTER_USERNAME_INVALID);
 
             if (password == null) {
                 errorMessage.add(ErrorMessages.AUTH_REGISTER_PASSWORD_NULL);
             } else {
-                if (!validPassword(password))
+                if (!AuthorizationUtilities.validPassword(password))
                     errorMessage.add(ErrorMessages.AUTH_REGISTER_PASSWORD_INVALID);
             }
             if (recaptchaResponse == null)
@@ -270,15 +267,19 @@ public class RouterAuth extends RouterImpl {
                                 byte[] salt = new byte[16];
                                 new SecureRandom().nextBytes(salt);
                                 String passwordHash = OpenBSDBCrypt.generate(password.toCharArray(), salt, 10);
+
+                                /* TODO Gravatar is disabled until images are pulled from it, this will help prevent emails from being retrievable
+                                   from the image url as they are only md5'ed
+                                 */
                                 UserRecord userResults = transaction.insertInto(USER, USER.EMAIL, USER.USERNAME, USER.PASSWORD, USER.AVATAR)
-                                        .values(email, username, passwordHash, "https://www.gravatar.com/avatar/" + AuthorizationUtilities.getMD5Hex(email.trim().toLowerCase()) + "?d=retro")
+                                        .values(email, username, passwordHash, "" /*"https://www.gravatar.com/avatar/" + AuthorizationUtilities.getMD5Hex(email.trim().toLowerCase()) + "?d=retro"*/)
                                         .returning(USER.ID)
                                         .fetchOne();
 
                                 JsonObject jwtData = new JsonObject();
                                 jwtData.put("email", email);
                                 jwtData.put("time", System.nanoTime());
-                                JWT jwtToken = AuthorizationUtilities.encodeToken(jwtData, "token").setExpiresInMinutes(60);
+                                JWT jwtToken = new JWT(jwtData, "token").setExpiresInMinutes(60);
 
                                 transaction.insertInto(AUTH_VERIFY_TOKEN, AUTH_VERIFY_TOKEN.USER_ID, AUTH_VERIFY_TOKEN.TOKEN)
                                         .values(userResults.getId(), jwtToken.toString());
@@ -298,17 +299,5 @@ public class RouterAuth extends RouterImpl {
                 ResponseUtilities.asErrorResponse(event, Errors.BAD_REQUEST, errorMessage);
             }
         });
-    }
-
-    public boolean validUsername(String username) {
-        if (username.length() < 3 || username.length() > 20)
-            return false;
-        return USERNAME.matcher(username).matches();
-    }
-
-    public boolean validPassword(String password) {
-        if (password.length() < 6 || password.length() > 50)
-            return false;
-        return true;
     }
 }

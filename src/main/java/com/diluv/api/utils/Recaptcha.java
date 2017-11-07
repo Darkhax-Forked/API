@@ -8,6 +8,8 @@ import io.vertx.ext.web.client.WebClient;
 
 
 public class Recaptcha {
+
+    //TODO Look for better way of doing this
     public static void verify(WebClient client, String recaptchaSecretKey, String recaptchaResponse, Callback<AsyncResult<HttpResponse<Buffer>>> callback) {
         CaseInsensitiveHeaders form = new CaseInsensitiveHeaders();
         form.set("secret", recaptchaSecretKey);

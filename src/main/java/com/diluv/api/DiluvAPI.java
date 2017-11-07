@@ -17,12 +17,6 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-/**
- * @apiDefine DefaultReturns
- * @apiSuccess {Object} data The data object.
- * @apiError {string} errorMessage The error message.
- * @apiError {number} status The status code of the request
- */
 public class DiluvAPI extends AbstractVerticle {
 
     private Connection conn;
