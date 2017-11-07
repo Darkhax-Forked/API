@@ -4,21 +4,14 @@ node {
     }
 
     stage("build") {
-        if (isUnix()) {
-            sh './gradlew clean shadowJar'
-        } else {
-            bat './gradlew.bat clean shadowJar'
-        }
+        sh './gradlew clean shadowJar'
     }
 
     stage("deploy") {
         if (env.BRANCH_NAME == 'master') {
-            
+
         } else {
-            if (isUnix()) {
-                ansiblePlaybook('deploy.yml')
-            } else {
-            }
+            ansiblePlaybook('dev-deploy.yml')
         }
     }
 }
