@@ -1,15 +1,12 @@
 package com.diluv.api.utils;
 
+import com.diluv.api.DiluvAPI;
 import com.diluv.api.jwt.JWT;
 import io.vertx.core.http.HttpHeaders;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.RoutingContext;
-import org.jooq.DSLContext;
-import org.jooq.SQLDialect;
-import org.jooq.impl.DSL;
 
 import java.security.MessageDigest;
-import java.sql.Connection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -60,7 +57,7 @@ public class AuthorizationUtilities {
      * @return The token, expire datatime of the token, refreshToken and the expire datetime of the refresh token.
      */
     //TODO This needs to be encrypted as a precaution to help restrict snooping and the forging of tokens
-    public static Map<String, Object> createAccessToken(Connection conn, long userId, String username) {
+    public static Map<String, Object> createAccessToken(long userId, String username) {
         JsonObject jwtData = new JsonObject();
         jwtData.put("userId", userId);
         jwtData.put("username", username);
@@ -73,16 +70,15 @@ public class AuthorizationUtilities {
         JWT jwtRefreshToken = new JWT(jwtData, "refreshToken").setExpiresInDays(60);
         String refreshToken = jwtRefreshToken.toString();
 
-        DSLContext transaction = DSL.using(conn, SQLDialect.MYSQL);
-        int count = transaction.selectCount()
+        int count = DiluvAPI.getDSLContext().selectCount()
                 .from(AUTH_ACCESS_TOKEN)
                 .where(AUTH_ACCESS_TOKEN.TOKEN.eq(token).and(AUTH_ACCESS_TOKEN.REFRESH_TOKEN.eq(refreshToken)))
                 .fetchOne(0, int.class);
 
         if (count > 0) {
-            return createAccessToken(conn, userId, username);
+            return createAccessToken(userId, username);
         } else {
-            transaction.insertInto(AUTH_ACCESS_TOKEN, AUTH_ACCESS_TOKEN.USER_ID, AUTH_ACCESS_TOKEN.TOKEN, AUTH_ACCESS_TOKEN.REFRESH_TOKEN)
+            DiluvAPI.getDSLContext().insertInto(AUTH_ACCESS_TOKEN, AUTH_ACCESS_TOKEN.USER_ID, AUTH_ACCESS_TOKEN.TOKEN, AUTH_ACCESS_TOKEN.REFRESH_TOKEN)
                     .values(userId, token, refreshToken)
                     .execute();
         }

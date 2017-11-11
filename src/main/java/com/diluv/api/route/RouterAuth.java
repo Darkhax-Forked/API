@@ -1,5 +1,6 @@
 package com.diluv.api.route;
 
+import com.diluv.api.DiluvAPI;
 import com.diluv.api.error.ErrorMessages;
 import com.diluv.api.error.Errors;
 import com.diluv.api.jwt.JWT;
@@ -18,13 +19,9 @@ import io.vertx.ext.web.client.WebClient;
 import io.vertx.ext.web.impl.RouterImpl;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.bouncycastle.crypto.generators.OpenBSDBCrypt;
-import org.jooq.DSLContext;
 import org.jooq.Record3;
-import org.jooq.SQLDialect;
-import org.jooq.impl.DSL;
 
 import java.security.SecureRandom;
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,12 +30,10 @@ import java.util.Map;
 import static com.diluv.api.models.Tables.*;
 
 public class RouterAuth extends RouterImpl {
-    private final Connection conn;
     private final Vertx vertx;
 
-    public RouterAuth(Connection conn, Vertx vertx) {
+    public RouterAuth(Vertx vertx) {
         super(vertx);
-        this.conn = conn;
         this.vertx = vertx;
 
         this.post("/register").handler(this::postRegister);
@@ -53,12 +48,11 @@ public class RouterAuth extends RouterImpl {
         String emailToken = event.request().getParam("emailToken");
 
         if (emailToken != null) {
-            DSLContext transaction = DSL.using(conn, SQLDialect.MYSQL);
-            AuthVerifyTokenRecord token = transaction.selectFrom(AUTH_VERIFY_TOKEN)
+            AuthVerifyTokenRecord token = DiluvAPI.getDSLContext().selectFrom(AUTH_VERIFY_TOKEN)
                     .where(AUTH_VERIFY_TOKEN.TOKEN.eq(emailToken))
                     .fetchAny();
             if (token != null) {
-                transaction.update(USER)
+                DiluvAPI.getDSLContext().update(USER)
                         .set(USER.VERIFIED_EMAIL, true)
                         .where(USER.ID.eq(token.getUserId()))
                         .execute();
@@ -91,15 +85,14 @@ public class RouterAuth extends RouterImpl {
             if (EmailValidator.getInstance(false).isValid(inputUsernameEmail))
                 isUsername = false;
 
-            DSLContext transaction = DSL.using(conn, SQLDialect.MYSQL);
             if (errorMessage.size() == 0) {
                 UserRecord user;
                 if (isUsername) {
-                    user = transaction.selectFrom(USER)
+                    user = DiluvAPI.getDSLContext().selectFrom(USER)
                             .where(USER.USERNAME.eq(inputUsernameEmail))
                             .fetchAny();
                 } else {
-                    user = transaction.selectFrom(USER)
+                    user = DiluvAPI.getDSLContext().selectFrom(USER)
                             .where(USER.EMAIL.eq(inputUsernameEmail))
                             .fetchAny();
                 }
@@ -118,7 +111,7 @@ public class RouterAuth extends RouterImpl {
                                 JWT jwtToken = new JWT(jwtData, "mfaToken").setExpiresInMinutes(10);
                                 String token = jwtToken.toString();
                                 //TODO Check unique
-                                transaction.insertInto(AUTH_MFA_TOKEN, AUTH_MFA_TOKEN.USER_ID, AUTH_MFA_TOKEN.TOKEN)
+                                DiluvAPI.getDSLContext().insertInto(AUTH_MFA_TOKEN, AUTH_MFA_TOKEN.USER_ID, AUTH_MFA_TOKEN.TOKEN)
                                         .values(userId, token)
                                         .execute();
 
@@ -128,7 +121,7 @@ public class RouterAuth extends RouterImpl {
                                 tokenData.put("tokenExpires", jwtToken.getExpires());
                                 ResponseUtilities.asSuccessResponse(event, tokenData);
                             } else {
-                                ResponseUtilities.asSuccessResponse(event, AuthorizationUtilities.createAccessToken(this.conn, userId, username));
+                                ResponseUtilities.asSuccessResponse(event, AuthorizationUtilities.createAccessToken(userId, username));
                             }
                         } else {
                             ResponseUtilities.asErrorResponse(event, ErrorMessages.AUTH_PASSWORD_INCORRECT);
@@ -148,11 +141,10 @@ public class RouterAuth extends RouterImpl {
     public void postMFA(RoutingContext event) {
         String token = AuthorizationUtilities.getAuthorizationToken(event);
         if (token != null) {
-            if (JWT.isTokenValid(conn, token)) {
+            if (JWT.isTokenValid(token)) {
                 JWT jwt = new JWT(token);
                 if (!jwt.isExpired()) {
-                    DSLContext transaction = DSL.using(conn, SQLDialect.MYSQL);
-                    String mfaToken = transaction.select(AUTH_MFA_TOKEN.TOKEN)
+                    String mfaToken = DiluvAPI.getDSLContext().select(AUTH_MFA_TOKEN.TOKEN)
                             .from(AUTH_MFA_TOKEN)
                             .where(AUTH_MFA_TOKEN.TOKEN.eq(token))
                             .fetchOne(0, String.class);
@@ -161,11 +153,11 @@ public class RouterAuth extends RouterImpl {
                         String username = jwt.getData().getString("username");
                         Long userId = jwt.getData().getLong("userId");
 
-                        transaction.delete(AUTH_MFA_TOKEN)
+                        DiluvAPI.getDSLContext().delete(AUTH_MFA_TOKEN)
                                 .where(AUTH_MFA_TOKEN.TOKEN.eq(token))
                                 .execute();
 
-                        ResponseUtilities.asSuccessResponse(event, AuthorizationUtilities.createAccessToken(this.conn, userId, username));
+                        ResponseUtilities.asSuccessResponse(event, AuthorizationUtilities.createAccessToken(userId, username));
                     } else {
                         ResponseUtilities.asErrorResponse(event, ErrorMessages.AUTH_MFA_NULL);
                     }
@@ -184,12 +176,10 @@ public class RouterAuth extends RouterImpl {
     public void postRefreshToken(RoutingContext event) {
         String refreshToken = AuthorizationUtilities.getAuthorizationToken(event);
         if (refreshToken != null) {
-            if (JWT.isRefreshTokenValid(conn, refreshToken)) {
+            if (JWT.isRefreshTokenValid(refreshToken)) {
                 JWT jwt = new JWT(refreshToken);
                 if (!jwt.isExpired()) {
-                    DSLContext transaction = DSL.using(conn, SQLDialect.MYSQL);
-
-                    String tokenInfo = transaction.select(AUTH_ACCESS_TOKEN.TOKEN)
+                    String tokenInfo = DiluvAPI.getDSLContext().select(AUTH_ACCESS_TOKEN.TOKEN)
                             .from(AUTH_ACCESS_TOKEN)
                             .where(AUTH_ACCESS_TOKEN.REFRESH_TOKEN.eq(refreshToken))
                             .fetchOne(0, String.class);
@@ -198,11 +188,11 @@ public class RouterAuth extends RouterImpl {
                         long userId = jwt.getData().getLong("userId");
                         String username = jwt.getData().getString("username");
 
-                        transaction.delete(AUTH_ACCESS_TOKEN)
+                        DiluvAPI.getDSLContext().delete(AUTH_ACCESS_TOKEN)
                                 .where(AUTH_ACCESS_TOKEN.REFRESH_TOKEN.eq(refreshToken))
                                 .execute();
 
-                        ResponseUtilities.asSuccessResponse(event, AuthorizationUtilities.createAccessToken(this.conn, userId, username));
+                        ResponseUtilities.asSuccessResponse(event, AuthorizationUtilities.createAccessToken(userId, username));
                     }
                 } else {
                     ResponseUtilities.asErrorResponse(event, ErrorMessages.AUTH_REFRESH_TOKEN_EXPIRED);
@@ -246,8 +236,7 @@ public class RouterAuth extends RouterImpl {
                 errorMessage.add(ErrorMessages.AUTH_RECAPTCHA_NULL);
 
             if (errorMessage.size() == 0) {
-                DSLContext transaction = DSL.using(conn, SQLDialect.MYSQL);
-                Record3<Long, String, String> user = transaction.select(USER.ID, USER.EMAIL, USER.USERNAME)
+                Record3<Long, String, String> user = DiluvAPI.getDSLContext().select(USER.ID, USER.EMAIL, USER.USERNAME)
                         .from(USER)
                         .where(USER.EMAIL.eq(email).or(USER.USERNAME.eq(username)))
                         .fetchOne();
@@ -271,7 +260,7 @@ public class RouterAuth extends RouterImpl {
                                 /* TODO Gravatar is disabled until images are pulled from it, this will help prevent emails from being retrievable
                                    from the image url as they are only md5'ed
                                  */
-                                UserRecord userResults = transaction.insertInto(USER, USER.EMAIL, USER.USERNAME, USER.PASSWORD, USER.AVATAR)
+                                UserRecord userResults = DiluvAPI.getDSLContext().insertInto(USER, USER.EMAIL, USER.USERNAME, USER.PASSWORD, USER.AVATAR)
                                         .values(email, username, passwordHash, "" /*"https://www.gravatar.com/avatar/" + AuthorizationUtilities.getMD5Hex(email.trim().toLowerCase()) + "?d=retro"*/)
                                         .returning(USER.ID)
                                         .fetchOne();
@@ -281,7 +270,7 @@ public class RouterAuth extends RouterImpl {
                                 jwtData.put("time", System.nanoTime());
                                 JWT jwtToken = new JWT(jwtData, "token").setExpiresInMinutes(60);
 
-                                transaction.insertInto(AUTH_VERIFY_TOKEN, AUTH_VERIFY_TOKEN.USER_ID, AUTH_VERIFY_TOKEN.TOKEN)
+                                DiluvAPI.getDSLContext().insertInto(AUTH_VERIFY_TOKEN, AUTH_VERIFY_TOKEN.USER_ID, AUTH_VERIFY_TOKEN.TOKEN)
                                         .values(userResults.getId(), jwtToken.toString());
 
                                 //TODO Send email

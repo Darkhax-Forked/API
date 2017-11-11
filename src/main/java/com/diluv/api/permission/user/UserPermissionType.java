@@ -3,7 +3,12 @@ package com.diluv.api.permission.user;
 public enum UserPermissionType {
 
     BAN_USER(1),
-    REMOVE_COMMENT(2),
+    MUTE_USER(2),
+
+    REMOVE_PROJECT(10),
+    REMOVE_COMMENT(11),
+
+    REVIEW_PROJECT_FILE(20),
 
     CREATE_BETA_KEYS(90),;
 
@@ -18,7 +23,7 @@ public enum UserPermissionType {
         return (1 << id & permissionId) > 0;
     }
 
-    public static int addPermissions(UserPermissionType[] permissions) {
+    public static int addPermissions(UserPermissionType... permissions) {
         int id = 0;
 
         for (UserPermissionType permission : permissions) {

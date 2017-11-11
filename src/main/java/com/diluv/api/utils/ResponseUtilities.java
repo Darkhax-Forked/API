@@ -47,7 +47,7 @@ public class ResponseUtilities {
 
     public static HttpServerResponse asErrorResponse(RoutingContext route, Errors error, List<ErrorMessages> errorMessagesList) {
         List<String> errorMessages = new ArrayList<>();
-        for(ErrorMessages errorMessage:errorMessagesList){
+        for (ErrorMessages errorMessage : errorMessagesList) {
             errorMessages.add(errorMessage.errorMessage);
         }
         return ResponseUtilities.asErrorResponse(route, error, errorMessages);

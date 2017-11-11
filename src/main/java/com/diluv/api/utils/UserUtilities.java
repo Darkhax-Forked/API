@@ -1,12 +1,9 @@
 package com.diluv.api.utils;
 
-import org.jooq.DSLContext;
+import com.diluv.api.DiluvAPI;
 import org.jooq.Record5;
 import org.jooq.Record6;
-import org.jooq.SQLDialect;
-import org.jooq.impl.DSL;
 
-import java.sql.Connection;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,10 +11,8 @@ import java.util.Map;
 import static com.diluv.api.models.Tables.USER;
 
 public class UserUtilities {
-    public static Map<String, Object> getUserByUserId(Connection conn, long userId, boolean authorized) {
-        DSLContext transaction = DSL.using(conn, SQLDialect.MYSQL);
-
-        Record5<String, String, String, Timestamp, Integer> user = transaction.select(USER.USERNAME, USER.EMAIL, USER.AVATAR, USER.CREATED_AT, USER.PERMISSION)
+    public static Map<String, Object> getUserByUserId(long userId, boolean authorized) {
+        Record5<String, String, String, Timestamp, Integer> user = DiluvAPI.getDSLContext().select(USER.USERNAME, USER.EMAIL, USER.AVATAR, USER.CREATED_AT, USER.PERMISSION)
                 .from(USER)
                 .where(USER.ID.eq(userId))
                 .fetchOne();
@@ -27,7 +22,7 @@ public class UserUtilities {
             userOut.put("username", user.get(USER.USERNAME));
             userOut.put("avatar", user.get(USER.AVATAR));
             userOut.put("createdAt", user.get(USER.CREATED_AT));
-            userOut.put("projects", ProjectUtilities.getProjectsByUserId(conn, userId));
+            userOut.put("projects", ProjectUtilities.getProjectsByUserId(userId));
 
             if (authorized) {
                 userOut.put("permission", user.get(USER.PERMISSION));
@@ -37,10 +32,8 @@ public class UserUtilities {
         return userOut;
     }
 
-    public static Map<String, Object> getUserSettingsByUserId(Connection conn, long userId) {
-        DSLContext transaction = DSL.using(conn, SQLDialect.MYSQL);
-
-        Record6<String, String, String, String, String, Boolean> user = transaction.select(USER.EMAIL, USER.AVATAR, USER.FIRST_NAME, USER.LAST_NAME, USER.LOCATION, USER.MFA_ENABLED)
+    public static Map<String, Object> getUserSettingsByUserId(long userId) {
+        Record6<String, String, String, String, String, Boolean> user = DiluvAPI.getDSLContext().select(USER.EMAIL, USER.AVATAR, USER.FIRST_NAME, USER.LAST_NAME, USER.LOCATION, USER.MFA_ENABLED)
                 .from(USER)
                 .where(USER.ID.eq(userId))
                 .fetchOne();

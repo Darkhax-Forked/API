@@ -1,12 +1,9 @@
 package com.diluv.api.jwt;
 
+import com.diluv.api.DiluvAPI;
 import io.vertx.core.json.JsonObject;
-import org.jooq.DSLContext;
-import org.jooq.SQLDialect;
-import org.jooq.impl.DSL;
 
 import java.nio.charset.StandardCharsets;
-import java.sql.Connection;
 import java.util.Base64;
 import java.util.regex.Pattern;
 
@@ -129,20 +126,16 @@ public class JWT {
     }
 
 
-    public static boolean isTokenValid(Connection conn, String token) {
-        DSLContext transaction = DSL.using(conn, SQLDialect.MYSQL);
-
-        String tokenInfo = transaction.select(AUTH_ACCESS_TOKEN.TOKEN)
+    public static boolean isTokenValid(String token) {
+        String tokenInfo = DiluvAPI.getDSLContext().select(AUTH_ACCESS_TOKEN.TOKEN)
                 .from(AUTH_ACCESS_TOKEN)
                 .where(AUTH_ACCESS_TOKEN.TOKEN.eq(token))
                 .fetchOne(0, String.class);
         return tokenInfo != null;
     }
 
-    public static boolean isRefreshTokenValid(Connection conn, String token) {
-        DSLContext transaction = DSL.using(conn, SQLDialect.MYSQL);
-
-        String tokenInfo = transaction.select(AUTH_ACCESS_TOKEN.REFRESH_TOKEN)
+    public static boolean isRefreshTokenValid(String token) {
+        String tokenInfo = DiluvAPI.getDSLContext().select(AUTH_ACCESS_TOKEN.REFRESH_TOKEN)
                 .from(AUTH_ACCESS_TOKEN)
                 .where(AUTH_ACCESS_TOKEN.REFRESH_TOKEN.eq(token))
                 .fetchOne(0, String.class);

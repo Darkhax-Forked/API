@@ -1,9 +1,10 @@
 package com.diluv.api.utils;
 
-import org.jooq.*;
-import org.jooq.impl.DSL;
+import com.diluv.api.DiluvAPI;
+import org.jooq.Record1;
+import org.jooq.Record3;
+import org.jooq.Result;
 
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,9 +14,8 @@ import static com.diluv.api.models.Tables.*;
 
 
 public class ProjectTypeUtilities {
-    public static List<Map<String, Object>> getCategoriesByProjectTypeId(Connection conn, long projectTypeId) {
-        DSLContext transaction = DSL.using(conn, SQLDialect.MYSQL);
-        Result<Record3<String, String, String>> dbUserProject = transaction.select(PROJECT_TYPE_CATEGORY.NAME, PROJECT_TYPE_CATEGORY.DESCRIPTION, PROJECT_TYPE_CATEGORY.SLUG)
+    public static List<Map<String, Object>> getCategoriesByProjectTypeId(long projectTypeId) {
+        Result<Record3<String, String, String>> dbUserProject = DiluvAPI.getDSLContext().select(PROJECT_TYPE_CATEGORY.NAME, PROJECT_TYPE_CATEGORY.DESCRIPTION, PROJECT_TYPE_CATEGORY.SLUG)
                 .from(PROJECT_TYPE_CATEGORY)
                 .where(PROJECT_TYPE_CATEGORY.PROJECT_TYPE_ID.eq(projectTypeId))
                 .fetch();
@@ -33,9 +33,8 @@ public class ProjectTypeUtilities {
         return projectTypeCategoryListOut;
     }
 
-    public static List<Map<String, Object>> getProjectsByProjectTypeId(Connection conn, long projectTypeId) {
-        DSLContext transaction = DSL.using(conn, SQLDialect.MYSQL);
-        Result<Record1<Long>> dbUserProject = transaction.select(PROJECT.ID)
+    public static List<Map<String, Object>> getProjectsByProjectTypeId(long projectTypeId) {
+        Result<Record1<Long>> dbUserProject = DiluvAPI.getDSLContext().select(PROJECT.ID)
                 .from(PROJECT)
                 .where(PROJECT.PROJECT_TYPE_ID.eq(projectTypeId))
                 .fetch();
@@ -43,16 +42,14 @@ public class ProjectTypeUtilities {
 
         List<Map<String, Object>> projectListOut = new ArrayList<>();
         for (Record1<Long> it : dbUserProject) {
-            projectListOut.add(ProjectUtilities.getProjectById(conn, it.get(PROJECT.ID), null));
+            projectListOut.add(ProjectUtilities.getProjectById(it.get(PROJECT.ID), null));
         }
 
         return projectListOut;
     }
 
-    public static Map<String, Object> getProjectTypeById(Connection conn, long projectTypeId) {
-        DSLContext transaction = DSL.using(conn, SQLDialect.MYSQL);
-
-        Record3<String, String, String> dbUserProject = transaction.select(PROJECT_TYPE.NAME, PROJECT_TYPE.DESCRIPTION, PROJECT_TYPE.SLUG)
+    public static Map<String, Object> getProjectTypeById(long projectTypeId) {
+        Record3<String, String, String> dbUserProject = DiluvAPI.getDSLContext().select(PROJECT_TYPE.NAME, PROJECT_TYPE.DESCRIPTION, PROJECT_TYPE.SLUG)
                 .from(PROJECT_TYPE)
                 .where(PROJECT_TYPE.ID.eq(projectTypeId))
                 .fetchOne();
@@ -60,7 +57,7 @@ public class ProjectTypeUtilities {
         Map<String, Object> projectTypeOut = new HashMap<>();
 
         if (dbUserProject != null) {
-            Integer dbPermission = transaction.select(PROJECT_TYPE_PERMISSION.PERMISSION_CREATE)
+            Integer dbPermission = DiluvAPI.getDSLContext().select(PROJECT_TYPE_PERMISSION.PERMISSION_CREATE)
                     .from(PROJECT_TYPE_PERMISSION)
                     .where(PROJECT_TYPE_PERMISSION.ID.eq(projectTypeId))
                     .fetchOne(0, int.class);
@@ -68,7 +65,7 @@ public class ProjectTypeUtilities {
             projectTypeOut.put("name", dbUserProject.get(PROJECT_TYPE.NAME));
             projectTypeOut.put("description", dbUserProject.get(PROJECT_TYPE.DESCRIPTION));
             projectTypeOut.put("slug", dbUserProject.get(PROJECT_TYPE.SLUG));
-            projectTypeOut.put("categories", ProjectTypeUtilities.getCategoriesByProjectTypeId(conn, projectTypeId));
+            projectTypeOut.put("categories", ProjectTypeUtilities.getCategoriesByProjectTypeId(projectTypeId));
 
             if (dbPermission != null)
                 projectTypeOut.put("permission", dbPermission);
@@ -77,24 +74,17 @@ public class ProjectTypeUtilities {
         return projectTypeOut;
     }
 
-    public static Long getProjectTypeIdBySlug(Connection conn, String projectTypeSlug) {
-        DSLContext transaction = DSL.using(conn, SQLDialect.MYSQL);
-
-        Long dbGame = transaction.select(PROJECT_TYPE.ID)
+    public static Long getProjectTypeIdBySlug(String projectTypeSlug) {
+        return DiluvAPI.getDSLContext().select(PROJECT_TYPE.ID)
                 .from(PROJECT_TYPE)
                 .where(PROJECT_TYPE.SLUG.eq(projectTypeSlug))
                 .fetchOne(0, long.class);
-        return dbGame;
     }
 
-    public static Long getProjectIdBySlugAndProjectTypeId(Connection conn, String projectSlug) {
-        DSLContext transaction = DSL.using(conn, SQLDialect.MYSQL);
-
-        Long projectId = transaction.select(PROJECT.ID)
+    public static Long getProjectIdBySlugAndProjectTypeId(String projectSlug) {
+        return DiluvAPI.getDSLContext().select(PROJECT.ID)
                 .from(PROJECT)
                 .where(PROJECT.SLUG.eq(projectSlug))
                 .fetchOne(0, long.class);
-
-        return projectId;
     }
 }

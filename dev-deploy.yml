@@ -1,19 +1,19 @@
 - hosts: apiservers
   tasks:
     - name: copies the jar file over
-      copy: src={{item}} dest=/var/www/devapi.diluv.com/API.jar
+      copy: src={{item}} dest=/var/www/api.diluv.io/API.jar
       with_fileglob:
         - build/libs/*.jar
 
     - name: copies the docker file over
-      copy: src=Dockerfile dest=/var/www/devapi.diluv.com/Dockerfile
+      copy: src=Dockerfile dest=/var/www/api.diluv.io/Dockerfile
 
     - name: stop docker
       command: docker-compose down
       args:
-          chdir: /var/www/devapi.diluv.com/
+          chdir: /var/www/api.diluv.io/
 
     - name: run docker
       command: docker-compose up --build -d
       args:
-          chdir: /var/www/devapi.diluv.com/
+          chdir: /var/www/api.diluv.io/

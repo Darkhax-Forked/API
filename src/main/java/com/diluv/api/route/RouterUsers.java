@@ -1,5 +1,6 @@
 package com.diluv.api.route;
 
+import com.diluv.api.DiluvAPI;
 import com.diluv.api.error.ErrorMessages;
 import com.diluv.api.error.Errors;
 import com.diluv.api.jwt.JWT;
@@ -14,14 +15,10 @@ import io.vertx.core.http.HttpServerRequest;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.impl.RouterImpl;
 import org.bouncycastle.crypto.generators.OpenBSDBCrypt;
-import org.jooq.DSLContext;
 import org.jooq.InsertValuesStep3;
-import org.jooq.SQLDialect;
-import org.jooq.impl.DSL;
 
 import java.math.BigInteger;
 import java.security.SecureRandom;
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,12 +30,10 @@ import static com.diluv.api.models.Tables.USER_BETA_KEY;
 
 public class RouterUsers extends RouterImpl {
 
-    private final Connection conn;
     private final Vertx vertx;
 
-    public RouterUsers(Connection conn, Vertx vertx) {
+    public RouterUsers(Vertx vertx) {
         super(vertx);
-        this.conn = conn;
         this.vertx = vertx;
 
         this.get("/").handler(this::getUsers);
@@ -53,16 +48,13 @@ public class RouterUsers extends RouterImpl {
 
     public void getUsers(RoutingContext event) {
         try {
-            DSLContext transaction = DSL.using(conn, SQLDialect.MYSQL);
-
-            List<Long> dbUsers = transaction.select(USER.ID)
+            List<Long> dbUsers = DiluvAPI.getDSLContext().select(USER.ID)
                     .from(USER)
                     .fetch(0, long.class);
 
-
             List<Map<String, Object>> userListOut = new ArrayList<>();
             for (long userId : dbUsers) {
-                userListOut.add(UserUtilities.getUserByUserId(this.conn, userId, false));
+                userListOut.add(UserUtilities.getUserByUserId(userId, false));
             }
 
             ResponseUtilities.asSuccessResponse(event, userListOut);
@@ -79,7 +71,7 @@ public class RouterUsers extends RouterImpl {
         boolean authorized = false;
         String token = AuthorizationUtilities.getAuthorizationToken(event);
         if (token != null) {
-            if (JWT.isTokenValid(this.conn, token)) {
+            if (JWT.isTokenValid(token)) {
                 JWT jwt = new JWT(token);
                 if (!jwt.isExpired()) {
                     String tokenUsername = jwt.getData().getString("username");
@@ -93,16 +85,14 @@ public class RouterUsers extends RouterImpl {
         }
 
         if (!authorized) {
-            DSLContext transaction = DSL.using(conn, SQLDialect.MYSQL);
-
-            userId = transaction.select(USER.ID)
+            userId = DiluvAPI.getDSLContext().select(USER.ID)
                     .from(USER)
                     .where(USER.USERNAME.eq(username))
                     .fetchOne(0, long.class);
         }
 
         if (userId != null) {
-            ResponseUtilities.asSuccessResponse(event, UserUtilities.getUserByUserId(this.conn, userId, authorized));
+            ResponseUtilities.asSuccessResponse(event, UserUtilities.getUserByUserId(userId, authorized));
         } else {
             ResponseUtilities.asErrorResponse(event, ErrorMessages.USER_NOT_FOUND);
         }
@@ -113,13 +103,13 @@ public class RouterUsers extends RouterImpl {
 
         String token = AuthorizationUtilities.getAuthorizationToken(event);
         if (token != null) {
-            if (JWT.isTokenValid(this.conn, token)) {
+            if (JWT.isTokenValid(token)) {
                 JWT jwt = new JWT(token);
                 if (!jwt.isExpired()) {
                     String tokenUsername = jwt.getData().getString("username");
                     Long tokenUserId = jwt.getData().getLong("userId");
                     if (tokenUserId != null && (username.equals("me") || username.equals(tokenUsername))) {
-                        Map<String, Object> userOut = UserUtilities.getUserSettingsByUserId(this.conn, tokenUserId);
+                        Map<String, Object> userOut = UserUtilities.getUserSettingsByUserId(tokenUserId);
                         ResponseUtilities.asSuccessResponse(event, userOut);
                     }
                 }
@@ -135,7 +125,7 @@ public class RouterUsers extends RouterImpl {
         String token = AuthorizationUtilities.getAuthorizationToken(event);
         if (token != null) {
             JWT jwt = new JWT(token);
-            if (JWT.isTokenValid(this.conn, token)) {
+            if (JWT.isTokenValid(token)) {
                 if (!jwt.isExpired()) {
                     Long userId = jwt.getData().getLong("userId");
 
@@ -143,9 +133,7 @@ public class RouterUsers extends RouterImpl {
                         String oldPassword = req.getFormAttribute("oldPassword");
                         String newPassword = req.getFormAttribute("newPassword");
 
-                        DSLContext transaction = DSL.using(conn, SQLDialect.MYSQL);
-
-                        UserRecord user = transaction.selectFrom(USER)
+                        UserRecord user = DiluvAPI.getDSLContext().selectFrom(USER)
                                 .where(USER.ID.eq(userId))
                                 .fetchAny();
                         if (OpenBSDBCrypt.checkPassword(user.getPassword(), oldPassword.toCharArray())) {
@@ -153,7 +141,7 @@ public class RouterUsers extends RouterImpl {
                             new SecureRandom().nextBytes(salt);
                             String passwordHash = OpenBSDBCrypt.generate(newPassword.toCharArray(), salt, 10);
 
-                            transaction.update(USER)
+                            DiluvAPI.getDSLContext().update(USER)
                                     .set(USER.PASSWORD, passwordHash)
                                     .execute();
 
@@ -165,10 +153,10 @@ public class RouterUsers extends RouterImpl {
                             ResponseUtilities.asErrorResponse(event, ErrorMessages.AUTH_PASSWORD_INCORRECT);
                         }
                     });
-                }else{
+                } else {
                     ResponseUtilities.asErrorResponse(event, ErrorMessages.AUTH_TOKEN_EXPIRED);
                 }
-            }else{
+            } else {
                 ResponseUtilities.asErrorResponse(event, ErrorMessages.AUTH_TOKEN_NON_EXIST);
             }
         } else {
@@ -195,9 +183,7 @@ public class RouterUsers extends RouterImpl {
                             ArrayList<String> keyList = new ArrayList<>();
                             //TODO Check duplicates
 
-                            DSLContext transaction = DSL.using(conn, SQLDialect.MYSQL);
-
-                            InsertValuesStep3<UserBetaKeyRecord, Long, String, Long> insertInto = transaction.insertInto(USER_BETA_KEY,
+                            InsertValuesStep3<UserBetaKeyRecord, Long, String, Long> insertInto = DiluvAPI.getDSLContext().insertInto(USER_BETA_KEY,
                                     USER_BETA_KEY.USER_ID, USER_BETA_KEY.BETA_KEY, USER_BETA_KEY.CREATION_USER_ID);
 
                             for (long i = 0; i < quantity; i++) {

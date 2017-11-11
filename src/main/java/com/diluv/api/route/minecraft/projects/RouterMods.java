@@ -1,5 +1,6 @@
 package com.diluv.api.route.minecraft.projects;
 
+import com.diluv.api.DiluvAPI;
 import com.diluv.api.error.ErrorMessages;
 import com.diluv.api.error.Errors;
 import com.diluv.api.jwt.JWT;
@@ -15,12 +16,9 @@ import io.vertx.ext.web.FileUpload;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.BodyHandler;
 import io.vertx.ext.web.impl.RouterImpl;
-import org.jooq.DSLContext;
-import org.jooq.SQLDialect;
 import org.jooq.TableField;
 import org.jooq.impl.DSL;
 
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,16 +27,14 @@ import java.util.Map;
 import static com.diluv.api.models.Tables.PROJECT;
 
 public class RouterMods extends RouterImpl {
-    private final Connection conn;
     private final Vertx vertx;
     private final Long projectTypeId;
 
-    public RouterMods(Connection conn, Vertx vertx) {
+    public RouterMods(Vertx vertx) {
         super(vertx);
-        this.conn = conn;
         this.vertx = vertx;
 
-        this.projectTypeId = ProjectTypeUtilities.getProjectTypeIdBySlug(this.conn, "mods");
+        this.projectTypeId = ProjectTypeUtilities.getProjectTypeIdBySlug("mods");
         this.get("/").handler(this::getMods);
         this.get("/projects").handler(this::getProjectsByMods);
         this.get("/projects/:projectSlug").handler(this::getProjectBySlug);
@@ -53,7 +49,7 @@ public class RouterMods extends RouterImpl {
     public void getMods(RoutingContext event) {
 
         if (this.projectTypeId != null) {
-            ResponseUtilities.asSuccessResponse(event, ProjectTypeUtilities.getProjectTypeById(this.conn, projectTypeId));
+            ResponseUtilities.asSuccessResponse(event, ProjectTypeUtilities.getProjectTypeById(projectTypeId));
         } else {
             ResponseUtilities.asErrorResponse(event, ErrorMessages.INTERNAL_SERVER_ERROR);
         }
@@ -63,11 +59,10 @@ public class RouterMods extends RouterImpl {
         if (this.projectTypeId != null) {
 
             HttpServerRequest req = event.request();
-            DSLContext transaction = DSL.using(conn, SQLDialect.MYSQL);
 
             String inputPerPage = req.getParam("perPage");
 
-            Integer dbProjectCount = transaction.select(DSL.count())
+            Integer dbProjectCount = DiluvAPI.getDSLContext().select(DSL.count())
                     .from(PROJECT)
                     .where(PROJECT.PROJECT_TYPE_ID.eq(this.projectTypeId))
                     .fetchOne(0, int.class);
@@ -89,7 +84,7 @@ public class RouterMods extends RouterImpl {
             if (inputOrderBy.equals("name"))
                 tableField = PROJECT.NAME;
 
-            List<Long> dbProject = transaction.select(PROJECT.ID)
+            List<Long> dbProject = DiluvAPI.getDSLContext().select(PROJECT.ID)
                     .from(PROJECT)
                     .where(PROJECT.PROJECT_TYPE_ID.eq(this.projectTypeId))
                     .orderBy(inputOrder.equals("asc") ? tableField.asc() : tableField.desc())
@@ -98,7 +93,7 @@ public class RouterMods extends RouterImpl {
 
             List<Map<String, Object>> gameListOut = new ArrayList<>();
             for (long projectId : dbProject) {
-                gameListOut.add(GameUtilities.getGameById(this.conn, projectId));
+                gameListOut.add(GameUtilities.getGameById(projectId));
             }
 
             Map<String, Object> outputData = new HashMap<>();
@@ -120,7 +115,7 @@ public class RouterMods extends RouterImpl {
 
         String token = AuthorizationUtilities.getAuthorizationToken(event);
         if (token != null) {
-            if (JWT.isTokenValid(this.conn, token)) {
+            if (JWT.isTokenValid(token)) {
                 JWT jwt = new JWT(token);
                 if (!jwt.isExpired()) {
                     Long userId = jwt.getData().getLong("userId");
@@ -142,9 +137,9 @@ public class RouterMods extends RouterImpl {
                     //TODO look into logo
                     if (errorMessage.size() == 0) {
                         String slug = new Slugify().slugify(name);
-                        if (ProjectUtilities.getProjectIdBySlug(this.conn, slug, this.projectTypeId) == null) {
+                        if (ProjectUtilities.getProjectIdBySlug(slug, this.projectTypeId) == null) {
                             if (this.projectTypeId != null) {
-                                ProjectUtilities.insertProject(conn, name, description, shortDescription, slug, logo, this.projectTypeId, userId);
+                                ProjectUtilities.insertProject(name, description, shortDescription, slug, logo, this.projectTypeId, userId);
                             } else {
                                 ResponseUtilities.asErrorResponse(event, ErrorMessages.INTERNAL_SERVER_ERROR);
                             }
@@ -163,19 +158,19 @@ public class RouterMods extends RouterImpl {
         String projectSlug = event.request().getParam("projectSlug");
 
         if (projectSlug != null) {
-            Long projectId = ProjectUtilities.getProjectIdBySlug(this.conn, projectSlug, this.projectTypeId);
+            Long projectId = ProjectUtilities.getProjectIdBySlug(projectSlug, this.projectTypeId);
             if (projectId != null) {
                 String token = AuthorizationUtilities.getAuthorizationToken(event);
                 Long userId = null;
                 if (token != null) {
-                    if (JWT.isTokenValid(this.conn, token)) {
+                    if (JWT.isTokenValid(token)) {
                         JWT jwt = new JWT(token);
                         if (jwt.isExpired()) {
                             userId = jwt.getData().getLong("userId");
                         }
                     }
                 }
-                Map<String, Object> projectObj = ProjectUtilities.getProjectById(this.conn, projectId, userId);
+                Map<String, Object> projectObj = ProjectUtilities.getProjectById(projectId, userId);
                 if (!projectObj.isEmpty()) {
                     ResponseUtilities.asSuccessResponse(event, projectObj);
                 } else {
@@ -191,9 +186,9 @@ public class RouterMods extends RouterImpl {
         String projectSlug = event.request().getParam("projectSlug");
 
         if (projectSlug != null) {
-            Long projectId = ProjectUtilities.getProjectIdBySlug(this.conn, projectSlug, this.projectTypeId);
+            Long projectId = ProjectUtilities.getProjectIdBySlug(projectSlug, this.projectTypeId);
             if (projectId != null) {
-                List<Map<String, Object>> userListOut = ProjectUtilities.getProjectMembersByProjectId(this.conn, projectId);
+                List<Map<String, Object>> userListOut = ProjectUtilities.getProjectMembersByProjectId(projectId);
                 if (!userListOut.isEmpty())
                     ResponseUtilities.asSuccessResponse(event, userListOut);
                 else
@@ -210,9 +205,9 @@ public class RouterMods extends RouterImpl {
         String projectSlug = event.request().getParam("projectSlug");
 
         if (projectSlug != null) {
-            Long projectId = ProjectUtilities.getProjectIdBySlug(this.conn, projectSlug, this.projectTypeId);
+            Long projectId = ProjectUtilities.getProjectIdBySlug(projectSlug, this.projectTypeId);
             if (projectId != null) {
-                ResponseUtilities.asSuccessResponse(event, ProjectUtilities.getProjectFilesById(this.conn, projectId));
+                ResponseUtilities.asSuccessResponse(event, ProjectUtilities.getProjectFilesById(projectId));
             } else {
                 ResponseUtilities.asErrorResponse(event, ErrorMessages.PROJECT_NOT_FOUND);
             }
@@ -229,7 +224,7 @@ public class RouterMods extends RouterImpl {
 
             String token = AuthorizationUtilities.getAuthorizationToken(event);
             if (token != null) {
-                if (JWT.isTokenValid(this.conn, token)) {
+                if (JWT.isTokenValid(token)) {
                     JWT jwt = new JWT(token);
                     if (!jwt.isExpired()) {
                         JsonObject payload = jwt.getData();
@@ -253,7 +248,7 @@ public class RouterMods extends RouterImpl {
                             if (releaseType == null)
                                 releaseType = "alpha";
 
-                            ProjectUtilities.insertProjectFiles(this.conn, fileName, displayName, size, releaseType, parentId, projectSlug, userId);
+                            ProjectUtilities.insertProjectFiles(fileName, displayName, size, releaseType, parentId, projectSlug, userId);
 //                            if (id != null) {
                             //TODO Insert into project processing
 //                            } else {
@@ -270,9 +265,9 @@ public class RouterMods extends RouterImpl {
         String projectSlug = event.request().getParam("projectSlug");
 
         if (projectSlug != null) {
-            Long projectId = ProjectUtilities.getProjectIdBySlug(this.conn, projectSlug, this.projectTypeId);
+            Long projectId = ProjectUtilities.getProjectIdBySlug(projectSlug, this.projectTypeId);
             if (projectId != null) {
-                ResponseUtilities.asSuccessResponse(event, ProjectUtilities.getProjectCategoriesById(this.conn, projectId));
+                ResponseUtilities.asSuccessResponse(event, ProjectUtilities.getProjectCategoriesById(projectId));
             } else {
                 ResponseUtilities.asErrorResponse(event, ErrorMessages.PROJECT_CATEGORY_NOT_FOUND);
             }
