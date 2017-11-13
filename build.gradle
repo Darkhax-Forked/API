@@ -54,7 +54,7 @@ dependencies {
     compile "org.jooq:jooq:3.9.3"
     runtime "org.jooq:jooq-meta:3.9.3"
     runtime "org.jooq:jooq-codegen:3.9.3"
-    runtime "mysql:mysql-connector-java:5.1.41"
+    runtime "mysql:mysql-connector-java:5.1.44"
 }
 
 idea {

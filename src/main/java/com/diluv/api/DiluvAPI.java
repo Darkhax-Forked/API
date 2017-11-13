@@ -86,9 +86,7 @@ public class DiluvAPI extends AbstractVerticle {
             String user = System.getenv("dbUsername");
             String password = System.getenv("dbPassword");
 
-
-            String url = String.format("jdbc:mysql://%s:%s/%s?autoReconnect=true", host, port, database);
-
+            String url = String.format("jdbc:mysql://%s:%s/%s?autoReconnect=true&interactiveClient=true", host, port, database);
             try {
                 Connection conn = DriverManager.getConnection(url, user, password);
 
