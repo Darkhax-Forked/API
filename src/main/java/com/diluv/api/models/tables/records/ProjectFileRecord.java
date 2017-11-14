@@ -28,7 +28,7 @@ import java.sql.Timestamp;
 @SuppressWarnings({"all", "unchecked", "rawtypes"})
 public class ProjectFileRecord extends UpdatableRecordImpl<ProjectFileRecord> implements Record14<Long, String, String, String, Long, Long, String, Timestamp, Boolean, Boolean, Boolean, Long, Long, Long> {
 
-    private static final long serialVersionUID = 871386638;
+    private static final long serialVersionUID = 248057771;
 
     /**
      * Setter for <code>diluv.PROJECT_FILE.ID</code>.
@@ -45,16 +45,16 @@ public class ProjectFileRecord extends UpdatableRecordImpl<ProjectFileRecord> im
     }
 
     /**
-     * Setter for <code>diluv.PROJECT_FILE.SHA256</code>.
+     * Setter for <code>diluv.PROJECT_FILE.SHA512</code>.
      */
-    public void setSha256(String value) {
+    public void setSha512(String value) {
         set(1, value);
     }
 
     /**
-     * Getter for <code>diluv.PROJECT_FILE.SHA256</code>.
+     * Getter for <code>diluv.PROJECT_FILE.SHA512</code>.
      */
-    public String getSha256() {
+    public String getSha512() {
         return (String) get(1);
     }
 
@@ -271,7 +271,7 @@ public class ProjectFileRecord extends UpdatableRecordImpl<ProjectFileRecord> im
      */
     @Override
     public Field<String> field2() {
-        return ProjectFile.PROJECT_FILE.SHA256;
+        return ProjectFile.PROJECT_FILE.SHA512;
     }
 
     /**
@@ -383,7 +383,7 @@ public class ProjectFileRecord extends UpdatableRecordImpl<ProjectFileRecord> im
      */
     @Override
     public String value2() {
-        return getSha256();
+        return getSha512();
     }
 
     /**
@@ -496,7 +496,7 @@ public class ProjectFileRecord extends UpdatableRecordImpl<ProjectFileRecord> im
      */
     @Override
     public ProjectFileRecord value2(String value) {
-        setSha256(value);
+        setSha512(value);
         return this;
     }
 
@@ -644,11 +644,11 @@ public class ProjectFileRecord extends UpdatableRecordImpl<ProjectFileRecord> im
     /**
      * Create a detached, initialised ProjectFileRecord
      */
-    public ProjectFileRecord(Long id, String sha256, String fileName, String displayName, Long size, Long downloads, String releaseType, Timestamp createdAt, Boolean public_, Boolean processed, Boolean reviewNeeded, Long parentId, Long projectId, Long userId) {
+    public ProjectFileRecord(Long id, String sha512, String fileName, String displayName, Long size, Long downloads, String releaseType, Timestamp createdAt, Boolean public_, Boolean processed, Boolean reviewNeeded, Long parentId, Long projectId, Long userId) {
         super(ProjectFile.PROJECT_FILE);
 
         set(0, id);
-        set(1, sha256);
+        set(1, sha512);
         set(2, fileName);
         set(3, displayName);
         set(4, size);

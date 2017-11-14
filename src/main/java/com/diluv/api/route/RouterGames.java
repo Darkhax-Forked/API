@@ -2,7 +2,7 @@ package com.diluv.api.route;
 
 import com.diluv.api.DiluvAPI;
 import com.diluv.api.route.minecraft.RouterMinecraft;
-import com.diluv.api.utils.GameUtilities;
+import com.diluv.api.utils.Game;
 import com.diluv.api.utils.ResponseUtilities;
 import io.vertx.core.Vertx;
 import io.vertx.ext.web.RoutingContext;
@@ -34,7 +34,7 @@ public class RouterGames extends RouterImpl {
 
         List<Map<String, Object>> gameListOut = new ArrayList<>();
         for (long gameId : dbGame) {
-            gameListOut.add(GameUtilities.getGameById(gameId));
+            gameListOut.add(new Game(gameId).getData());
         }
         ResponseUtilities.asSuccessResponse(event, gameListOut);
     }

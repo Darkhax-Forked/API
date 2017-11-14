@@ -30,11 +30,9 @@ import java.util.Map;
 import static com.diluv.api.models.Tables.*;
 
 public class RouterAuth extends RouterImpl {
-    private final Vertx vertx;
 
     public RouterAuth(Vertx vertx) {
         super(vertx);
-        this.vertx = vertx;
 
         this.post("/register").handler(this::postRegister);
         this.post("/login").handler(this::postLogin);

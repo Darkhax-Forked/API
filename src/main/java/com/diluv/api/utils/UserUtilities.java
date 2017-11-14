@@ -22,7 +22,6 @@ public class UserUtilities {
             userOut.put("username", user.get(USER.USERNAME));
             userOut.put("avatar", user.get(USER.AVATAR));
             userOut.put("createdAt", user.get(USER.CREATED_AT));
-            userOut.put("projects", ProjectUtilities.getProjectsByUserId(userId));
 
             if (authorized) {
                 userOut.put("permission", user.get(USER.PERMISSION));

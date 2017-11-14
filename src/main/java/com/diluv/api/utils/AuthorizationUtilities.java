@@ -18,21 +18,27 @@ public class AuthorizationUtilities {
     private static final Pattern USERNAME = Pattern.compile("([A-Za-z0-9_]+)");
 
 
-    public static boolean isAuthorizationTokenPresent(RoutingContext event) {
-        return event.request().getHeader(HttpHeaders.AUTHORIZATION) != null;
+    /**
+     * Check if the authorization header is present in the request.
+     *
+     * @param rc The request made to the server
+     * @return If an authorization header exists it will return true, else false
+     */
+    public static boolean isAuthorizationHeaderPresent(RoutingContext rc) {
+        return rc.request().getHeader(HttpHeaders.AUTHORIZATION) != null;
     }
 
     /**
      * Returns a token from the authorization header of the request, if the token is invalid or not present, it will return null
      *
-     * @param event The data that is sent as a request to the API
+     * @param rc The request that is made to the api with the header
      * @return The token that is in the authorization header or null if invalid or not present
      */
-    public static String getAuthorizationToken(RoutingContext event) {
-        if (!isAuthorizationTokenPresent(event))
+    public static String getAuthorizationToken(RoutingContext rc) {
+        if (!isAuthorizationHeaderPresent(rc))
             return null;
 
-        String auth = event.request().getHeader(HttpHeaders.AUTHORIZATION);
+        String auth = rc.request().getHeader(HttpHeaders.AUTHORIZATION);
         if (auth != null) {
             String[] parts = auth.split(" ");
             if (parts.length == 2) {
@@ -51,7 +57,6 @@ public class AuthorizationUtilities {
      * Creates an access token for the user using the userId and username, it is encrypted to prevent
      * snooping and the forging of the token. Will create a map of token and refresh token and their expire datetime.
      *
-     * @param conn     The database connection to keep record of the token/
      * @param userId   The id of the user for the token to created for.
      * @param username The username of the token for the token to be created for.
      * @return The token, expire datatime of the token, refreshToken and the expire datetime of the refresh token.
